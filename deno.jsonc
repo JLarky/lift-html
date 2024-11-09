@@ -1,0 +1,7 @@
+{
+  "tasks": {},
+  "compilerOptions": {
+    "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
+  },
+  "workspace": ["./packages/html-lift"]
+}
