@@ -1,8 +1,7 @@
 // to fix crashes in SSR/Node
-const HTMLElement_ =
-  typeof HTMLElement !== "undefined"
-    ? HTMLElement
-    : (class {} as unknown as typeof HTMLElement);
+const HTMLElement_ = typeof HTMLElement !== "undefined"
+  ? HTMLElement
+  : (class {} as unknown as typeof HTMLElement);
 
 interface LiftOptions {
   observedAttributes?: string[] | undefined;
@@ -14,7 +13,7 @@ interface LiftOptions {
     attrName: string,
     oldValue: string | null,
     newValue: string,
-    namespace?: string
+    namespace?: string,
   ) => void;
   adoptedCallback?: (this: LiftBaseClass<LiftOptions>) => void;
 }
@@ -27,7 +26,7 @@ export interface LiftBaseConstructor<Options extends LiftOptions> {
 }
 
 export abstract class LiftBaseClass<
-  T extends LiftOptions
+  T extends LiftOptions,
 > extends HTMLElement_ {
   abstract readonly options: T;
   static readonly formAssociated: boolean | undefined;
@@ -35,7 +34,7 @@ export abstract class LiftBaseClass<
   abstract attributeChangedCallback(
     attrName: string,
     oldValue: string | null,
-    newValue: string
+    newValue: string,
   ): void;
   abstract connectedCallback(): void;
   abstract disconnectedCallback(): void;
@@ -44,7 +43,7 @@ export abstract class LiftBaseClass<
 
 export function liftHtml<Options extends LiftOptions>(
   tagName: string,
-  opts: Options
+  opts: Options,
 ): LiftBaseConstructor<Options> {
   class LiftElement extends LiftBaseClass<Options> {
     override options = opts;
@@ -53,7 +52,7 @@ export function liftHtml<Options extends LiftOptions>(
     override attributeChangedCallback(
       attrName: string,
       oldValue: string | null,
-      newValue: string
+      newValue: string,
     ) {
       opts.attributeChangedCallback?.call(this, attrName, oldValue, newValue);
     }

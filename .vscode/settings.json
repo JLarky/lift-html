@@ -1,0 +1,10 @@
+{
+  // https://github.com/denoland/vscode_deno/issues/66#issuecomment-1631804057
+  "deno.enable": true,
+  "deno.lint": true,
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false
+}

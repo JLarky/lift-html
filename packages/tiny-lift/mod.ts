@@ -8,7 +8,7 @@ export interface TinyLiftBaseConstructor {
 
 export function tinyLift<Options extends TinyOptions>(
   tagName: string,
-  opts: Options
+  opts: Options,
 ): TinyLiftBaseConstructor {
   class TinyLiftElement extends HTMLElement {
     connectedCallback() {
