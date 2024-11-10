@@ -1,7 +1,8 @@
 {
+  "nodeModulesDir": "auto",
   "tasks": {},
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
   },
-  "workspace": ["packages/tiny-lift"]
+  "workspace": ["examples/astro", "packages/tiny-lift"]
 }

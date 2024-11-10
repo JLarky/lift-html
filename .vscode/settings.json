@@ -6,5 +6,8 @@
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
   "typescript.tsserver.experimental.enableProjectDiagnostics": false
 }
