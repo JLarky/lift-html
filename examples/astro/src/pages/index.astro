@@ -86,17 +86,10 @@
       <script>
         import { liftHtml } from "../../../../packages/lift-html/mod.ts";
 
-        let i = 1;
         liftHtml(
           "lift-html-counter",
-          () => ({
-            id: i++,
-            abortController: new AbortController(),
-          }),
           {
             connectedCallback() {
-              const { id } = this.state;
-              console.log("connected", this.dataset.id, id);
               const button = this.querySelector("button")!;
               button.addEventListener(
                 "click",
@@ -107,9 +100,37 @@
               );
             },
             disconnectedCallback() {
-              console.log("disconnected", this.dataset.id, this.state.id);
               this.state.abortController.abort();
             },
+          },
+          () => ({
+            abortController: new AbortController(),
+          })
+        );
+      </script>
+      <button onclick="this.parentElement.remove()">unmount</button>
+    </article>
+    <article>
+      <vanilla-counter data-id="1">Counter <button>0</button></vanilla-counter>
+      <vanilla-counter data-id="2">Counter <button>0</button></vanilla-counter>
+      <script>
+        customElements.define(
+          "vanilla-counter",
+          class extends HTMLElement {
+            abortController = new AbortController();
+            connectedCallback() {
+              const button = this.querySelector("button")!;
+              button.addEventListener(
+                "click",
+                () => {
+                  button.textContent = String(Number(button.textContent) + 1);
+                },
+                { signal: this.abortController.signal }
+              );
+            }
+            disconnectedCallback() {
+              this.abortController.abort();
+            }
           }
         );
       </script>

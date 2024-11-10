@@ -78,22 +78,10 @@ export abstract class LiftBaseClass<
 export function liftHtml<State, Options extends LiftOptions<State>>(
   tagName: string,
   opts: Options,
-): LiftBaseConstructor<NoInfer<State>, Options>;
-export function liftHtml<State, Options extends LiftOptions<State>>(
-  tagName: string,
-  initState: () => State,
-  opts: Options,
-): LiftBaseConstructor<NoInfer<State>, Options>;
-export function liftHtml<State, Options extends LiftOptions<State>>(
-  tagName: string,
-  initStateOrOptions: Options | (() => State),
-  options?: Options | undefined,
+  initState?: () => State,
 ): LiftBaseConstructor<NoInfer<State>, Options> {
-  const opts = options ?? (initStateOrOptions as Options);
   class LiftElement extends LiftBaseClass<State, Options> {
-    override state = options === undefined
-      ? (initStateOrOptions as () => State)()
-      : initStateOrOptions as State;
+    override state = initState?.() ?? {} as State;
     override options = opts;
     static override observedAttributes = opts.observedAttributes;
     static override formAssociated = opts.formAssociated;
