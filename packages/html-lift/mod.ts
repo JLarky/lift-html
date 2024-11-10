@@ -66,7 +66,7 @@ export function liftHtml<Options extends LiftOptions>(
       opts.adoptedCallback?.call(this);
     }
   }
-  if (!customElements.get(tagName)) {
+  if (typeof customElements !== "undefined" && !customElements.get(tagName)) {
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
