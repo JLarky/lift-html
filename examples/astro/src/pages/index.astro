@@ -12,14 +12,59 @@
   </head>
   <body>
     <h1>Astro</h1>
-    <tiny-test>Hello</tiny-test>
-    <script>
-      import { tinyLift } from "../../../../packages/tiny-lift/mod.ts";
-      tinyLift("tiny-test", {
-        connectedCallback() {
-          this.appendChild(document.createTextNode(" from tiny-lift"));
-        },
-      });
-    </script>
+    <article>
+      <tiny-test>Hello</tiny-test>
+      <script>
+        import { tinyLift } from "../../../../packages/tiny-lift/mod.ts";
+        tinyLift("tiny-test", {
+          connectedCallback() {
+            this.appendChild(document.createTextNode(" from tiny-lift"));
+          },
+        });
+      </script>
+    </article>
+    <article>
+      <lift-test>Hello</lift-test>
+      <script>
+        import { liftHtml } from "../../../../packages/html-lift/mod.ts";
+        liftHtml("lift-test", {
+          connectedCallback() {
+            this.appendChild(document.createTextNode(" from lift-html"));
+          },
+        });
+      </script>
+    </article>
+    <article>
+      <lift-counter data-id="1">Counter <button>0</button></lift-counter>
+      <lift-counter data-id="2">Counter <button>0</button></lift-counter>
+      <script>
+        import { liftHtml } from "../../../../packages/lift-options-this/mod.ts";
+
+        liftHtml("lift-counter", {
+          id: "",
+          onCleanup: () => {},
+          connectedCallback(element) {
+            this.id = element.dataset.id!;
+            const button = element.querySelector("button")!;
+            const abortController = new AbortController();
+            this.onCleanup = () => {
+              abortController.abort();
+            };
+            button.addEventListener(
+              "click",
+              () => {
+                button.textContent = String(Number(button.textContent) + 1);
+              },
+              { signal: abortController.signal }
+            );
+          },
+          disconnectedCallback(el) {
+            console.log("disconnected", el.dataset.id, this.id);
+            this.onCleanup();
+          },
+        });
+      </script>
+      <button onclick="this.parentElement.remove()">unmount</button>
+    </article>
   </body>
 </html>

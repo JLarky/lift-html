@@ -11,16 +11,16 @@ const HTMLElement_ = typeof HTMLElement !== "undefined"
 export interface LiftOptions {
   observedAttributes?: string[] | undefined;
   formAssociated?: boolean | undefined;
-  connectedCallback?: (this: LiftBaseClass<LiftOptions>) => void;
-  disconnectedCallback?: (this: LiftBaseClass<LiftOptions>) => void;
+  connectedCallback?: (element: LiftBaseClass<LiftOptions>) => void;
+  disconnectedCallback?: (element: LiftBaseClass<LiftOptions>) => void;
   attributeChangedCallback?: (
-    this: LiftBaseClass<LiftOptions>,
+    element: LiftBaseClass<LiftOptions>,
     attrName: string,
     oldValue: string | null,
     newValue: string,
     namespace?: string,
   ) => void;
-  adoptedCallback?: (this: LiftBaseClass<LiftOptions>) => void;
+  adoptedCallback?: (element: LiftBaseClass<LiftOptions>) => void;
 }
 
 /**
@@ -81,16 +81,16 @@ export function liftHtml<Options extends LiftOptions>(
       oldValue: string | null,
       newValue: string,
     ) {
-      opts.attributeChangedCallback?.call(this, attrName, oldValue, newValue);
+      opts.attributeChangedCallback?.(this, attrName, oldValue, newValue);
     }
     override connectedCallback() {
-      opts.connectedCallback?.call(this);
+      opts.connectedCallback?.(this);
     }
     override disconnectedCallback() {
-      opts.disconnectedCallback?.call(this);
+      opts.disconnectedCallback?.(this);
     }
     override adoptedCallback() {
-      opts.adoptedCallback?.call(this);
+      opts.adoptedCallback?.(this);
     }
   }
   if (typeof customElements !== "undefined" && !customElements.get(tagName)) {
