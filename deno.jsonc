@@ -1,7 +1,9 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
-    "start:example": "cd examples/astro && astro dev"
+    "example:start": "cd examples/astro && astro dev",
+    "example:build": "cd examples/astro && astro build",
+    "example:preview": "cd examples/astro && astro preview"
   },
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]

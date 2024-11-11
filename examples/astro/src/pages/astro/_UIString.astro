@@ -1,0 +1,10 @@
+---
+type Props = { key: string };
+---
+
+{
+  Astro.props.key
+    .split(".")
+    .filter((x) => x !== "feedback")
+    .join(" ")
+}
