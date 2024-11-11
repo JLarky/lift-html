@@ -150,91 +150,96 @@
 </style>
 
 <script>
-  class MultipleChoice extends HTMLElement {
-    #defaultCorrectLabel: string;
-    #defaultIncorrectLabel: string;
-    #key: string;
-    #submitEl: HTMLButtonElement;
-    #answerEl: HTMLParagraphElement;
+  import { liftHtml } from "../../../../../packages/lift-html/mod.ts";
+  liftHtml("multiple-choice", {
+    connectedCallback() {
+      const self = this;
 
-    constructor() {
-      super();
-      this.#defaultCorrectLabel = this.dataset.correctLabel!;
-      this.#defaultIncorrectLabel = this.dataset.incorrectLabel!;
-      this.#key = Math.random().toString();
-      this.#submitEl = this.querySelector(".submit")!;
-      this.#answerEl = this.querySelector(".answer")!;
+      const defaultCorrectLabel = this.dataset.correctLabel!;
+      const defaultIncorrectLabel = this.dataset.incorrectLabel!;
+      const key = Math.random().toString();
+      const submitEl = this.querySelector(".submit" as "button")!;
+      const answerEl = this.querySelector(".answer" as "p")!;
       this.querySelectorAll(".opt-list > li").forEach((li) =>
-        this.#upgradeListItem(li)
+        upgradeListItem(li)
       );
-    }
 
-    #upgradeListItem(li: Element) {
-      const option = li.querySelector(
-        'input[type="radio"]'
-      ) as HTMLInputElement | null;
-      if (!option) return;
+      function upgradeListItem(li: Element) {
+        const option = li.querySelector(
+          'input[type="radio"]'
+        ) as HTMLInputElement | null;
+        if (!option) return;
 
-      option.removeAttribute("disabled");
-      option.setAttribute("name", this.#key);
-      option.addEventListener("change", () => {
-        this.#clearAnswer();
-        this.#enableSubmit();
-      });
-      if (option.checked) this.#enableSubmit();
-    }
-
-    /** Clear the answer text and hide its container visually. */
-    #clearAnswer() {
-      this.#answerEl.innerText = "";
-      this.#answerEl.classList.remove("wrong", "correct");
-      this.#answerEl.classList.add("sr-only");
-    }
-
-    /** Show the answer result to the user. */
-    #setAnswer(isCorrect: boolean) {
-      const answerTemplate = this.querySelector(
-        "input:checked ~ template"
-      ) as HTMLTemplateElement | null;
-      if (answerTemplate) {
-        this.#answerEl.replaceChildren(answerTemplate.content.cloneNode(true));
-      } else {
-        this.#answerEl.innerText = isCorrect
-          ? this.#defaultCorrectLabel
-          : this.#defaultIncorrectLabel;
+        option.removeAttribute("disabled");
+        option.setAttribute("name", key);
+        option.addEventListener("change", () => {
+          clearAnswer();
+          enableSubmit();
+        });
+        if (option.checked) enableSubmit();
       }
-      this.#answerEl.classList.remove("sr-only", "wrong", "correct");
-      this.#answerEl.classList.add(isCorrect ? "correct" : "wrong");
-    }
 
-    /** Activate the submit button, preparing it to evaluate the form when clicked. */
-    #enableSubmit() {
-      this.#submitEl.removeAttribute("disabled");
-      this.#submitEl.classList.remove("sr-only");
-      this.#submitEl.onclick = () => this.#submitAnswer();
-    }
+      /** Clear the answer text and hide its container visually. */
+      function clearAnswer() {
+        answerEl.innerText = "";
+        answerEl.classList.remove("wrong", "correct");
+        answerEl.classList.add("sr-only");
+      }
 
-    /** Disable the submit button and hide it visually. */
-    #disableSubmit() {
-      this.#submitEl.setAttribute("disabled", "");
-      this.#submitEl.classList.add("sr-only");
-      this.#submitEl.onclick = null;
-    }
+      /** Show the answer result to the user. */
+      function setAnswer(isCorrect: boolean) {
+        const answerTemplate = self.querySelector(
+          "input:checked ~ template"
+        ) as HTMLTemplateElement | null;
+        if (answerTemplate) {
+          answerEl.replaceChildren(answerTemplate.content.cloneNode(true));
+        } else {
+          answerEl.innerText = isCorrect
+            ? defaultCorrectLabel
+            : defaultIncorrectLabel;
+        }
+        answerEl.classList.remove("sr-only", "wrong", "correct");
+        answerEl.classList.add(isCorrect ? "correct" : "wrong");
+      }
 
-    /** Check if the selected option is correct and display the result. */
-    #submitAnswer() {
-      const selection = this.querySelector(
-        "input:checked"
-      ) as HTMLInputElement | null;
-      if (!selection) return;
+      /** Activate the submit button, preparing it to evaluate the form when clicked. */
+      function enableSubmit() {
+        submitEl.removeAttribute("disabled");
+        submitEl.classList.remove("sr-only");
+        submitEl.onclick = () => submitAnswer();
+      }
 
-      this.#disableSubmit();
-      const isCorrect =
-        selection.dataset.isCorrect !== undefined &&
-        ["", "true"].includes(selection.dataset.isCorrect);
-      this.#setAnswer(isCorrect);
+      /** Disable the submit button and hide it visually. */
+      function disableSubmit() {
+        submitEl.setAttribute("disabled", "");
+        submitEl.classList.add("sr-only");
+        submitEl.onclick = null;
+      }
+
+      /** Check if the selected option is correct and display the result. */
+      function submitAnswer() {
+        const selection = self.querySelector(
+          "input:checked"
+        ) as HTMLInputElement | null;
+        if (!selection) return;
+
+        disableSubmit();
+        const isCorrect =
+          selection.dataset.isCorrect !== undefined &&
+          ["", "true"].includes(selection.dataset.isCorrect);
+        setAnswer(isCorrect);
+      }
+    },
+  });
+
+  declare global {
+    namespace astroHTML.JSX {
+      interface IntrinsicElements {
+        "multiple-choice": HTMLAttributes & {
+          "data-correct-label": string;
+          "data-incorrect-label": string;
+        };
+      }
     }
   }
-
-  customElements.define("multiple-choice", MultipleChoice);
 </script>
