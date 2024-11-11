@@ -35,6 +35,7 @@ export interface LiftBaseConstructor<
   State,
   Options extends LiftOptions<State>,
 > {
+  state: State;
   readonly observedAttributes: Options["observedAttributes"];
   readonly formAssociated: Options["formAssociated"];
 
@@ -79,7 +80,7 @@ export function liftHtml<State, Options extends LiftOptions<State>>(
   tagName: string,
   opts: Options,
   initState?: () => State,
-): LiftBaseConstructor<NoInfer<State>, Options> {
+): LiftBaseConstructor<State, Options> {
   class LiftElement extends LiftBaseClass<State, Options> {
     override state = initState?.() ?? {} as State;
     override options = opts;
