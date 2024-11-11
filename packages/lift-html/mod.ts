@@ -35,8 +35,6 @@ export interface LiftBaseConstructor<
   Options extends LiftOptions<State>,
 > {
   state: State;
-  readonly observedAttributes: Options["observedAttributes"];
-  readonly formAssociated: Options["formAssociated"];
 
   new (): LiftBaseClass<State, Options>;
 }

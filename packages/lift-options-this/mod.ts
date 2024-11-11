@@ -29,9 +29,6 @@ export interface LiftOptions {
  * type-safety when using `liftHtml` function.
  */
 export interface LiftBaseConstructor<Options extends LiftOptions> {
-  readonly observedAttributes: Options["observedAttributes"];
-  readonly formAssociated: Options["formAssociated"];
-
   new (): LiftBaseClass<Options>;
 }
 
