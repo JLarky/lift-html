@@ -19,8 +19,7 @@ export interface LiftOptions<State> {
     this: LiftBaseClass<State, LiftOptions<State>>,
     attrName: string,
     oldValue: string | null,
-    newValue: string,
-    namespace?: string,
+    newValue: string | null,
   ) => void;
   adoptedCallback?: (this: LiftBaseClass<State, LiftOptions<State>>) => void;
 }
@@ -59,7 +58,7 @@ export abstract class LiftBaseClass<
   abstract attributeChangedCallback(
     attrName: string,
     oldValue: string | null,
-    newValue: string,
+    newValue: string | null,
   ): void;
   abstract connectedCallback(): void;
   abstract disconnectedCallback(): void;
@@ -89,7 +88,7 @@ export function liftHtml<State, Options extends LiftOptions<State>>(
     override attributeChangedCallback(
       attrName: string,
       oldValue: string | null,
-      newValue: string,
+      newValue: string | null,
     ) {
       opts.attributeChangedCallback?.call(this, attrName, oldValue, newValue);
     }

@@ -66,7 +66,7 @@ Deno.test("attributeChangedCallback is called", () => {
             _element: HTMLElement,
             _name: string,
             _oldValue: string | null,
-            _newValue: string,
+            _newValue: string | null,
         ) => {},
     );
     const TestElement = liftHtml("test-element", {
