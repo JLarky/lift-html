@@ -125,6 +125,10 @@ export function liftHtml<
   return LiftElement;
 }
 
+/**
+ * Makes attributes reactive. Returns an object where each key is an attribute
+ * based on the `options.observedAttributes` of the component.
+ */
 export function useAttributes<TAttributes extends Attributes>(
   instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
 ) {

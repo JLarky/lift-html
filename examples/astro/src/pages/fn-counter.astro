@@ -1,0 +1,82 @@
+---
+// https://twitter.com/mihar_22/status/1855968951555268900
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <style>
+      body {
+        background-color: #f9f9f9;
+      }
+      article {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: white;
+      }
+    </style>
+    <h1>fn-counter</h1>
+    <article>
+      <fn-counter></fn-counter>
+      <script>
+        import { className, insert } from "solid-js/web";
+        import { createSignal, createEffect } from "solid-js";
+        import { liftHtml } from "../../../../packages/lift-solid/mod.ts";
+
+        liftHtml("fn-counter", {
+          init() {
+            const button = document.createElement("button");
+            const [count, setCount] = createSignal(0);
+            const shadowRoot = this.attachShadow({ mode: "open" });
+            shadowRoot.appendChild(button);
+
+            function onClick() {
+              setCount(count() + 1);
+            }
+            button.onclick = onClick; // different from original
+
+            createEffect(() => {
+              insert(button, `${count()}`);
+              className(button, count() % 2 === 0 ? "even" : "");
+            });
+          },
+        });
+      </script>
+    </article>
+    <article>
+      <fn-counter-html></fn-counter-html>
+      <script>
+        import { render } from "solid-js/web";
+        import html from "solid-js/html";
+        import { createSignal } from "solid-js";
+        import { liftHtml } from "../../../../packages/lift-solid/mod.ts";
+
+        liftHtml("fn-counter-html", {
+          init() {
+            const shadowRoot = this.attachShadow({ mode: "open" });
+
+            // just use solid 🤷
+            render(() => {
+              const [count, setCount] = createSignal(0);
+              function onClick() {
+                setCount(count() + 1);
+              }
+              return html`<button
+                onClick=${onClick}
+                class=${() => (count() % 2 === 0 ? "even" : "")}
+              >
+                ${count}
+              </button>`;
+            }, shadowRoot);
+          },
+        });
+      </script>
+    </article>
+  </body>
+</html>
