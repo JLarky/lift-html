@@ -8,5 +8,5 @@
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
   },
-  "workspace": ["examples/astro", "packages/tiny-lift"]
+  "workspace": ["examples/astro", "packages/tiny-lift", "packages/lift-solid"]
 }

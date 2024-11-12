@@ -138,40 +138,35 @@
     </article>
     <article>
       Solid
-      <solid-counter data-id="1">Counter <button>0</button></solid-counter>
-      <!-- <solid-counter data-id="2">Counter <button>0</button></solid-counter> -->
+      <solid-counter increment="1">Counter <button>0</button></solid-counter>
+      <solid-counter increment="2">Counter <button>0</button></solid-counter>
       <script>
-        import { createSignal, createEffect, onCleanup } from "solid-js";
-        import { liftHtml } from "../../../../packages/lift-solid/mod.ts";
+        import { onCleanup } from "solid-js";
+        import {
+          liftHtml,
+          useAttributes,
+        } from "../../../../packages/lift-solid/mod.ts";
 
         liftHtml("solid-counter", {
-          observedAttributes: ["x"] as const,
+          observedAttributes: ["increment"] as const,
           init() {
+            const attrs = useAttributes(this);
             const abortController = new AbortController();
-            console.log("connete");
             onCleanup(() => {
-              console.log("cleanup");
               abortController.abort();
             });
             const button = this.querySelector("button")!;
             button.addEventListener(
               "click",
               () => {
-                button.textContent = String(Number(button.textContent) + 1);
+                button.textContent = String(
+                  Number(button.textContent) + Number(attrs.increment)
+                );
               },
               { signal: abortController.signal }
             );
           },
         });
-
-        const x = document.createElement("solid-counter");
-        const button = document.createElement("button");
-        x.appendChild(button);
-        document.body.appendChild(x);
-        document.body.appendChild(x);
-        document.body.appendChild(x);
-        document.body.appendChild(x);
-        document.body.appendChild(x);
       </script>
       <button onclick="this.parentElement.remove()">unmount</button>
     </article>

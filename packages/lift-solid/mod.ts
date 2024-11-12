@@ -5,25 +5,17 @@ const HTMLElement_ = typeof HTMLElement !== "undefined"
   ? HTMLElement
   : (class {} as unknown as typeof HTMLElement);
 
+export type Attributes = ReadonlyArray<string> | undefined;
+
 /**
  * Options for `liftHtml` function.
  *
  * This is the main way to configure your component.
  */
-export interface LiftOptions<State> {
-  observedAttributes?: string[] | undefined;
+export interface LiftOptions<TAttributes extends Attributes> {
+  observedAttributes: TAttributes;
   formAssociated?: boolean | undefined;
-  connectedCallback?: (this: LiftBaseClass<State, LiftOptions<State>>) => void;
-  disconnectedCallback?: (
-    this: LiftBaseClass<State, LiftOptions<State>>,
-  ) => void;
-  attributeChangedCallback?: (
-    this: LiftBaseClass<State, LiftOptions<State>>,
-    attrName: string,
-    oldValue: string | null,
-    newValue: string | null,
-  ) => void;
-  adoptedCallback?: (this: LiftBaseClass<State, LiftOptions<State>>) => void;
+  init(this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>): void;
 }
 
 /**
@@ -33,12 +25,10 @@ export interface LiftOptions<State> {
  * type-safety when using `liftHtml` function.
  */
 export interface LiftBaseConstructor<
-  State,
-  Options extends LiftOptions<State>,
+  TAttributes extends Attributes,
+  Options extends LiftOptions<TAttributes>,
 > {
-  state: State;
-
-  new (): LiftBaseClass<State, Options>;
+  new (): LiftBaseClass<TAttributes, Options>;
 }
 
 /**
@@ -48,13 +38,19 @@ export interface LiftBaseConstructor<
  * inside `liftHtml` function.
  */
 export abstract class LiftBaseClass<
-  State,
-  T extends LiftOptions<State>,
+  TAttributes extends Attributes,
+  T extends LiftOptions<TAttributes>,
 > extends HTMLElement_ {
-  abstract state: State;
+  /** internal property to override attributeChangedCallback */
+  abstract acb:
+    | ((
+      attrName: string,
+      newValue: string | null,
+    ) => void)
+    | undefined;
   abstract readonly options: T;
   static readonly formAssociated: boolean | undefined;
-  static readonly observedAttributes: undefined | string[];
+  static readonly observedAttributes: Attributes;
   abstract attributeChangedCallback(
     attrName: string,
     oldValue: string | null,
@@ -75,23 +71,29 @@ export abstract class LiftBaseClass<
  * liftHtml("my-element", {
  *   observedAttributes: ["name"],
  */
-export function liftHtml<State, Options extends LiftOptions<State>>(
+export function liftHtml<
+  TAttributes extends Attributes,
+  Options extends LiftOptions<TAttributes>,
+>(
   tagName: string,
-  opts: {
-    observedAttributes?: string[];
-    formAssociated?: boolean;
-    init(this: LiftBaseClass<State, LiftOptions<State>>): State;
-  },
-): LiftBaseConstructor<State, Options> {
-  class LiftElement extends LiftBaseClass<State, Options> {
+  opts: Partial<LiftOptions<TAttributes>>,
+): LiftBaseConstructor<TAttributes, Options> {
+  class LiftElement extends LiftBaseClass<TAttributes, Options> {
+    public acb:
+      | ((
+        attrName: string,
+        newValue: string | null,
+      ) => void)
+      | undefined = undefined;
+    override options = opts as Options;
     static override observedAttributes = opts.observedAttributes;
     static override formAssociated = opts.formAssociated;
     override attributeChangedCallback(
       attrName: string,
-      oldValue: string | null,
+      _oldValue: string | null,
       newValue: string | null,
     ) {
-      opts.attributeChangedCallback?.call(this, attrName, oldValue, newValue);
+      this.acb?.(attrName, newValue);
     }
     override connectedCallback() {
       this.cb(true);
@@ -101,8 +103,10 @@ export function liftHtml<State, Options extends LiftOptions<State>>(
     }
     override disconnectedCallback() {
       this.cb();
+      this.acb = undefined;
     }
     cleanup = [] as (() => void)[];
+    /** This callback is called to connect or disconnect the component. */
     cb(connect?: true | undefined) {
       while (this.cleanup.length) {
         this.cleanup.pop()!();
@@ -119,4 +123,21 @@ export function liftHtml<State, Options extends LiftOptions<State>>(
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
+}
+
+export function useAttributes<TAttributes extends Attributes>(
+  instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
+) {
+  const attributes = instance.options.observedAttributes as TAttributes;
+  const props = {} as Record<NonNullable<TAttributes>[number], string | null>;
+  if (attributes) {
+    for (const key of attributes) {
+      const [get, set] = createSignal(instance.getAttribute(key));
+      Object.defineProperty(props, key, { get, set });
+    }
+    instance.acb = (attrName, newValue) => {
+      props[attrName as keyof typeof props] = newValue;
+    };
+  }
+  return props;
 }
