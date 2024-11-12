@@ -136,5 +136,44 @@
       </script>
       <button onclick="this.parentElement.remove()">unmount</button>
     </article>
+    <article>
+      Solid
+      <solid-counter data-id="1">Counter <button>0</button></solid-counter>
+      <!-- <solid-counter data-id="2">Counter <button>0</button></solid-counter> -->
+      <script>
+        import { createSignal, createEffect, onCleanup } from "solid-js";
+        import { liftHtml } from "../../../../packages/lift-solid/mod.ts";
+
+        liftHtml("solid-counter", {
+          observedAttributes: ["x"] as const,
+          init() {
+            const abortController = new AbortController();
+            console.log("connete");
+            onCleanup(() => {
+              console.log("cleanup");
+              abortController.abort();
+            });
+            const button = this.querySelector("button")!;
+            button.addEventListener(
+              "click",
+              () => {
+                button.textContent = String(Number(button.textContent) + 1);
+              },
+              { signal: abortController.signal }
+            );
+          },
+        });
+
+        const x = document.createElement("solid-counter");
+        const button = document.createElement("button");
+        x.appendChild(button);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+      </script>
+      <button onclick="this.parentElement.remove()">unmount</button>
+    </article>
   </body>
 </html>
