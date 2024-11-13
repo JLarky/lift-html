@@ -1,5 +1,19 @@
 ---
+// import { createSignal, createEffect, onCleanup } from "solid-js";
+// import { liftHtml } from "../../../../packages/lift-solid/mod.ts";
 
+// const X = liftHtml("solid-counter", {
+//   observedAttributes: ["x"] as const,
+//   init() {
+//     const [signal, setSignal] = createSignal();
+//     console.log("init", signal, this);
+//     createEffect(() => {
+//       console.log("effect", signal());
+//     });
+//   },
+// });
+
+// new X();
 ---
 
 <html lang="en">
@@ -153,35 +167,58 @@
     </article>
     <article>
       Solid
-      <solid-counter increment="1">Counter <button>0</button></solid-counter>
-      <solid-counter increment="2">Counter <button>0</button></solid-counter>
+      <solid-counter data-id="1">Counter <button>0</button></solid-counter>
+      <solid-counter data-id="2">Counter <button>0</button></solid-counter>
       <script>
-        import { onCleanup } from "solid-js";
+        import { createSignal, createEffect, onCleanup } from "solid-js";
         import {
           liftHtml,
           useAttributes,
         } from "../../../../packages/lift-solid/mod.ts";
 
+        // const observedAttributes = ["x", "data-id"] as const;
         liftHtml("solid-counter", {
-          observedAttributes: ["increment"] as const,
+          observedAttributes: ["x", "data-id"] as const,
           init() {
-            const attrs = useAttributes(this);
+            this.options;
+            this.options.observedAttributes[1] === "data-id";
+            const x = useAttributes(this);
             const abortController = new AbortController();
+            createEffect(() => {
+              console.log("effect", x);
+            });
+            createEffect(() => {
+              console.log("effect x", x.test, x["data-id"]);
+            });
+            console.log("connete", x);
             onCleanup(() => {
+              console.log("cleanup");
               abortController.abort();
             });
             const button = this.querySelector("button")!;
             button.addEventListener(
               "click",
               () => {
-                button.textContent = String(
-                  Number(button.textContent) + Number(attrs.increment)
-                );
+                button.textContent = String(Number(button.textContent) + 1);
               },
               { signal: abortController.signal }
             );
           },
         });
+
+        const x = document.createElement("solid-counter");
+        const button = document.createElement("button");
+        x.appendChild(button);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        document.body.appendChild(x);
+        x.setAttribute("x", "x");
+        x.setAttribute("x", "y");
+        setTimeout(() => {
+          x.setAttribute("x", "z");
+        }, 1000);
       </script>
       <button onclick="this.parentElement.remove()">unmount</button>
     </article>
