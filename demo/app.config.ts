@@ -5,10 +5,4 @@ export default defineConfig({
     experimental: {
         islands: true,
     },
-    // I need this to circumvent the issue with deno workspaces
-    vite: {
-        resolve: {
-            alias: { "@lift-html/solid": "../../../packages/solid/mod.ts" },
-        },
-    },
 });
