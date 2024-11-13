@@ -1,6 +1,14 @@
 {
   "name": "demo",
   "type": "module",
+  "description": "lift-html is a tiny library for building HTML Web Components, components that are meant to enhance existing HTML on the page instead of rendering it on the client or hydrating it. It utilizes SolidJS to make attributes reactive, uses signals for state management and uses hooks to better manipulate the DOM.",
+  "contributors": [
+    {
+      "name": "Yaroslav (JLarky) Lapin",
+      "email": "jlarky@gmail.com",
+      "url": "https://jlarky.now.sh/"
+    }
+  ],
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
