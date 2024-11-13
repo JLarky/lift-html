@@ -1,15 +1,16 @@
-import { createSignal } from "solid-js";
+/* @jsxImportSource solid-js */
 import "./Counter.css";
+import { CounterWC } from "./Counter.WC.tsx";
 
 export default function Counter() {
-  const [count, setCount] = createSignal(0);
   return (
-    <button
-      class="increment"
-      onClick={() => setCount(count() + 1)}
-      type="button"
-    >
-      Clicks: {count()}
-    </button>
+    <>
+      <my-button>
+        <button class="increment" type="button" disabled>
+          Clicks: 0
+        </button>
+      </my-button>
+      <CounterWC />
+    </>
   );
 }

@@ -1,3 +1,4 @@
+/* @jsxImportSource solid-js */
 import { Title } from "@solidjs/meta";
 
 export default function Home() {

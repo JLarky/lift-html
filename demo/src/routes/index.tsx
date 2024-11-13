@@ -1,5 +1,6 @@
+/* @jsxImportSource solid-js */
 import { Title } from "@solidjs/meta";
-import Counter from "~/components/Counter";
+import Counter from "../components/Counter.tsx";
 
 export default function Home() {
   return (

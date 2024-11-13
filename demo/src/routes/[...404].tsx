@@ -1,3 +1,4 @@
+/* @jsxImportSource solid-js */
 import { Title } from "@solidjs/meta";
 import { HttpStatusCode } from "@solidjs/start";
 
