@@ -143,7 +143,7 @@ export function liftHtml<
  */
 export function useAttributes<TAttributes extends Attributes>(
   instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-) {
+): Record<NonNullable<TAttributes>[number], string | null> {
   const attributes = instance.options.observedAttributes as TAttributes;
   const props = {} as Record<NonNullable<TAttributes>[number], string | null>;
   if (attributes) {
@@ -185,22 +185,42 @@ export function useAttributes<TAttributes extends Attributes>(
 // deno-lint-ignore no-empty-interface
 export interface KnownElements {}
 
-declare module "solid-js" {
-  namespace JSX {
-    interface IntrinsicElements extends Solidify<KnownElements> {}
-  }
-}
+/**
+ * Add this to your env.d.ts file to make all lift-html components
+ * available as Solid JSX elements. You only need to do this once
+ * per project.
+ *
+ * @example
+ * ```ts
+ * import type { Solidify, KnownElements } from "@lift-html/solid";
+ *
+ * declare module "solid-js" {
+ *   namespace JSX {
+ *     interface IntrinsicElements extends Solidify<KnownElements> {}
+ *   }
+ * }
+ * ```
+ */
 
-type Solidify<T> = {
+export type Solidify<T> = {
   [K in keyof T]: JSX.HTMLAttributes<HTMLDivElement>;
 };
 
-// redeclare all lift-html components as global html elements
-declare global {
-  interface HTMLElementTagNameMap extends Htmlify<KnownElements> {}
-}
-
-type Htmlify<T> = {
+/**
+ * Converts a type of `KnownElements` to a type that can be used in
+ * `HTMLElementTagNameMap` to make all lift-html components available as
+ * global HTML elements. You only need to do this once per project.
+ *
+ * @example
+ * ```ts
+ * import type { Htmlify, KnownElements } from "@lift-html/solid";
+ *
+ * declare global {
+ *   interface HTMLElementTagNameMap extends Htmlify<KnownElements> {}
+ * }
+ * ```
+ */
+export type Htmlify<T> = {
   [K in keyof T]:
     & HTMLElement
     // deno-lint-ignore no-explicit-any
