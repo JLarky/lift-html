@@ -7,8 +7,8 @@ import { ShowCode } from "../components/utils/ShowCode.tsx";
 export default function Home() {
   return (
     <main>
-      <Title>lift-html: Solid counter example</Title>
-      <h1>Solid counter example</h1>
+      <Title>lift-html: lift counter example</Title>
+      <h1>lift counter example</h1>
       <Counter />
       <ShowCode code={CounterText} />
     </main>

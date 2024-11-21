@@ -1,5 +1,3 @@
-import { createRoot, createSignal, type JSX } from "solid-js";
-
 // to fix crashes in SSR/Node
 const HTMLElement_ = typeof HTMLElement !== "undefined"
   ? HTMLElement
@@ -15,7 +13,10 @@ export type Attributes = ReadonlyArray<string> | undefined;
 export interface LiftOptions<TAttributes extends Attributes> {
   observedAttributes: TAttributes;
   formAssociated?: boolean | undefined;
-  init(this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>): void;
+  init(
+    this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
+    onCleanup: (dispose: () => void) => void,
+  ): void;
 }
 
 /**
@@ -64,7 +65,7 @@ export abstract class LiftBaseClass<
 /**
  * Creates a custom element. The `init` function is called when the element is
  * connected to the DOM, and you can safely use Solid's reactive primitives like
- * `createEffect` and `onCleanup` and `createSignal` inside it.
+//  * `createEffect` and `onCleanup` and `createSignal` inside it.
  *
  * @example
  *```ts
@@ -124,9 +125,8 @@ export function liftHtml<
         this.cleanup.pop()!();
       }
       if (this.isConnected && connect) {
-        createRoot((dispose) => {
-          this.cleanup.push(dispose);
-          this.options.init?.call(this);
+        this.options.init?.call(this, (cb) => {
+          this.cleanup.push(cb);
         });
       }
     }
@@ -135,27 +135,6 @@ export function liftHtml<
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
-}
-
-/**
- * Makes attributes reactive. Returns an object where each key is an attribute
- * based on the `options.observedAttributes` of the component.
- */
-export function useAttributes<TAttributes extends Attributes>(
-  instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-): Record<NonNullable<TAttributes>[number], string | null> {
-  const attributes = instance.options.observedAttributes as TAttributes;
-  const props = {} as Record<NonNullable<TAttributes>[number], string | null>;
-  if (attributes) {
-    for (const key of attributes) {
-      const [get, set] = createSignal(instance.getAttribute(key));
-      Object.defineProperty(props, key, { get, set });
-    }
-    instance.acb = (attrName, newValue) => {
-      props[attrName as keyof typeof props] = newValue;
-    };
-  }
-  return props;
 }
 
 /**
@@ -198,14 +177,14 @@ export interface KnownElements {}
  *
  * declare module "solid-js" {
  *   namespace JSX {
- *     interface IntrinsicElements extends Solidify<KnownElements> {}
+ *     interface IntrinsicElements extends Solidify<JSX.HTMLAttributes<HTMLDivElement>, KnownElements> {}
  *   }
  * }
  * ```
  */
 
-export type Solidify<T> = {
-  [K in keyof T]: JSX.HTMLAttributes<HTMLDivElement>;
+export type Solidify<Base, T> = {
+  [K in keyof T]: Base & ResolveProps<T[K]>;
 };
 
 /**
@@ -225,7 +204,10 @@ export type Solidify<T> = {
  * ```
  */
 export type Reactify<Base, T> = {
-	[P in keyof T]?: Omit<Base, "className"> & { class?: string } & ResolveProps<T[P]>;
+  [P in keyof T]?:
+    & Omit<Base, "className">
+    & { class?: string }
+    & ResolveProps<T[P]>;
 };
 
 /**

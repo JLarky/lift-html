@@ -8,5 +8,5 @@
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
   },
-  "workspace": ["demo", "packages/solid"]
+  "workspace": ["demo", "packages/solid", "packages/lift-html"]
 }

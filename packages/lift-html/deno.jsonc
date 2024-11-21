@@ -1,8 +1,6 @@
 {
-  "name": "@lift-html/solid",
+  "name": "@lift-html/lift-html",
   "version": "0.0.1",
   "exports": "./mod.ts",
-  "imports": {
-    "solid-js": "npm:solid-js@^1.9.3"
-  }
+  "imports": {}
 }

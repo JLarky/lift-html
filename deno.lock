@@ -30,6 +30,7 @@
     "npm:@types/node@*": "22.5.4",
     "npm:create-astro@latest": "3.0.0",
     "npm:create-solid@*": "0.2.8",
+    "npm:signal-polyfill@~0.2.1": "0.2.1",
     "npm:solid-js@*": "1.8.22_seroval@1.1.1",
     "npm:solid-js@^1.9.2": "1.9.3_seroval@1.1.1",
     "npm:solid-js@^1.9.3": "1.9.3_seroval@1.1.1",
@@ -3080,6 +3081,9 @@
     "signal-exit@4.1.0": {
       "integrity": "sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw=="
     },
+    "signal-polyfill@0.2.1": {
+      "integrity": "sha512-HtchWosT4UT1i6yIMmxjg7gqkDT9lXvQtJRGVppi2TDwVjgs8cS+7ATVFqBvgJGThludjxrxJFOvmzzGSAc8OA=="
+    },
     "sisteransi@1.0.5": {
       "integrity": "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="
     },
@@ -3659,6 +3663,7 @@
             "npm:@solidjs/meta@~0.29.4",
             "npm:@solidjs/router@0.15",
             "npm:@solidjs/start@^1.0.10",
+            "npm:signal-polyfill@~0.2.1",
             "npm:solid-js@^1.9.2",
             "npm:vinxi@~0.4.3"
           ]
