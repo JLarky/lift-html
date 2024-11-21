@@ -126,7 +126,7 @@ export function liftHtml<
       if (this.isConnected && connect) {
         createRoot((dispose) => {
           this.cleanup.push(dispose);
-          opts.init?.call(this);
+          this.options.init?.call(this);
         });
       }
     }
@@ -159,9 +159,11 @@ export function useAttributes<TAttributes extends Attributes>(
 }
 
 /**
- * Extending this interface allows you to define custom once and get
- * type definitions for it in Solid JSX as well as regular HTML and
- * sometimes other frameworks like React.
+ * Extending this interface allows you to define custom element once and
+ * get type definitions for it in Solid JSX as well as regular HTML and
+ * sometimes other frameworks like React. There's nothing special
+ * about this interface, feel free to create your own for your project
+ * or library if you need to.
  *
  * @example
  *
@@ -207,6 +209,26 @@ export type Solidify<T> = {
 };
 
 /**
+ * Add this to your env.d.ts file to make all lift-html components
+ * available as React JSX elements. You only need to do this once
+ * per project.
+ *
+ * @example
+ * ```ts
+ * import type { Reactify, KnownElements } from "@lift-html/solid";
+ *
+ * declare global {
+ *   namespace JSX {
+ *     interface IntrinsicElements extends Reactify<React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>, KnownElements> {}
+ *   }
+ * }
+ * ```
+ */
+export type Reactify<Base, T> = {
+	[P in keyof T]?: Omit<Base, "className"> & { class?: string } & ResolveProps<T[P]>;
+};
+
+/**
  * Converts a type of `KnownElements` to a type that can be used in
  * `HTMLElementTagNameMap` to make all lift-html components available as
  * global HTML elements. You only need to do this once per project.
@@ -227,3 +249,5 @@ export type Htmlify<T> = {
     & (T[K] extends (abstract new (...args: any) => any) ? InstanceType<T[K]>
       : T[K]);
 };
+
+type ResolveProps<T> = T extends { props: infer P } ? P : {};
