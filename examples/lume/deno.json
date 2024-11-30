@@ -6,10 +6,5 @@
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
     "build": "deno task lume",
     "serve": "deno task lume -s"
-  },
-  "compilerOptions": {
-    "types": [
-      "lume/types.ts"
-    ]
   }
 }
