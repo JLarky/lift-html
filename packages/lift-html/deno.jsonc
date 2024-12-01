@@ -2,5 +2,10 @@
   "name": "@lift-html/lift-html",
   "version": "0.0.1",
   "exports": "./mod.ts",
-  "imports": {}
+  "imports": {},
+  "lint": {
+    "rules": {
+      "exclude": ["ban-types", "no-empty-interface", "no-explicit-any"]
+    }
+  }
 }

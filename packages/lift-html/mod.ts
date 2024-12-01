@@ -1,8 +1,22 @@
-// to fix crashes in SSR/Node
+/**
+ * We use fallback for HTMLElement on the server side.
+ *
+ * Because we only need to inherit from HTMLElement in the browser.
+ * You are free to override global HTMLElement on the server with your
+ * own implementation if that's something you need.
+ */
 const HTMLElement_ = typeof HTMLElement !== "undefined"
   ? HTMLElement
   : (class {} as unknown as typeof HTMLElement);
 
+/**
+ * Type used for `observedAttributes` property in `LiftOptions`.
+ *
+ * @example
+ * ```ts
+ * observedAttributes: ["name", "age"] as const,
+ * ```
+ */
 export type Attributes = ReadonlyArray<string> | undefined;
 
 /**
@@ -30,6 +44,8 @@ export interface LiftBaseConstructor<
   Options extends LiftOptions<TAttributes>,
 > {
   new (): LiftBaseClass<TAttributes, Options>;
+  formAssociated: boolean | undefined;
+  observedAttributes: TAttributes | undefined;
 }
 
 /**
@@ -42,7 +58,13 @@ export abstract class LiftBaseClass<
   TAttributes extends Attributes,
   T extends LiftOptions<TAttributes>,
 > extends HTMLElement_ {
-  /** internal property to override attributeChangedCallback */
+  /**
+   * **a**ttribute changed **c**all**b**ack. This is obviously there to
+   * give you access to `attributeChangedCallback` method, but it's
+   * primerally intended to be used by a wrapper like `useAttributes` from
+   * `@lift-html/solid` package. If you still want to use it directly,
+   * note that `oldValue` is not available.
+   */
   abstract acb:
     | ((
       attrName: string,
@@ -163,7 +185,6 @@ export function liftHtml<
    }
 ```
  */
-// deno-lint-ignore no-empty-interface
 export interface KnownElements {}
 
 /**
@@ -227,7 +248,6 @@ export type Reactify<Base, T> = {
 export type Htmlify<T> = {
   [K in keyof T]:
     & HTMLElement
-    // deno-lint-ignore no-explicit-any
     & (T[K] extends (abstract new (...args: any) => any) ? InstanceType<T[K]>
       : T[K]);
 };
