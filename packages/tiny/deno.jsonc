@@ -1,0 +1,12 @@
+{
+  "name": "@lift-html/tiny",
+  "version": "0.0.1",
+  "exports": "./mod.ts",
+  "imports": {},
+  "lint": {
+    "exclude": ["**/*.ts"],
+    "rules": {
+      "exclude": ["ban-types", "no-empty-interface", "no-explicit-any"]
+    }
+  }
+}
