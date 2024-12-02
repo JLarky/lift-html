@@ -87,7 +87,7 @@ export abstract class LiftBaseClass<
 /**
  * Creates a custom element. The `init` function is called when the element is
  * connected to the DOM, and you can safely use Solid's reactive primitives like
-//  * `createEffect` and `onCleanup` and `createSignal` inside it.
+ * `createEffect` and `onCleanup` and `createSignal` inside it.
  *
  * @example
  *```ts
