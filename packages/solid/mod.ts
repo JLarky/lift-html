@@ -24,19 +24,19 @@ import {
  *
  * @example
  *```ts
-   // rendered with <hello-el name="world"></hello-el>
-   import { liftSolid, useAttributes } from "@lift-html/solid";
-   import { createEffect } from "solid-js";
-
-   liftSolid("hello-el", {
-     observedAttributes: ["name"],
-     init() {
-       const props = useAttributes(this);
-       createEffect(() => {
-         this.innerText = "Hello, " + props.name;
-       });
-     },
-   });
+ * // rendered with <hello-el name="world"></hello-el>
+ * import { liftSolid, useAttributes } from "@lift-html/solid";
+ * import { createEffect } from "solid-js";
+ *
+ * liftSolid("hello-el", {
+ *   observedAttributes: ["name"],
+ *   init() {
+ *     const props = useAttributes(this);
+ *     createEffect(() => {
+ *       this.innerText = "Hello, " + props.name;
+ *     });
+ *   },
+ * });
 ```
  */
 export function liftSolid<
