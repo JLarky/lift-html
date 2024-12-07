@@ -77,12 +77,14 @@
     "npm:@sveltejs/vite-plugin-svelte@5": "5.0.1_svelte@5.7.1__acorn@8.14.0_vite@6.0.3",
     "npm:create-astro@latest": "3.0.0",
     "npm:create-solid@*": "0.2.8",
+    "npm:estree-walker@3.0.3": "3.0.3",
     "npm:expect-type@*": "1.1.0",
     "npm:markdown-it-attrs@4.2.0": "4.2.0_markdown-it@14.1.0",
     "npm:markdown-it-deflist@3.0.0": "3.0.0",
     "npm:markdown-it@14.1.0": "14.1.0",
     "npm:meriyah@6.0.3": "6.0.3",
     "npm:react-table@*": "7.8.0_react@18.3.1",
+    "npm:solid-js@*": "1.9.3_seroval@1.1.1",
     "npm:solid-js@^1.9.3": "1.9.3_seroval@1.1.1",
     "npm:svelte-check@4": "4.1.1_svelte@5.7.1__acorn@8.14.0_typescript@5.7.2",
     "npm:svelte@5": "5.7.1_acorn@8.14.0",
@@ -867,6 +869,12 @@
       "integrity": "sha512-ZlQmCCK+n7SGoqo7DnfKaP1sJZa49P01/dXzmjCASSo04p72w8EksT2NMK8CEX8DhKsfJXANioIw8VyHNsBfvQ==",
       "dependencies": [
         "@jridgewell/sourcemap-codec",
+        "@types/estree"
+      ]
+    },
+    "estree-walker@3.0.3": {
+      "integrity": "sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==",
+      "dependencies": [
         "@types/estree"
       ]
     },

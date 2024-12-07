@@ -8,7 +8,7 @@ export type {
   Reactify,
   Solidify,
 } from "@lift-html/lift-html";
-import { createRoot, createSignal } from "solid-js";
+import { createRoot, createSignal } from "npm:solid-js";
 import {
   type Attributes,
   type LiftBaseClass,
@@ -50,7 +50,7 @@ export function liftSolid<
     ...opts,
     init(onCleanup) {
       createRoot((dispose) => {
-        this.options.init?.call(this, onCleanup);
+        opts.init?.call(this, onCleanup);
         onCleanup(dispose);
       });
     },
