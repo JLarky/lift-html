@@ -10,6 +10,7 @@
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@deno/cache-dir@~0.10.3": "0.10.3",
     "jsr:@deno/dnt@*": "0.41.3",
+    "jsr:@eta-dev/eta@*": "3.5.0",
     "jsr:@hono/hono@4.6.11": "4.6.11",
     "jsr:@std/assert@*": "1.0.7",
     "jsr:@std/assert@0.221": "0.221.0",
@@ -75,6 +76,7 @@
     "npm:@sveltejs/adapter-auto@3": "3.3.1_@sveltejs+kit@2.9.0__@sveltejs+vite-plugin-svelte@5.0.1___svelte@5.7.1____acorn@8.14.0___vite@6.0.3__svelte@5.7.1___acorn@8.14.0__vite@6.0.3_@sveltejs+vite-plugin-svelte@5.0.1__svelte@5.7.1___acorn@8.14.0__vite@6.0.3_svelte@5.7.1__acorn@8.14.0_vite@6.0.3",
     "npm:@sveltejs/kit@^2.9.0": "2.9.0_@sveltejs+vite-plugin-svelte@5.0.1__svelte@5.7.1___acorn@8.14.0__vite@6.0.3_svelte@5.7.1__acorn@8.14.0_vite@6.0.3",
     "npm:@sveltejs/vite-plugin-svelte@5": "5.0.1_svelte@5.7.1__acorn@8.14.0_vite@6.0.3",
+    "npm:@types/node@*": "22.5.4",
     "npm:create-astro@latest": "3.0.0",
     "npm:create-solid@*": "0.2.8",
     "npm:estree-walker@3.0.3": "3.0.3",
@@ -158,6 +160,9 @@
         "jsr:@std/path@1",
         "jsr:@ts-morph/bootstrap"
       ]
+    },
+    "@eta-dev/eta@3.5.0": {
+      "integrity": "6b70827efc14c7cbf08498ac7a922ecab003641caf3852a6cb5b1b12ee58fb37"
     },
     "@hono/hono@4.6.11": {
       "integrity": "07399d911f09e94b7dc1e0e0a0577d35fe66578af20163d513958364c4e9e702"
@@ -593,6 +598,12 @@
     },
     "@types/estree@1.0.6": {
       "integrity": "sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw=="
+    },
+    "@types/node@22.5.4": {
+      "integrity": "sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==",
+      "dependencies": [
+        "undici-types"
+      ]
     },
     "@ungap/promise-all-settled@1.1.2": {
       "integrity": "sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q=="
@@ -1547,6 +1558,9 @@
     },
     "uc.micro@2.1.0": {
       "integrity": "sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A=="
+    },
+    "undici-types@6.19.8": {
+      "integrity": "sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw=="
     },
     "vite@6.0.3": {
       "integrity": "sha512-Cmuo5P0ENTN6HxLSo6IHsjCLn/81Vgrp81oaiFFMRa8gGDj5xEjIcEpf2ZymZtZR8oU0P2JX5WuUp/rlXcHkAw==",
