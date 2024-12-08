@@ -2,7 +2,7 @@
 import { build, emptyDir } from "jsr:@deno/dnt";
 import $ from "jsr:@david/dax";
 
-$.cd($.path(new URL("../packages/core/", import.meta.url)));
+$.cd($.path(new URL("../packages/solid/", import.meta.url)));
 
 const { version } = await $`cat deno.jsonc`.json();
 
@@ -36,6 +36,7 @@ await build({
       url: "https://github.com/JLarky/lift-html/issues",
     },
     dependencies: {
+      "@lift-html/core": "*",
       "solid-js": "*",
     },
   },
