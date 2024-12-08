@@ -85,6 +85,7 @@
     "npm:meriyah@6.0.3": "6.0.3",
     "npm:react-table@*": "7.8.0_react@18.3.1",
     "npm:solid-js@*": "1.9.3_seroval@1.1.1",
+    "npm:solid-js@^1.9.0": "1.9.3_seroval@1.1.1",
     "npm:solid-js@^1.9.3": "1.9.3_seroval@1.1.1",
     "npm:svelte-check@4": "4.1.1_svelte@5.7.1__acorn@8.14.0_typescript@5.7.2",
     "npm:svelte@5": "5.7.1_acorn@8.14.0",

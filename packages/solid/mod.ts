@@ -8,7 +8,7 @@ export type {
   Reactify,
   Solidify,
 } from "@lift-html/core";
-import { createRoot, createSignal } from "solid-js";
+import { createRoot, createSignal } from "npm:solid-js@^1.9";
 import {
   type Attributes,
   type LiftBaseClass,
