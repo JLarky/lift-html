@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "exports": "./mod.ts",
   "imports": {
+    "lift-html": "@lift-html/lift-html",
     "solid-js": "npm:solid-js@^1.9.3"
   }
 }

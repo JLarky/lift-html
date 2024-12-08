@@ -1,24 +1,23 @@
+node_modules
 
-dist
-.solid
+# Output
 .output
 .vercel
 .netlify
-netlify
+.wrangler
+/.svelte-kit
+/build
 
-# dependencies
-/node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-*.launch
-.settings/
-
-# Temp
-gitignore
-
-# System Files
+# OS
 .DS_Store
 Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*

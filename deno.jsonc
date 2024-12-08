@@ -1,6 +1,7 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
+    "test": "deno test -A",
     "demo:start": "cd demo && vinxi dev",
     "demo:build": "cd demo && vinxi build",
     "demo:preview": "cd demo && vinxi preview"
@@ -8,5 +9,11 @@
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
   },
-  "workspace": ["demo", "packages/solid"]
+  "workspace": [
+    "demo",
+    "packages/solid",
+    "packages/core",
+    "packages/tiny",
+    "examples/lume"
+  ]
 }

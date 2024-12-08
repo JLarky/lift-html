@@ -1,0 +1,80 @@
+name: Publish
+on:
+  push:
+    branches:
+      - main
+      - next
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.1
+
+      - name: format
+        run: deno fmt --check
+
+      - name: lint
+        run: deno lint
+
+      - name: test
+        run: deno test -A
+
+  publish_npm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          registry-url: "https://registry.npmjs.org"
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.1
+
+      - name: Publish package dry-run
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: scripts/publish_npm.ts --dry-run
+
+      - name: Publish package
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: scripts/publish_npm.ts
+
+  publish_jsr:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.1
+
+      - name: Publish package dry-run
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: deno publish --dry-run
+
+      - name: Publish package
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        run: deno publish

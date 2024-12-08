@@ -1,4 +1,6 @@
 node_modules
+# dnt
+npm
 
 # Local Netlify folder
 .netlify
