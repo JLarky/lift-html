@@ -15,5 +15,6 @@
     "packages/core",
     "packages/tiny",
     "examples/lume"
-  ]
+  ],
+  "exclude": ["**/npm"]
 }

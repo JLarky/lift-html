@@ -19,9 +19,11 @@ Deno.test({
     ]);
 
     await t.step({
-      name: "check reaction to attribute change",
+      name: "core: check reaction to attribute change",
       async fn() {
-        const page = await browser.newPage("http://localhost:" + PORT);
+        const page = await browser.newPage(
+          "http://localhost:" + PORT + "/core",
+        );
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
