@@ -24,3 +24,13 @@ if (dryRun) {
 } else {
   await $`cd ../packages/tiny/npm/; npm publish --access=public`;
 }
+
+// solid
+
+await $`./build_solid.ts`;
+
+if (dryRun) {
+  await $`cd ../packages/solid/npm/; npm publish --dry-run`;
+} else {
+  await $`cd ../packages/solid/npm/; npm publish --access=public`;
+}
