@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - hotfix-npm
     tags:
       - "**"
   pull_request:
@@ -51,6 +52,8 @@ jobs:
 
       - name: Publish package dry-run
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: scripts/publish_npm.ts --dry-run
 
       - name: Publish package

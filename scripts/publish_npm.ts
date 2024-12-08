@@ -9,7 +9,7 @@ const dryRun = Deno.args.includes("--dry-run");
 
 await $`./build_core.ts`;
 
-if (dryRun) {
+if (dryRun && false) {
   await $`cd ../packages/core/npm/; npm publish --dry-run`;
 } else {
   await $`cd ../packages/core/npm/; npm publish --access=public`;
