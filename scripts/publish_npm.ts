@@ -5,32 +5,39 @@ $.cd($.path(new URL(".", import.meta.url)));
 
 const dryRun = Deno.args.includes("--dry-run");
 
+async function npmPublish(name: string, dryRun: boolean) {
+  if (dryRun) {
+    await $`cd ../packages/${name}/npm/; npm publish --dry-run`;
+  } else if (await isVersionDifferent(name)) {
+    await $`cd ../packages/${name}/npm/; npm publish --access=public`;
+  } else {
+    console.log(`npm version is the same for @lift-html/${name}`);
+  }
+}
+
+async function isVersionDifferent(name: string) {
+  const { version } = await $`cat ../packages/${name}/deno.jsonc`.json() as {
+    version: string;
+  };
+  const npmVersion = await $`npm info @lift-html/${name} version --json`
+    .json().catch(() => "not_found") as string;
+  return version !== npmVersion;
+}
+
 // core
 
 await $`./build_core.ts`;
 
-if (dryRun) {
-  await $`cd ../packages/core/npm/; npm publish --dry-run`;
-} else {
-  await $`cd ../packages/core/npm/; npm publish --access=public`;
-}
+await npmPublish("core", dryRun);
 
 // tiny
 
 await $`./build_tiny.ts`;
 
-if (dryRun) {
-  await $`cd ../packages/tiny/npm/; npm publish --dry-run`;
-} else {
-  await $`cd ../packages/tiny/npm/; npm publish --access=public`;
-}
+await npmPublish("tiny", dryRun);
 
 // solid
 
 await $`./build_solid.ts`;
 
-if (dryRun) {
-  await $`cd ../packages/solid/npm/; npm publish --dry-run`;
-} else {
-  await $`cd ../packages/solid/npm/; npm publish --access=public`;
-}
+await npmPublish("solid", dryRun);
