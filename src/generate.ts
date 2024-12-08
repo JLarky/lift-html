@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-read=. --allow-write=../packages,./packages
+#!/usr/bin/env -S deno run --allow-read=. --allow-write=../packages,./packages --watch
 
 import $ from "jsr:@david/dax";
 import { Eta } from "jsr:@eta-dev/eta";
@@ -13,3 +13,9 @@ for (const name of ["core", "tiny"]) {
   Deno.writeTextFileSync(`../packages/${name}/mod.ts`, res);
   console.log(`File %c${name}/mod.ts`, "color: green", "written");
 }
+
+// watch for changes in templates
+// ha ha, long story short is that deno --watch will watch when TS files change, but to trigger reload for changes in assets you want deno to know about them, but because we can't actually import those files (they are plaintext) we just create a function to import them but never run it
+(() => import("./core.eta"));
+(() => import("./tiny.eta"));
+(() => import("./inc/types.eta"));

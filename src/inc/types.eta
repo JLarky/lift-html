@@ -1,0 +1,94 @@
+/**
+ * Extending this interface allows you to define custom element once and
+ * get type definitions for it in Solid JSX as well as regular HTML and
+ * sometimes other frameworks like React. There's nothing special
+ * about this interface, feel free to create your own for your project
+ * or library if you need to.
+ *
+ * @example
+ *
+ *```ts
+   // rendered with <hello-el name="world"></hello-el>
+   import { <%~it.fn%> } from "@lift-html/<%~it.name%>";
+
+   const HelloEl = <%~it.fn%>("hello-el", {
+     <%~it.name==="tiny" ? "connectedCallback" : "init"%>() {
+       this.innerText = "Hello, " + this.getAttribute("name");
+     },
+   });
+
+   declare module "@lift-html/<%~it.name%>" {
+     interface KnownElements {
+       "hello-el": typeof HelloEl;
+     }
+   }
+```
+ */
+export interface KnownElements {}
+
+/**
+ * Add this to your env.d.ts file to make all lift-html components
+ * available as Solid JSX elements. You only need to do this once
+ * per project.
+ *
+ * @example
+ * ```ts
+ * import type { Solidify, KnownElements } from "@lift-html/<%~it.name%>";
+ *
+ * declare module "solid-js" {
+ *   namespace JSX {
+ *     interface IntrinsicElements extends Solidify<JSX.HTMLAttributes<HTMLDivElement>, KnownElements> {}
+ *   }
+ * }
+ * ```
+ */
+
+export type Solidify<Base, T> = {
+  [K in keyof T]: Base & ResolveProps<T[K]>;
+};
+
+/**
+ * Add this to your env.d.ts file to make all lift-html components
+ * available as React JSX elements. You only need to do this once
+ * per project.
+ *
+ * @example
+ * ```ts
+ * import type { Reactify, KnownElements } from "@lift-html/<%~it.name%>";
+ *
+ * declare global {
+ *   namespace JSX {
+ *     interface IntrinsicElements extends Reactify<React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>, KnownElements> {}
+ *   }
+ * }
+ * ```
+ */
+export type Reactify<Base, T> = {
+  [P in keyof T]?:
+    & Omit<Base, "className">
+    & { class?: string }
+    & ResolveProps<T[P]>;
+};
+
+/**
+ * Converts a type of `KnownElements` to a type that can be used in
+ * `HTMLElementTagNameMap` to make all lift-html components available as
+ * global HTML elements. You only need to do this once per project.
+ *
+ * @example
+ * ```ts
+ * import type { Htmlify, KnownElements } from "@lift-html/<%~it.name%>";
+ *
+ * declare global {
+ *   interface HTMLElementTagNameMap extends Htmlify<KnownElements> {}
+ * }
+ * ```
+ */
+export type Htmlify<T> = {
+  [K in keyof T]:
+    & HTMLElement
+    & (T[K] extends (abstract new (...args: any) => any) ? InstanceType<T[K]>
+      : T[K]);
+};
+
+type ResolveProps<T> = T extends { props: infer P } ? P : {};

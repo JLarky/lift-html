@@ -170,7 +170,7 @@ export function liftHtml<
  *
  *```ts
    // rendered with <hello-el name="world"></hello-el>
-   import { liftHtml } from "@lift-html/solid";
+   import { liftHtml } from "@lift-html/core";
 
    const HelloEl = liftHtml("hello-el", {
      init() {
@@ -178,7 +178,7 @@ export function liftHtml<
      },
    });
 
-   declare module "@lift-html/solid" {
+   declare module "@lift-html/core" {
      interface KnownElements {
        "hello-el": typeof HelloEl;
      }
@@ -194,7 +194,7 @@ export interface KnownElements {}
  *
  * @example
  * ```ts
- * import type { Solidify, KnownElements } from "@lift-html/solid";
+ * import type { Solidify, KnownElements } from "@lift-html/core";
  *
  * declare module "solid-js" {
  *   namespace JSX {
@@ -215,7 +215,7 @@ export type Solidify<Base, T> = {
  *
  * @example
  * ```ts
- * import type { Reactify, KnownElements } from "@lift-html/solid";
+ * import type { Reactify, KnownElements } from "@lift-html/core";
  *
  * declare global {
  *   namespace JSX {
@@ -238,7 +238,7 @@ export type Reactify<Base, T> = {
  *
  * @example
  * ```ts
- * import type { Htmlify, KnownElements } from "@lift-html/solid";
+ * import type { Htmlify, KnownElements } from "@lift-html/core";
  *
  * declare global {
  *   interface HTMLElementTagNameMap extends Htmlify<KnownElements> {}
