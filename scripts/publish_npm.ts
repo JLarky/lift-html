@@ -12,5 +12,5 @@ await $`./build_core.ts`;
 if (dryRun) {
   await $`cd ../packages/core/npm/; npm publish --dry-run`;
 } else {
-  await $`cd ../packages/core/npm/; npm publish`;
+  await $`cd ../packages/core/npm/; npm publish --access=public`;
 }
