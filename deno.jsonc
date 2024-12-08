@@ -12,7 +12,7 @@
   "workspace": [
     "demo",
     "packages/solid",
-    "packages/lift-html",
+    "packages/core",
     "packages/tiny",
     "examples/lume"
   ]

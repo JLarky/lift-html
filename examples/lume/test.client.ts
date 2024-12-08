@@ -1,4 +1,4 @@
-import { liftHtml } from "../../packages/lift-html/mod.ts";
+import { liftHtml } from "../../packages/core/mod.ts";
 
 const LiftCounter = liftHtml("lift-counter", {
   observedAttributes: ["count"] as const,

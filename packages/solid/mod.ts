@@ -7,7 +7,7 @@ export type {
   LiftOptions,
   Reactify,
   Solidify,
-} from "@lift-html/lift-html";
+} from "@lift-html/core";
 import { createRoot, createSignal } from "solid-js";
 import {
   type Attributes,
@@ -15,7 +15,7 @@ import {
   type LiftBaseConstructor,
   liftHtml,
   type LiftOptions,
-} from "@lift-html/lift-html";
+} from "@lift-html/core";
 
 /**
  * Creates a custom element. The `init` function is called when the element is
