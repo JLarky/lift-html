@@ -14,3 +14,13 @@ if (dryRun) {
 } else {
   await $`cd ../packages/core/npm/; npm publish --access=public`;
 }
+
+// tiny
+
+await $`./build_tiny.ts`;
+
+if (dryRun) {
+  await $`cd ../packages/tiny/npm/; npm publish --dry-run`;
+} else {
+  await $`cd ../packages/tiny/npm/; npm publish --access=public`;
+}
