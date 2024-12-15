@@ -1,3 +1,5 @@
+// PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/solid/mod.ts
+
 export type {
   Attributes,
   Htmlify,
