@@ -33,6 +33,7 @@ export interface LiftOptions<TAttributes extends Attributes> {
     this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
     onCleanup: (dispose: () => void) => void,
   ): void;
+  noHMR?: boolean;
 }
 
 /**
@@ -48,6 +49,7 @@ export interface LiftBaseConstructor<
   new (): LiftBaseClass<TAttributes, Options>;
   formAssociated: boolean | undefined;
   observedAttributes: TAttributes | undefined;
+  hmr: Array<(opts: unknown) => void>;
 }
 
 /**
@@ -68,10 +70,7 @@ export abstract class LiftBaseClass<
    * note that `oldValue` is not available.
    */
   abstract acb:
-    | ((
-      attrName: string,
-      newValue: string | null,
-    ) => void)
+    | ((attrName: string, newValue: string | null) => void)
     | undefined;
   abstract readonly options: T;
   static readonly formAssociated: boolean | undefined;
@@ -116,11 +115,9 @@ export function liftHtml<
   opts: Partial<LiftOptions<TAttributes>>,
 ): LiftBaseConstructor<TAttributes, Options> {
   class LiftElement extends LiftBaseClass<TAttributes, Options> {
+    static hmr = [] as Array<(opts: unknown) => void>;
     public acb:
-      | ((
-        attrName: string,
-        newValue: string | null,
-      ) => void)
+      | ((attrName: string, newValue: string | null) => void)
       | undefined = undefined;
     override options = opts as Options;
     static override observedAttributes = opts.observedAttributes;
@@ -152,10 +149,28 @@ export function liftHtml<
         this.options.init?.call(this, (cb) => {
           this.cleanup.push(cb);
         });
+        LiftElement.hmr.push((opts) => {
+          const that = this as unknown as {
+            options: unknown;
+            cb: (reload: boolean) => void;
+          };
+          that.options = opts;
+          that.cb(true);
+        });
       }
     }
   }
-  if (typeof customElements !== "undefined" && !customElements.get(tagName)) {
+
+  if (typeof customElements !== "undefined") {
+    const existing = customElements.get(tagName) as
+      | undefined
+      | LiftBaseConstructor<TAttributes, Options>;
+    if (existing) {
+      if (!opts.noHMR) {
+        existing.hmr.forEach((cb) => cb(opts));
+      }
+      return existing;
+    }
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
