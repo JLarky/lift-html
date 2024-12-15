@@ -1,3 +1,5 @@
+// PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/core/mod.ts
+
 /**
  * We use fallback for HTMLElement on the server side.
  *

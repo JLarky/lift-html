@@ -1,3 +1,5 @@
+// PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/tiny/mod.ts
+
 /**
  * Options for `tinyLift` function.
  *
