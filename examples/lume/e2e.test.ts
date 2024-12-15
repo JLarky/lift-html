@@ -44,7 +44,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "tiny: check reaction to attribute change",
+      name: "solid: check reaction to attribute change",
       async fn() {
         const page = await browser.newPage(
           "http://localhost:" + PORT + "/solid",
@@ -70,7 +70,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "solid: check reaction to attribute change",
+      name: "tiny: check reaction to attribute change",
       async fn() {
         const page = await browser.newPage(
           "http://localhost:" + PORT + "/tiny",
