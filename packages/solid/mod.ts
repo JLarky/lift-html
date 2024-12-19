@@ -1,5 +1,13 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/solid/mod.ts
 
+import { createRoot, createSignal } from "npm:solid-js@^1.9";
+import {
+  type Attributes,
+  type LiftBaseClass,
+  type LiftBaseConstructor,
+  liftHtml,
+  type LiftOptions,
+} from "@lift-html/core";
 export type {
   Attributes,
   Htmlify,
@@ -9,14 +17,6 @@ export type {
   LiftOptions,
   Reactify,
   Solidify,
-} from "@lift-html/core";
-import { createRoot, createSignal } from "npm:solid-js@^1.9";
-import {
-  type Attributes,
-  type LiftBaseClass,
-  type LiftBaseConstructor,
-  liftHtml,
-  type LiftOptions,
 } from "@lift-html/core";
 
 /**
