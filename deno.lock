@@ -32,6 +32,7 @@
     "jsr:@std/fmt@^1.0.2": "1.0.3",
     "jsr:@std/fmt@^1.0.3": "1.0.3",
     "jsr:@std/front-matter@1.0.5": "1.0.5",
+    "jsr:@std/fs@*": "1.0.6",
     "jsr:@std/fs@0.223": "0.223.0",
     "jsr:@std/fs@1": "1.0.6",
     "jsr:@std/fs@1.0.5": "1.0.5",
@@ -69,6 +70,7 @@
     "jsr:@std/yaml@^1.0.5": "1.0.5",
     "jsr:@ts-morph/bootstrap@0.24": "0.24.0",
     "jsr:@ts-morph/common@0.24": "0.24.0",
+    "jsr:@valibot/valibot@*": "0.42.1",
     "jsr:@zip-js/zip-js@^2.7.52": "2.7.53",
     "npm:@fontsource/fira-mono@5": "5.1.0",
     "npm:@js-temporal/polyfill@0.4.4": "0.4.4",
@@ -357,6 +359,9 @@
         "jsr:@std/fs@~0.229.3",
         "jsr:@std/path@~0.225.2"
       ]
+    },
+    "@valibot/valibot@0.42.1": {
+      "integrity": "ba0f6f7964aaeec0e4b1f793d575061f325ae6254cbb9d7ff01fb65068a0a23b"
     },
     "@zip-js/zip-js@2.7.53": {
       "integrity": "acea5bd8e01feb3fe4c242cfbde7d33dd5e006549a4eb1d15283bc0c778ed672"
