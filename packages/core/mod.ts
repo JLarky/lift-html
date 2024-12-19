@@ -1,3 +1,5 @@
+// PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/core/mod.ts
+
 /**
  * We use fallback for HTMLElement on the server side.
  *
@@ -61,7 +63,7 @@ export abstract class LiftBaseClass<
   /**
    * **a**ttribute changed **c**all**b**ack. This is obviously there to
    * give you access to `attributeChangedCallback` method, but it's
-   * primerally intended to be used by a wrapper like `useAttributes` from
+   * primarily intended to be used by a wrapper like `useAttributes` from
    * `@lift-html/solid` package. If you still want to use it directly,
    * note that `oldValue` is not available.
    */
