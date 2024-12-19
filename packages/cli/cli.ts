@@ -1,5 +1,5 @@
-import * as v from "jsr:@valibot/valibot";
-import { ensureDir } from "jsr:@std/fs/ensure-dir";
+import * as v from "jsr:@valibot/valibot@^0.42.1";
+import { ensureDir } from "jsr:@std/fs@^1.0/ensure-dir";
 
 async function fetchPackage(name: string) {
   const { latest } = await fetchJson(
