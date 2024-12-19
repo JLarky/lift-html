@@ -101,23 +101,24 @@ To achieve that we had to depart a bit from the web components vibe. Namely:
 <ul><li>
 <details>
 <summary>we don't use class syntax</summary>
-Classes make your code overly concerned with lifecycles, so lift-html does a
-similar to jump to one from class components in React to functional components.
-Imagine a scenario of adding some sort of computed property, now with classes you start
+Classes make your code overly concerned with lifecycles. Imagine a scenario of
+adding some sort of computed property, now with classes you start
 by adding a property on the class to store a value, adding a getter on the class
 to access it, adding a callback method to react and update that value and a call
 in constructor to hook that callback to the lifecycle. All of those are going to
-be spread over your whole class, mixing together in buckets (class properties,
+be spread over your whole class, mixing with other features together in buckets (class properties,
 class methods, getters, setters, public APIs, callbacks, constructor initializers,
 connectedCallback initializers, destructors) and your only option to share the
 logic is to use Mixins, which have their issues with performance and type safety.
-With function syntax I can have `const thing = myThing(this)` and for the most
-part not worry about how `myThing` is implemented. This does come with a bit of
-theoretically loss of performance and flexibility compared to writing everything
+With function syntax I can have <code>const thing = myThing(this)</code> and for the most
+part not worry about how <code>myThing</code> is implemented. This is pretty
+much <a href="https://legacy.reactjs.org/docs/hooks-intro.html#motivation">the same argument</a>
+as was used to introduce hooks in React. This does come with a bit of
+theoretical loss of performance and flexibility compared to writing everything
 by hand, but that option is always there if you need it. On a side node, if you
 like classes and typescript be sure to check out
-[this approach](https://github.com/trusktr/lowclass/blob/c182595253ee79f45e4770c97d1c55702e351866/src/Constructor.ts)
-from Joe Pea (author of @lume/element)
+<a href="https://github.com/trusktr/lowclass/blob/c182595253ee79f45e4770c97d1c55702e351866/src/Constructor.ts">this approach</a>
+by Joe Pea (author of @lume/element)
 </details>
 </li>
 <li><details>
