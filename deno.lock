@@ -32,6 +32,7 @@
     "jsr:@std/fmt@^1.0.2": "1.0.3",
     "jsr:@std/fmt@^1.0.3": "1.0.3",
     "jsr:@std/front-matter@1.0.5": "1.0.5",
+    "jsr:@std/fs@*": "1.0.6",
     "jsr:@std/fs@0.223": "0.223.0",
     "jsr:@std/fs@1": "1.0.6",
     "jsr:@std/fs@1.0.5": "1.0.5",
@@ -69,6 +70,7 @@
     "jsr:@std/yaml@^1.0.5": "1.0.5",
     "jsr:@ts-morph/bootstrap@0.24": "0.24.0",
     "jsr:@ts-morph/common@0.24": "0.24.0",
+    "jsr:@valibot/valibot@*": "0.42.1",
     "jsr:@zip-js/zip-js@^2.7.52": "2.7.53",
     "npm:@fontsource/fira-mono@5": "5.1.0",
     "npm:@js-temporal/polyfill@0.4.4": "0.4.4",
@@ -357,6 +359,9 @@
         "jsr:@std/fs@~0.229.3",
         "jsr:@std/path@~0.225.2"
       ]
+    },
+    "@valibot/valibot@0.42.1": {
+      "integrity": "ba0f6f7964aaeec0e4b1f793d575061f325ae6254cbb9d7ff01fb65068a0a23b"
     },
     "@zip-js/zip-js@2.7.53": {
       "integrity": "acea5bd8e01feb3fe4c242cfbde7d33dd5e006549a4eb1d15283bc0c778ed672"
@@ -1642,6 +1647,9 @@
       "integrity": "sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w=="
     }
   },
+  "redirects": {
+    "https://esm.sh/solid-js": "https://esm.sh/solid-js@1.9.3"
+  },
   "remote": {
     "https://cdn.jsdelivr.net/gh/lumeland/cms@v0.7.3/core/cms.ts": "0fcf7ab9ddcc90637c915052e6ab5375d11d49bf827c59c3b6c1fcc3aa408c1a",
     "https://cdn.jsdelivr.net/gh/lumeland/cms@v0.7.3/core/collection.ts": "0c95ac5d5e52e110453b40fb494ac7ae3179f6f775e9a5a6e708e9e86027c435",
@@ -1909,7 +1917,9 @@
     "https://deno.land/x/vento@v1.12.11/src/js.ts": "c4ac5e2b2cd2995523d3167c5708c424686fd30d2d3951ff965a76dbdfb74e37",
     "https://deno.land/x/vento@v1.12.11/src/loader.ts": "c05add67f582e937ee611852075ce2cc038b5e80e3e609eef96fa5ed74a5086c",
     "https://deno.land/x/vento@v1.12.11/src/tokenizer.ts": "127ddad02054f63b8b646e4dfbf555e1e34e9b8dcbd58d86b3729a4de95abd27",
-    "https://deno.land/x/vento@v1.12.11/src/transformer.ts": "587a0b107a2bd1437a3093c4c44c07e4fdf3abfaaf8e845767b69bd34a039154"
+    "https://deno.land/x/vento@v1.12.11/src/transformer.ts": "587a0b107a2bd1437a3093c4c44c07e4fdf3abfaaf8e845767b69bd34a039154",
+    "https://esm.sh/solid-js@1.9.3": "82832b8ecd0103090d34501b9c1a9c6a75eb89da45156d686da90b4b96e09393",
+    "https://esm.sh/stable/solid-js@1.9.3/denonext/solid-js.mjs": "714cd3429e3c8d41bd87630df83ab9517534487a88f63da401e9a1eef9ca9a00"
   },
   "workspace": {
     "members": {
