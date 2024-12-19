@@ -19,7 +19,7 @@ export interface TinyLiftBaseConstructor {
 /**
  * Creates a custom element. The `connectedCallback` function is called when
  * the element is connected to the DOM. Generally speaking, this is a wrong
- * thing to do, because you are not nadling cases like changing attributes
+ * thing to do, because you are not handling cases like changing attributes
  * or removing the element from the DOM. 9 times out of 10 you should use
  * `liftHtml` instead. But this is a great fit for components used in static
  * pages generated with frameworks like Eleventy, Hugo, or Astro.
