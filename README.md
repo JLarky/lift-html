@@ -28,7 +28,7 @@ Code for `liftHtml` is public domain see more in the Vendoring section.
   import { liftSolid } from "https://esm.sh/@lift-html/solid";
   import { createEffect, createSignal } from "https://esm.sh/solid-js";
   // define a custom element
-  export const MyButton = liftSolid("my-button", {
+  const MyButton = liftSolid("my-button", {
     init() {
       const button = this.querySelector("button");
       if (!button) throw new Error("<my-button> must contain a <button>");
@@ -44,9 +44,9 @@ Code for `liftHtml` is public domain see more in the Vendoring section.
 ```
 
 via [codepen](https://codepen.io/jlarky/pen/vYoPzNE?editors=1000), total code size
-[3.41kb gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B%7BliftSolid%7D%5D%2C%5B%7BcreateSignal%2CcreateEffect%7D%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
+[3.36kb gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B%7BliftSolid%7D%5D%2C%5B%7BcreateSignal%2CcreateEffect%7D%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
 and with no-build
-[8.94kb](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B*%5D%2C%5B*%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
+[8.93kb](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B*%5D%2C%5B*%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
 
 ```html
 <!-- @lift-html/core -->
@@ -58,7 +58,7 @@ and with no-build
 <script type="module">
   import { liftHtml } from "https://esm.sh/@lift-html/core";
   // define a custom element
-  export const MyButton = liftHtml("my-button", {
+  const MyButton = liftHtml("my-button", {
     init() {
       const button = this.querySelector("button");
       if (!button) throw new Error("<my-button> must contain a <button>");
@@ -79,9 +79,9 @@ and with no-build
 ```
 
 via [codepen](https://codepen.io/jlarky/pen/ogvZMLR?editors=1000), total code size
-[493 bytes gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fcore&treeshake=%5B{liftHtml}%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUJAB4AOeATjunvLqALICeAQhhz54oALygSsaDgASOAiQAUAIgK8AtACMhIlQBpQAb2qhQCWDiUBKY6bPtObHcI7jQOABawsAOgCOGJDMvADKpJBo%2BMyqLnrWANz2ZtKgSgCEcRy2Xsx4AO6giIUAosx5MSoAPOrauhwAfKAE2GxoHDjICCigVVnwDSqJyaD9vuA%2ByFpk4O7QyCRYkEkOkpBteBhU7gAMKw7MlFAxw6tjHGhSaADW7jbiTSarZu1bOADU7-urh-DHNt9QABfJIjaBbKKwNy-f62J7PMY4eg4ADCHUobAkAAMUVdrlgAFygAAkRleVCBWMBQPsQP01CBiSAA)
+[485 bytes gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fcore&treeshake=%5B{liftHtml}%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUJAB4AOeATjunvLqALICeAQhhz54oALygSsaDgASOAiQAUAIgK8AtACMhIlQBpQAb2qhQCWDiUBKY6bPtObHcI7jQOABawsAOgCOGJDMvADKpJBo%2BMyqLnrWANz2ZtKgSgCEcRy2Xsx4AO6giIUAosx5MSoAPOrauhwAfKAE2GxoHDjICCigVVnwDSqJyaD9vuA%2ByFpk4O7QyCRYkEkOkpBteBhU7gAMKw7MlFAxw6tjHGhSaADW7jbiTSarZu1bOADU7-urh-DHNt9QABfJIjaBbKKwNy-f62J7PMY4eg4ADCHUobAkAAMUVdrlgAFygAAkRleVCBWMBQPsQP01CBiSAA)
 and with no-build
-[505 bytes gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fcore&treeshake=%5B*%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUJAB4AOeATjunvLqALICeAQhhz54oALygSsaDgASOAiQAUAIgK8AtACMhIlQBpQAb2qhQCWDiUBKY6bPtObHcI7jQOABawsAOgCOGJDMvADKpJBo%2BMyqLnrWANz2ZtKgSgCEcRy2Xsx4AO6giIUAosx5MSoAPOrauhwAfKAE2GxoHDjICCigVVnwDSqJyaD9vuA%2ByFpk4O7QyCRYkEkOkpBteBhU7gAMKw7MlFAxw6tjHGhSaADW7jbiTSarZu1bOADU7-urh-DHNt9QABfJIjaBbKKwNy-f62J7PMY4eg4ADCHUobAkAAMUVdrlgAFygAAkRleVCBWMBQPsQP01CBiSAA)
+[498 bytes gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fcore&treeshake=%5B*%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUJAB4AOeATjunvLqALICeAQhhz54oALygSsaDgASOAiQAUAIgK8AtACMhIlQBpQAb2qhQCWDiUBKY6bPtObHcI7jQOABawsAOgCOGJDMvADKpJBo%2BMyqLnrWANz2ZtKgSgCEcRy2Xsx4AO6giIUAosx5MSoAPOrauhwAfKAE2GxoHDjICCigVVnwDSqJyaD9vuA%2ByFpk4O7QyCRYkEkOkpBteBhU7gAMKw7MlFAxw6tjHGhSaADW7jbiTSarZu1bOADU7-urh-DHNt9QABfJIjaBbKKwNy-f62J7PMY4eg4ADCHUobAkAAMUVdrlgAFygAAkRleVCBWMBQPsQP01CBiSAA)
 
 ## Why you need web components framework
 
@@ -271,5 +271,5 @@ We are planning to have a command like `npx @lift-html/cli` that will save
 `lift-html` code as a single file in your project, which is perfect for a
 zero-dependency or no-build projects. Code for `liftHtml` is public domain, so
 once you have it in your project you can do whatever you want with it. Which
-could give you an opportunity to remove features you don't use or add something
-that is missing.
+could give you an opportunity to remove features you don't use (like HMR) or
+add something that is missing.
