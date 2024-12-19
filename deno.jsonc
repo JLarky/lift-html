@@ -3,6 +3,9 @@
   "tasks": {
     "generate": "./src/generate.ts",
     "test": "deno test -A",
+    "bump:cli": "deno run -A jsr:@kellnerd/bump --file packages/cli/deno.jsonc --tag @lift-html/cli@ --commit \"release @lift-html/cli@\"",
+    "bump:core": "deno run -A jsr:@kellnerd/bump --file packages/core/deno.jsonc --tag @lift-html/core@ --commit \"release @lift-html/core@\"",
+    "bump:solid": "deno run -A jsr:@kellnerd/bump --file packages/solid/deno.jsonc --tag @lift-html/solid@ --commit \"release @lift-html/solid@\"",
     "demo:start": "cd demo && vinxi dev",
     "demo:build": "cd demo && vinxi build",
     "demo:preview": "cd demo && vinxi preview"
