@@ -1,6 +1,6 @@
 {
   "name": "@lift-html/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "exports": "./cli.ts",
   "imports": {},
   "lint": {}

@@ -71,6 +71,7 @@
     "jsr:@ts-morph/bootstrap@0.24": "0.24.0",
     "jsr:@ts-morph/common@0.24": "0.24.0",
     "jsr:@valibot/valibot@*": "0.42.1",
+    "jsr:@valibot/valibot@~0.42.1": "0.42.1",
     "jsr:@zip-js/zip-js@^2.7.52": "2.7.53",
     "npm:@fontsource/fira-mono@5": "5.1.0",
     "npm:@js-temporal/polyfill@0.4.4": "0.4.4",
