@@ -7,10 +7,10 @@ async function fetchPackage(name: string) {
     `https://jsr.io/${name}/meta.json`,
   );
 
-  return `// ${name}@${latest}\n\n${await (await fetch(
-    `https://jsr.io/${name}/${latest}/mod.ts`,
-  ))
-    .text()}`;
+  const mod = Deno.readTextFileSync(
+    `${import.meta.dirname}/../${name.split("/").at(-1)}/mod.ts`,
+  );
+  return `// ${name}@${latest}\n\n${mod}`;
 }
 
 async function fetchJson<TSchema extends v.GenericSchema>(
