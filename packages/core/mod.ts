@@ -29,10 +29,8 @@ export type Attributes = ReadonlyArray<string> | undefined;
 export interface LiftOptions<TAttributes extends Attributes> {
   observedAttributes: TAttributes;
   formAssociated?: boolean | undefined;
-  init(
-    this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-    onCleanup: (dispose: () => void) => void,
-  ): void;
+  init(this: LiftBaseClass, onCleanup: (dispose: () => void) => void): void;
+  noHMR?: boolean;
 }
 
 /**
@@ -45,9 +43,11 @@ export interface LiftBaseConstructor<
   TAttributes extends Attributes,
   Options extends LiftOptions<TAttributes>,
 > {
-  new (): LiftBaseClass<TAttributes, Options>;
+  new (): LiftBaseClass;
   formAssociated: boolean | undefined;
   observedAttributes: TAttributes | undefined;
+  hmr: Set<{ cb: (connect?: true | undefined) => void }>;
+  options: Options;
 }
 
 /**
@@ -56,10 +56,7 @@ export interface LiftBaseConstructor<
  * You probably don't need to use this class directly, it helps with type-safety
  * inside `liftHtml` function.
  */
-export abstract class LiftBaseClass<
-  TAttributes extends Attributes,
-  T extends LiftOptions<TAttributes>,
-> extends HTMLElement_ {
+export abstract class LiftBaseClass extends HTMLElement_ {
   /**
    * **a**ttribute changed **c**all**b**ack. This is obviously there to
    * give you access to `attributeChangedCallback` method, but it's
@@ -68,12 +65,9 @@ export abstract class LiftBaseClass<
    * note that `oldValue` is not available.
    */
   abstract acb:
-    | ((
-      attrName: string,
-      newValue: string | null,
-    ) => void)
+    | ((attrName: string, newValue: string | null) => void)
     | undefined;
-  abstract readonly options: T;
+  static readonly options: LiftOptions<Attributes>;
   static readonly formAssociated: boolean | undefined;
   static readonly observedAttributes: Attributes;
   abstract attributeChangedCallback(
@@ -115,14 +109,12 @@ export function liftHtml<
   tagName: string,
   opts: Partial<LiftOptions<TAttributes>>,
 ): LiftBaseConstructor<TAttributes, Options> {
-  class LiftElement extends LiftBaseClass<TAttributes, Options> {
+  class LiftElement extends LiftBaseClass {
+    static hmr = new Set<{ cb: (connect?: true | undefined) => void }>();
     public acb:
-      | ((
-        attrName: string,
-        newValue: string | null,
-      ) => void)
+      | ((attrName: string, newValue: string | null) => void)
       | undefined = undefined;
-    override options = opts as Options;
+    static override options = opts as Options;
     static override observedAttributes = opts.observedAttributes;
     static override formAssociated = opts.formAssociated;
     override attributeChangedCallback(
@@ -141,6 +133,7 @@ export function liftHtml<
     override disconnectedCallback() {
       this.cb();
       this.acb = undefined;
+      LiftElement.hmr.delete(this);
     }
     cleanup = [] as (() => void)[];
     /** This callback is called to connect or disconnect the component. */
@@ -149,13 +142,27 @@ export function liftHtml<
         this.cleanup.pop()!();
       }
       if (this.isConnected && connect) {
-        this.options.init?.call(this, (cb) => {
+        LiftElement.options.init?.call(this, (cb) => {
           this.cleanup.push(cb);
         });
       }
+      if (!opts.noHMR) {
+        LiftElement.hmr.add(this);
+      }
     }
   }
-  if (typeof customElements !== "undefined" && !customElements.get(tagName)) {
+
+  if (typeof customElements !== "undefined") {
+    const existing = customElements.get(tagName) as
+      | undefined
+      | LiftBaseConstructor<TAttributes, Options>;
+    if (existing) {
+      if (!opts.noHMR) {
+        existing.options = opts as Options;
+        existing.hmr.forEach((cb) => cb.cb(true));
+      }
+      return existing;
+    }
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
