@@ -7,10 +7,10 @@ liftSolid("lift-counter", {
     const props = useAttributes(this);
     createEffect(() => {
       const count = props.count || "-";
-      const div = document.createElement("div");
-      div.className = "loaded";
-      div.textContent = count;
-      this.innerHTML = div.outerHTML;
+      const span = document.createElement("span");
+      span.className = "loaded";
+      span.textContent = count;
+      this.innerHTML = span.outerHTML;
     });
   },
 });

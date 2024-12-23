@@ -33,6 +33,7 @@ export interface LiftOptions<TAttributes extends Attributes> {
     this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
     onCleanup: (dispose: () => void) => void,
   ): void;
+  noHMR?: boolean;
 }
 
 /**
@@ -48,6 +49,8 @@ export interface LiftBaseConstructor<
   new (): LiftBaseClass<TAttributes, Options>;
   formAssociated: boolean | undefined;
   observedAttributes: TAttributes | undefined;
+  hmr: Set<{ cb: (connect?: true | undefined) => void }>;
+  options: Options;
 }
 
 /**
@@ -68,11 +71,9 @@ export abstract class LiftBaseClass<
    * note that `oldValue` is not available.
    */
   abstract acb:
-    | ((
-      attrName: string,
-      newValue: string | null,
-    ) => void)
+    | ((attrName: string, newValue: string | null) => void)
     | undefined;
+  static readonly options: LiftOptions<Attributes>;
   abstract readonly options: T;
   static readonly formAssociated: boolean | undefined;
   static readonly observedAttributes: Attributes;
@@ -116,12 +117,11 @@ export function liftHtml<
   opts: Partial<LiftOptions<TAttributes>>,
 ): LiftBaseConstructor<TAttributes, Options> {
   class LiftElement extends LiftBaseClass<TAttributes, Options> {
+    static hmr = new Set<{ cb: (connect?: true | undefined) => void }>();
     public acb:
-      | ((
-        attrName: string,
-        newValue: string | null,
-      ) => void)
+      | ((attrName: string, newValue: string | null) => void)
       | undefined = undefined;
+    static override options = opts as Options;
     override options = opts as Options;
     static override observedAttributes = opts.observedAttributes;
     static override formAssociated = opts.formAssociated;
@@ -141,6 +141,7 @@ export function liftHtml<
     override disconnectedCallback() {
       this.cb();
       this.acb = undefined;
+      LiftElement.hmr.delete(this);
     }
     cleanup = [] as (() => void)[];
     /** This callback is called to connect or disconnect the component. */
@@ -149,13 +150,26 @@ export function liftHtml<
         this.cleanup.pop()!();
       }
       if (this.isConnected && connect) {
-        this.options.init?.call(this, (cb) => {
+        LiftElement.options.init?.call(this, (cb) => {
           this.cleanup.push(cb);
         });
       }
+      if (!opts.noHMR) {
+        LiftElement.hmr.add(this);
+      }
     }
   }
-  if (typeof customElements !== "undefined" && !customElements.get(tagName)) {
+  if (typeof customElements !== "undefined") {
+    const existing = customElements.get(tagName) as
+      | undefined
+      | LiftBaseConstructor<TAttributes, Options>;
+    if (existing) {
+      if (!opts.noHMR) {
+        existing.options = opts as Options;
+        existing.hmr.forEach((cb) => cb.cb(true));
+      }
+      return existing;
+    }
     customElements.define(tagName, LiftElement);
   }
   return LiftElement;
