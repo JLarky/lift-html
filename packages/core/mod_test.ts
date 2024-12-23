@@ -12,7 +12,11 @@ Deno.test("observedAttributes is set", () => {
   expectTypeOf(element.options.observedAttributes).toEqualTypeOf(
     ["test"] as const,
   );
+  expectTypeOf(TestElement.options.observedAttributes).toEqualTypeOf(
+    ["test"] as const,
+  );
   assertEquals(element.options.observedAttributes, ["test"]);
+  assertEquals(TestElement.options.observedAttributes, ["test"]);
   assertEquals(TestElement.observedAttributes, ["test"]);
 });
 
@@ -20,8 +24,7 @@ Deno.test("formAssociated is set", () => {
   const TestElement = liftHtml("test-element", {
     formAssociated: true,
   });
-  const element = new TestElement();
-  assertEquals(element.options.formAssociated, true);
+  assertEquals(TestElement.options.formAssociated, true);
   assertEquals(TestElement.formAssociated, true);
 });
 

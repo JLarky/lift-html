@@ -69,6 +69,41 @@ Deno.test({
     });
 
     await t.step({
+      name: "solid: works with HMR",
+      async fn() {
+        const page = await browser.newPage(
+          "http://localhost:" + PORT + "/solid",
+        );
+        await page.waitForSelector(".loaded");
+        const value = await page.evaluate(() => {
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value,
+          '<lift-counter count="1"><div class="loaded">1</div></lift-counter>',
+        );
+        // load new implementation
+        const value2 = await page.evaluate(async () => {
+          await import("/solid-hmr.client.js");
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value2,
+          '<lift-counter count="1"><span class="loaded">1</span></lift-counter>',
+        );
+        // still reactive
+        const value3 = await page.evaluate(() => {
+          document.querySelector("lift-counter")!.setAttribute("count", "2");
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value3,
+          '<lift-counter count="2"><span class="loaded">2</span></lift-counter>',
+        );
+      },
+    });
+
+    await t.step({
       name: "tiny: check reaction to attribute change",
       async fn() {
         const page = await browser.newPage(
