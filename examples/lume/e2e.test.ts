@@ -61,10 +61,9 @@ Deno.test({
           document.querySelector("lift-counter")!.setAttribute("count", "2");
           return document.body.innerHTML.trim();
         });
-        // no reaction to attribute change
         assertEquals(
           value2,
-          '<lift-counter count="2"><div class="loaded">1</div></lift-counter>',
+          '<lift-counter count="2"><div class="loaded">2</div></lift-counter>',
         );
       },
     });

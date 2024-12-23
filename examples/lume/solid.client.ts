@@ -1,14 +1,16 @@
-import { liftSolid } from "../../packages/solid/mod.ts";
+import { createEffect } from "npm:solid-js@^1.9.3";
+import { liftSolid, useAttributes } from "../../packages/solid/mod.ts";
 
 liftSolid("lift-counter", {
+  observedAttributes: ["count"],
   init() {
-    const render = () => {
-      const count = this.getAttribute("count") || "-";
+    const props = useAttributes(this);
+    createEffect(() => {
+      const count = props.count || "-";
       const div = document.createElement("div");
       div.className = "loaded";
       div.textContent = count;
       this.innerHTML = div.outerHTML;
-    };
-    render();
+    });
   },
 });
