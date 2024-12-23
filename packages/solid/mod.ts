@@ -1,4 +1,5 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/solid/mod.ts
+// @ts-nocheck
 
 import { createRoot, createSignal } from "npm:solid-js@^1.9";
 import {

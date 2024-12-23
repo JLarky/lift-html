@@ -14,3 +14,10 @@ liftSolid("lift-counter", {
     });
   },
 });
+
+// // why init2 works but init breaks?
+// liftSolid("lift-counter", {
+//   init() {
+//     this.innerHTML = `Hello`;
+//   },
+// });

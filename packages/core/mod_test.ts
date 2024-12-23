@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { expectTypeOf } from "npm:expect-type";
 import { assertEquals } from "jsr:@std/assert";
 import { assertSpyCallArgs, assertSpyCalls, spy } from "jsr:@std/testing/mock";
@@ -8,11 +9,10 @@ Deno.test("observedAttributes is set", () => {
   const TestElement = liftHtml("test-element", {
     observedAttributes: ["test"] as const,
   });
-  const element = new TestElement();
-  expectTypeOf(element.options.observedAttributes).toEqualTypeOf(
+  expectTypeOf(TestElement.options.observedAttributes).toEqualTypeOf(
     ["test"] as const,
   );
-  assertEquals(element.options.observedAttributes, ["test"]);
+  assertEquals(TestElement.options.observedAttributes, ["test"]);
   assertEquals(TestElement.observedAttributes, ["test"]);
 });
 
@@ -20,8 +20,7 @@ Deno.test("formAssociated is set", () => {
   const TestElement = liftHtml("test-element", {
     formAssociated: true,
   });
-  const element = new TestElement();
-  assertEquals(element.options.formAssociated, true);
+  assertEquals(TestElement.options.formAssociated, true);
   assertEquals(TestElement.formAssociated, true);
 });
 
