@@ -18,6 +18,7 @@
     "packages/solid",
     "packages/core",
     "packages/tiny",
+    "packages/incentive",
     "packages/cli",
     "examples/lume"
   ],
