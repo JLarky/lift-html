@@ -1,0 +1,11 @@
+{
+  "name": "@lift-html/incentive",
+  "version": "0.0.1",
+  "exports": "./mod.ts",
+  "imports": {},
+  "lint": {
+    "rules": {
+      "exclude": ["ban-types", "no-explicit-any"]
+    }
+  }
+}

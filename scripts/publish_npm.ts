@@ -41,3 +41,9 @@ await npmPublish("tiny", dryRun);
 await $`./build_solid.ts`;
 
 await npmPublish("solid", dryRun);
+
+// incentive
+
+await $`./build_incentive.ts`;
+
+await npmPublish("incentive", dryRun);
