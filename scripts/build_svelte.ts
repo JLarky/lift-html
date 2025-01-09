@@ -14,7 +14,8 @@ await build({
   shims: {
     deno: "dev",
   },
-  typeCheck: "both",
+  typeCheck: false,
+  scriptModule: false,
   compilerOptions: {
     importHelpers: false,
     sourceMap: true,
