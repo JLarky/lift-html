@@ -6,6 +6,28 @@
  * The biggest difference with regular `<svelte:options tag="my-tag" />` is that
  * `liftSvelte` doesn't have render function, instead you are expected to work with
  * the HTML you got from the server.
+ *
+ * @example
+ * ```ts
+ * <my-button>
+ *   <button disabled>Loading...</button>
+ * </my-button>
+ * <script module lang="ts">
+ *   import { liftSvelte } from "@lift-html/svelte";
+ *   // define a custom element
+ *   const MyButton = liftSvelte("my-button", {
+ *     init() {
+ *       const button = this.querySelector("button");
+ *       if (!button) throw new Error("<my-button> must contain a <button>");
+ *       button.disabled = false;
+ *       let count = $state(0);
+ *       button.onclick = () => count++;
+ *       $effect(() => {
+ *         button.textContent = `Clicks: ${count}`;
+ *       });
+ *     },
+ *   });
+ * </script>
  */
 
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/svelte/mod.ts
