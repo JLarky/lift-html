@@ -1,3 +1,13 @@
+/**
+ * @module
+ *
+ * Use `liftSvelte` and `createAttributes` to create custom elements with Svelte.
+ *
+ * The biggest difference with regular `<svelte:options tag="my-tag" />` is that
+ * `liftSvelte` doesn't have render function, instead you are expected to work with
+ * the HTML you got from the server.
+ */
+
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/svelte/mod.ts
 
 import {
@@ -19,16 +29,6 @@ export type {
 } from "@lift-html/core";
 import "npm:svelte@5/internal/disclose-version";
 import { effect_root, get, set, state } from "npm:svelte@5/internal/client";
-
-/**
- * @module
- *
- * Use `liftSvelte` and `createAttributes` to create custom elements with Svelte.
- *
- * The biggest difference with regular `<svelte:options tag="my-tag" />` is that
- * `liftSvelte` doesn't have render function, instead you are expected to work with
- * the HTML you got from the server.
- */
 
 /**
  * Creates a custom element. The `init` function is called when the element is
