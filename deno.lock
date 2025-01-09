@@ -1686,7 +1686,10 @@
     }
   },
   "redirects": {
-    "https://esm.sh/solid-js": "https://esm.sh/solid-js@1.9.3"
+    "https://esm.sh/solid-js": "https://esm.sh/solid-js@1.9.3",
+    "https://esm.sh/svelte": "https://esm.sh/svelte@5.16.1",
+    "https://esm.sh/svelte/internal/client": "https://esm.sh/svelte@5.16.1/internal/client",
+    "https://esm.sh/svelte/internal/disclose-version": "https://esm.sh/svelte@5.16.1/internal/disclose-version"
   },
   "remote": {
     "https://cdn.jsdelivr.net/gh/lumeland/cms@v0.7.3/core/cms.ts": "0fcf7ab9ddcc90637c915052e6ab5375d11d49bf827c59c3b6c1fcc3aa408c1a",
@@ -1957,7 +1960,20 @@
     "https://deno.land/x/vento@v1.12.11/src/tokenizer.ts": "127ddad02054f63b8b646e4dfbf555e1e34e9b8dcbd58d86b3729a4de95abd27",
     "https://deno.land/x/vento@v1.12.11/src/transformer.ts": "587a0b107a2bd1437a3093c4c44c07e4fdf3abfaaf8e845767b69bd34a039154",
     "https://esm.sh/solid-js@1.9.3": "82832b8ecd0103090d34501b9c1a9c6a75eb89da45156d686da90b4b96e09393",
-    "https://esm.sh/stable/solid-js@1.9.3/denonext/solid-js.mjs": "714cd3429e3c8d41bd87630df83ab9517534487a88f63da401e9a1eef9ca9a00"
+    "https://esm.sh/stable/solid-js@1.9.3/denonext/solid-js.mjs": "714cd3429e3c8d41bd87630df83ab9517534487a88f63da401e9a1eef9ca9a00",
+    "https://esm.sh/stable/svelte@5.16.1/denonext/internal/client.js": "729952abef2ae7646329decf217292c1800d2f9f893319143e25ab8ade1e292e",
+    "https://esm.sh/stable/svelte@5.16.1/denonext/internal/disclose-version.js": "07454c427ae1fac4fe51919d7c50a2d4db4b3a186eb066d99aaa97756e0f6022",
+    "https://esm.sh/stable/svelte@5.16.1/denonext/internal/server.js": "6f09934fb261f8fffa8d9cf214b5a5e4fb06c91009260dc2b22cf0eddda6d263",
+    "https://esm.sh/stable/svelte@5.16.1/denonext/legacy.js": "75a5fea8bb56722b0fc4b3604a3458f75321c73415c0960b258b89fc3d77fc12",
+    "https://esm.sh/stable/svelte@5.16.1/denonext/svelte.mjs": "0b848d9b0f6ab194e298977e910dc7745fe86f3e6509aeeca8056a5d4ca75c87",
+    "https://esm.sh/svelte@5.16.1": "d82fef9a35d987760fc66f2488d1fd274006b8ef80d676e3cec3d8cae1d47f89",
+    "https://esm.sh/svelte@5.16.1/internal/client": "5e82b0519186b664189cf11e1c9c57a76c1fc95edbde5501858024e8700efb69",
+    "https://esm.sh/svelte@5.16.1/internal/disclose-version": "a38ac98104f6f670d9b2008b4c14f5d9663d614b16515499387fe48759e15302",
+    "https://esm.sh/v135/clsx@2.1.1/denonext/clsx.mjs": "473960cb9c0d5c50e81301280839609bb1d28777853094f1805e2e0e4c64f010",
+    "https://esm.sh/v135/esm-env@1.2.1/denonext/browser.js": "dc2490680a91d8f3a94c47131743d8255f266cc41fe13f435c031e41b20d00e9",
+    "https://esm.sh/v135/esm-env@1.2.1/denonext/development.js": "5bc45e3caa606b028acc3cdce232953c469d3ee24aee65204478406c111dc1f4",
+    "https://esm.sh/v135/esm-env@1.2.1/denonext/esm-env.mjs": "6f9e0cfe7e8a2c15335247f08032c12dcd78859706af9c631b95c5ded92d735e",
+    "https://esm.sh/v135/esm-env@1.2.1/denonext/node.js": "2db8477926c73d57ab6ebdc371e180170699e5f2a2cf91954bc7658198b7c6b0"
   },
   "workspace": {
     "members": {

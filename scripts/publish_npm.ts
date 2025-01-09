@@ -42,6 +42,12 @@ await $`./build_solid.ts`;
 
 await npmPublish("solid", dryRun);
 
+// svelte
+
+await $`./build_svelte.ts`;
+
+await npmPublish("svelte", dryRun);
+
 // incentive
 
 await $`./build_incentive.ts`;

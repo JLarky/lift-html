@@ -1,8 +1,6 @@
 {
   "name": "@lift-html/svelte",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "exports": "./mod.ts",
-  "imports": {
-    "@lift-html/core": "@lift-html/core"
-  }
+  "imports": {}
 }
