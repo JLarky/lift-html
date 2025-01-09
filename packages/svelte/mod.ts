@@ -21,6 +21,16 @@ import "npm:svelte@5/internal/disclose-version";
 import { effect_root, get, set, state } from "npm:svelte@5/internal/client";
 
 /**
+ * @module
+ *
+ * Use `liftSvelte` and `createAttributes` to create custom elements with Svelte.
+ *
+ * The biggest difference with regular `<svelte:options tag="my-tag" />` is that
+ * `liftSvelte` doesn't have render function, instead you are expected to work with
+ * the HTML you got from the server.
+ */
+
+/**
  * Creates a custom element. The `init` function is called when the element is
  * connected to the DOM, and you can safely use Svelte's reactive primitives like
  * `$effect` and `$state` inside it.
