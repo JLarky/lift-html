@@ -1,14 +1,17 @@
 /**
- * @module
- *
  * Use `liftSvelte` and `createAttributes` to create custom elements with Svelte.
  *
  * The biggest difference with regular `<svelte:options tag="my-tag" />` is that
  * `liftSvelte` doesn't have render function, instead you are expected to work with
  * the HTML you got from the server.
  *
+ * @module
+ *
  * @example
- * ```ts
+ *
+ * This code is about 10kb gzipped all together (svelte + lift-html + component code)
+ *
+ * ```html
  * <my-button>
  *   <button disabled>Loading...</button>
  * </my-button>
