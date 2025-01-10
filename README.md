@@ -7,11 +7,42 @@
 | @lift-html/solid (includes solid-js)                   | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid}]" height="28" valign="middle">               |
 | @lift-html/solid (includes solid-js and useAttributes) | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid,useAttributes}]" height="28" valign="middle"> |
 
+## Welcome to the non-isomorphic web
+
+Lift HTML is a new way to build your JavaScript applications, especially if all
+that you know is isomorphic libraries like React, Vue, Preact, Angular, Lit,
+Svelte, SolidJS, Ember and Qwik. It's going to be less new if you have
+experience with primerally server-side frameworks like Rails, Django, Laravel.
+Those are built with expectation that you are going to write a lot of HTML+CSS
+and plop a couple of script tags here are there.
+
+With lift-html you can start with as low overhead as 150 bytes
+(`@lift-html/tiny`) to get type safety when declaring your custom elements and
+simplified API (I tested that every web component used in
+[Astro website](https://astro.build/) could be built with `@lift-html/tiny`).
+
+If you jump up to `@lift-html/core`, in the less than 600 bytes you get HMR (Hot
+Module Replacement) support, full support of web components features like
+`formAssociated` and `observedAttributes` with type safety and nice API: `init`
+and `onCleanup` callbacks instead of `constructor`, `connectedCallback`,
+`adoptedCallback`, `disconnectedCallback` (I yet to find an example of a web
+component that can't be written with `@lift-html/core`).
+
+After this you may enjoy a buffet of opt-in (and tree-shakeable) features like
+`@lift-html/incentive` that gives you
+[Hotwire Stimulus](https://stimulus.hotwired.dev/reference/targets) or
+[GitHub Catalyst](https://github.github.io/catalyst/guide-v2/targets)-like API
+to work with targets inside of your components. Or various integrations to make
+your attributes reactive like `@lift-html/solid` that also gives you ability to
+use APIs like `createSignal` and `createEffect` inside of your components;
+`@lift-html/svelte` that gives you ability to use Runes like `state$` and
+`effect$` inside of your components.
+
 ## What is lift-html
 
 lift-html is a tiny library for building HTML Web Components, components that
 are meant to enhance existing HTML on the page instead of rendering it on the
-client or hydrating it. You can use SolidJS to make attributes reactive.
+client or hydrating it.
 
 Code for `liftHtml` is public domain see more in the Vendoring section.
 
@@ -65,13 +96,13 @@ and with no-build
       if (!button) throw new Error("<my-button> must contain a <button>");
       button.disabled = false;
       let count = 0;
-      render();
+      updateCount();
       button.onclick = () => {
         count++;
-        render();
+        updateCount();
       };
 
-      function render() {
+      function updateCount() {
         button.textContent = `Clicks: ${count}`;
       }
     },
