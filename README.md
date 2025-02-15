@@ -342,14 +342,14 @@ and in some extreme cases the whole page was just:
 ```
 
 At some point people started to reclaim the original goal of Web Components but
-because "Web Components" at that point was already associated with SPAs, they
-had to invent a new name and **HTML Web Components** better represented the idea
-of producing HTML on the server and using web components to enhance it. That
-would also mean not relying as much on features like shadow dom, html modules,
-shadow dom based css scoping, but still using custom elements (and sometimes
-html templates). This means that HTML Web Components will often rely on global
-CSS to style them, like `.my-button { color: red }` (or even tailwind
-`<my-button class="text-red-500">`).
+because "Web Components" was already associated with SPAs, they had to invent a
+new name and **HTML Web Components** better represented the idea of producing
+HTML on the server and using web components to enhance it. That would also mean
+not relying as much on features like shadow dom, html modules, shadow dom based
+css scoping, but still using custom elements (and sometimes html templates).
+This means that HTML Web Components will often rely on global CSS to style them,
+like `my-button { color: red }` (notice tag selector instead of CSS class
+selector) or even tailwind `<my-button class="text-red-500">`.
 
 There comes a point when you are working on your HTML Web Components and you
 realize that what originally started as `<my-card>` ended up being just a
@@ -399,3 +399,7 @@ something that is missing.
 | F&nbsp;tier        | Lightning Web Components (I refuse to believe that this is a real thing)                                                                                                                                                                                                                                                                     |
 | Honorable mentions | Stencil (very popular, only under React, Vue, Preact, Angular, Lit and Svelte, above Solid and Ember), Haunted (hooks based but uses lit-html, from matthewp, co-creator of Astro), CanJS (from author of @r2wc/react-to-web-component), hyperhtml+heresy+µhtml (from WebReflection), Hybrids (never heard of it), Minze (never heard of it) |
 | Fallen warriors    | Web Components v0, Polymer (the OG, that's how I remember web components introduced, felt like a good idea at the time), Slim.js (last update 3 years ago), SkateJS (last update 6 years ago),                                                                                                                                               |
+
+### Thanks
+
+-
