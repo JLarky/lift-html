@@ -1,4 +1,4 @@
-import { createAttributes, liftSvelte } from "../../packages/svelte/mod.ts";
+import { createAttributes, liftSvelte } from "jsr:@lift-html/svelte@0.0.5";
 import "npm:svelte@^5.16.1/internal/disclose-version";
 import * as $ from "npm:svelte@^5.16.1/internal/client";
 

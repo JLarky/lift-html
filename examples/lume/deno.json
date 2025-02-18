@@ -1,5 +1,6 @@
 {
   "imports": {
+    "@lift-html/svelte": "jsr:@lift-html/svelte@^0.0.5",
     "lume/": "https://deno.land/x/lume@v2.4.2/",
     "solid-js": "https://esm.sh/solid-js",
     "svelte/internal/disclose-version": "https://esm.sh/svelte/internal/disclose-version",
