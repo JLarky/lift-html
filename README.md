@@ -343,13 +343,14 @@ and in some extreme cases the whole page was just:
 
 At some point people started to reclaim the original goal of Web Components but
 because "Web Components" was already associated with SPAs, they had to invent a
-new name and **HTML Web Components** better represented the idea of producing
-HTML on the server and using web components to enhance it. That would also mean
-not relying as much on features like shadow dom, html modules, shadow dom based
-css scoping, but still using custom elements (and sometimes html templates).
-This means that HTML Web Components will often rely on global CSS to style them,
-like `my-button { color: red }` (notice tag selector instead of CSS class
-selector) or even tailwind `<my-button class="text-red-500">`.
+[new name](https://adactio.com/journal/20618) and **HTML Web Components** better
+represented the idea of producing HTML on the server and using web components to
+enhance it. That would also mean not relying as much on features like shadow
+dom, html modules, shadow dom based css scoping, but still using custom elements
+(and sometimes html templates). This means that HTML Web Components will often
+rely on global CSS to style them, like `my-button { color: red }` (notice tag
+selector instead of CSS class selector) or even tailwind
+`<my-button class="text-red-500">`.
 
 There comes a point when you are working on your HTML Web Components and you
 realize that what originally started as `<my-card>` ended up being just a
@@ -376,6 +377,11 @@ declare module "@lift-html/core" {
 As you can imagine this will add exactly 0 bytes of JS to your bundle, but will
 add type checking to your templating (given that you are using typescript for
 that part obviously).
+
+> [!NOTE]
+> This section was reviewed by two Google engineers and they
+> [both](https://bsky.app/profile/infrequently.org/post/3liass6z6tcix) didn't
+> [like](https://bsky.app/profile/justinfagnani.com/post/3lid6g42e7s2h) it.
 
 ### Vendoring
 
