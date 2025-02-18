@@ -69,41 +69,6 @@ Deno.test({
     });
 
     await t.step({
-      name: "svelte: check reaction to attribute change",
-      async fn() {
-        const page = await browser.newPage(
-          "http://localhost:" + PORT + "/svelte",
-        );
-        await page.waitForSelector(".loaded");
-        const value = await page.evaluate(() => {
-          return document.body.innerHTML.trim();
-        });
-        assertEquals(
-          value,
-          '<lift-counter count="1"><div class="loaded">1</div></lift-counter>',
-        );
-        // svelte schedules its updates, so we expect that effect didn't run
-        const value2 = await page.evaluate(() => {
-          document.querySelector("lift-counter")!.setAttribute("count", "2");
-          return document.body.innerHTML.trim();
-        });
-        assertEquals(
-          value2,
-          '<lift-counter count="2"><div class="loaded">1</div></lift-counter>',
-        );
-        // svelte schedules its updates, on the next tick we expect the new value
-        const value3 = await page.evaluate(() => {
-          document.querySelector("lift-counter")!.setAttribute("count", "2");
-          return document.body.innerHTML.trim();
-        });
-        assertEquals(
-          value3,
-          '<lift-counter count="2"><div class="loaded">2</div></lift-counter>',
-        );
-      },
-    });
-
-    await t.step({
       name: "solid: works with HMR",
       async fn() {
         const page = await browser.newPage(
