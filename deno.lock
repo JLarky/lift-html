@@ -16,7 +16,6 @@
     "jsr:@deno/dnt@*": "0.41.3",
     "jsr:@eta-dev/eta@*": "3.5.0",
     "jsr:@hono/hono@4.6.11": "4.6.11",
-    "jsr:@lift-html/svelte@^0.0.5": "0.0.5",
     "jsr:@std/assert@*": "1.0.7",
     "jsr:@std/assert@0.221": "0.221.0",
     "jsr:@std/assert@0.223": "0.223.0",
@@ -204,12 +203,6 @@
     },
     "@hono/hono@4.6.11": {
       "integrity": "07399d911f09e94b7dc1e0e0a0577d35fe66578af20163d513958364c4e9e702"
-    },
-    "@lift-html/svelte@0.0.5": {
-      "integrity": "b75b225d39951c2f7d7dccfba49e8a547c036d46edaad510915e13eead817e09",
-      "dependencies": [
-        "npm:svelte"
-      ]
     },
     "@std/assert@0.221.0": {
       "integrity": "a5f1aa6e7909dbea271754fd4ab3f4e687aeff4873b4cef9a320af813adb489a"
@@ -1998,11 +1991,6 @@
             "npm:vite@6"
           ]
         }
-      },
-      "examples/lume": {
-        "dependencies": [
-          "jsr:@lift-html/svelte@^0.0.5"
-        ]
       },
       "packages/solid": {
         "dependencies": [

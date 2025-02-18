@@ -1,11 +1,7 @@
 {
   "imports": {
-    "@lift-html/svelte": "jsr:@lift-html/svelte@^0.0.5",
     "lume/": "https://deno.land/x/lume@v2.4.2/",
-    "solid-js": "https://esm.sh/solid-js",
-    "svelte/internal/disclose-version": "https://esm.sh/svelte/internal/disclose-version",
-    "svelte/internal/client": "https://esm.sh/svelte/internal/client",
-    "svelte": "https://esm.sh/svelte"
+    "solid-js": "https://esm.sh/solid-js"
   },
   "tasks": {
     "lume": "echo \"import 'lume/cli.ts'\" | deno run -A -",
