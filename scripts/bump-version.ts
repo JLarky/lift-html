@@ -2,7 +2,7 @@
 import { Checkbox } from "jsr:@cliffy/prompt@1.0.0-rc.7";
 import $ from "jsr:@david/dax";
 
-const options = ["core", "solid", "incentive", "svelte", "tiny", "cli"];
+const options = ["core", "solid", "incentive", "tiny", "cli"];
 
 try {
   const selected = await Checkbox.prompt({
