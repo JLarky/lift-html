@@ -139,6 +139,44 @@ Deno.test({
       },
     });
 
+    await t.step({
+      name: "tiny: check reconnection behavior",
+      async fn() {
+        const page = await browser.newPage(
+          `http://localhost:${PORT}/tiny`,
+        );
+        await page.waitForSelector(".loaded");
+
+        // Initial state
+        const value = await page.evaluate(() => {
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value,
+          '<lift-counter count="1"><div class="loaded">1</div></lift-counter>',
+        );
+
+        // Remove and reattach the element to trigger connectedCallback
+        const value2 = await page.evaluate(() => {
+          const counter = document.querySelector("lift-counter");
+          if (!counter) throw new Error("Counter not found");
+          const parent = counter.parentElement;
+          if (!parent) throw new Error("Parent not found");
+
+          // Remove and reattach to trigger connectedCallback
+          parent.removeChild(counter);
+          parent.appendChild(counter);
+          return document.body.innerHTML.trim();
+        });
+
+        // Should show the same content after reconnection
+        assertEquals(
+          value2,
+          '<lift-counter count="1"><div class="loaded">1</div></lift-counter>',
+        );
+      },
+    });
+
     server.stop();
     await browser.close();
   },
