@@ -137,3 +137,62 @@ Deno.test("attributeChangedCallback is called", () => {
   element.attributeChangedCallback("test", "old", "new");
   assertSpyCalls(mockFn, 1);
 });
+
+Deno.test("lifecycle callbacks execute in correct order", () => {
+  const events: string[] = [];
+  const mockInit = spy(() => {
+    events.push("init");
+  });
+  const mockCleanup = spy(() => {
+    events.push("cleanup");
+  });
+  const mockAttrChange = spy(() => {
+    events.push("attr_change");
+  });
+
+  const TestElement = liftHtml("test-element", {
+    observedAttributes: ["test"] as const,
+    init(onCleanup) {
+      mockInit();
+      this.acb = () => mockAttrChange();
+      onCleanup(() => mockCleanup());
+    },
+  });
+
+  const element = new TestElement();
+
+  // Initial state - nothing should be called
+  assertSpyCalls(mockInit, 0);
+  assertSpyCalls(mockCleanup, 0);
+  assertSpyCalls(mockAttrChange, 0);
+  assertEquals(events, []);
+
+  // Connect element
+  Object.defineProperty(element, "isConnected", { value: true });
+  element.connectedCallback();
+  assertSpyCalls(mockInit, 1);
+  assertSpyCalls(mockCleanup, 0);
+  assertSpyCalls(mockAttrChange, 0);
+  assertEquals(events, ["init"]);
+
+  // Change attribute
+  element.attributeChangedCallback("test", null, "value");
+  assertSpyCalls(mockInit, 1);
+  assertSpyCalls(mockCleanup, 0);
+  assertSpyCalls(mockAttrChange, 1);
+  assertEquals(events, ["init", "attr_change"]);
+
+  // Disconnect element
+  element.disconnectedCallback();
+  assertSpyCalls(mockInit, 1);
+  assertSpyCalls(mockCleanup, 1);
+  assertSpyCalls(mockAttrChange, 1);
+  assertEquals(events, ["init", "attr_change", "cleanup"]);
+
+  // Attribute changes after disconnect should not trigger callback
+  element.attributeChangedCallback("test", "value", "new-value");
+  assertSpyCalls(mockInit, 1);
+  assertSpyCalls(mockCleanup, 1);
+  assertSpyCalls(mockAttrChange, 1);
+  assertEquals(events, ["init", "attr_change", "cleanup"]);
+});
