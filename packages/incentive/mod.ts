@@ -48,11 +48,34 @@ export function findTarget<T = HTMLElement>(
   return undefined;
 }
 
+type TargetConfig<T> = {
+  type: Constructor<T>;
+  required?: boolean;
+};
+
+type TargetDefinition<T> = Constructor<T> | TargetConfig<T>;
+
+type InferTargetType<T extends TargetDefinition<any>> = T extends
+  Constructor<infer U> ? U
+  : T extends TargetConfig<infer U> ? U
+  : never;
+
+type InferTargetRequired<T extends TargetDefinition<any>> = T extends
+  Constructor<any> ? false
+  : T extends TargetConfig<any> ? T["required"] extends true ? true
+    : false
+  : never;
+
+type TargetsConfig = Record<string, TargetDefinition<any>>;
+
+type InferTargetTypes<T extends TargetsConfig> = {
+  [K in keyof T]: InferTargetRequired<T[K]> extends true ? InferTargetType<T[K]>
+    : InferTargetType<T[K]> | undefined;
+};
+
 /**
- * This is a wrapper around `querySelector` that finds the first element with a
- * specified target name. To make things more explicit you have to specify the
- * name of the custom element as a prefix, the second difference is that if you
- * have nested components selector will ignore targets from nested ones.
+ * This is a wrapper around `querySelector` that finds elements with specified target names.
+ * You can mark targets as required to ensure they exist at runtime.
  *
  * @example
  * ```html
@@ -67,29 +90,43 @@ export function findTarget<T = HTMLElement>(
  * liftHtml('my-element', {
  *   init() {
  *     const refs = targetRefs(this, {
+ *       // Optional target - type will be HTMLElement | undefined
  *       button: HTMLElement,
- *       input: HTMLInputElement,
+ *       // Required target - type will be HTMLInputElement
+ *       input: { type: HTMLInputElement, required: true },
  *     });
- *     // note that typescript will know that input has the `value` property
- *     refs.button.onclick = () => refs.input.value = 'Hello world';
+ *     // TypeScript knows input is not undefined
+ *     refs.button?.onclick = () => refs.input.value = 'Hello world';
  *   }
  * });
  * </script>
  * ```
  */
-export function targetRefs<Targets extends Record<string, Constructor>>(
+export function targetRefs<Targets extends TargetsConfig>(
   self: HTMLElement,
   targets: Targets,
-): { [K in keyof Targets]: InstanceType<Targets[K]> | undefined } {
-  const refs = {} as {
-    [K in keyof Targets]: InstanceType<Targets[K]> | undefined;
-  };
-  for (const [key, targetType] of Object.entries(targets)) {
+): InferTargetTypes<Targets> {
+  const refs = {} as InferTargetTypes<Targets>;
+
+  for (const [key, config] of Object.entries(targets)) {
+    const targetType = typeof config === "function" ? config : config.type;
+    const required = typeof config === "function"
+      ? false
+      : config.required ?? false;
+
     Object.defineProperty(refs, key, {
       get() {
-        return findTarget(self, key, targetType);
+        const element = findTarget(self, key, targetType);
+        if (required && !element) {
+          throw new Error(
+            `Required target "${key}" not found in <${self.tagName.toLowerCase()}>. ` +
+              `Make sure the element has data-target="${self.tagName.toLowerCase()}:${key}" attribute.`,
+          );
+        }
+        return element;
       },
     });
   }
+
   return refs;
 }

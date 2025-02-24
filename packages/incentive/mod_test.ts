@@ -1,5 +1,6 @@
 import { expectTypeOf } from "npm:expect-type";
 import { assertSpyCallArgs, assertSpyCalls, spy } from "jsr:@std/testing/mock";
+import { assertThrows } from "jsr:@std/assert";
 
 import { findTarget, targetRefs } from "./mod.ts";
 
@@ -55,6 +56,38 @@ Deno.test({
         >();
         assertSpyCallArgs(mockFn, 0, [expect]);
         assertSpyCalls(mockFn, 1);
+      },
+    });
+
+    await t.step({
+      name: "targetRefs supports required refs",
+      fn() {
+        const div = document.createElement("my-element");
+        const mockFn = spy((_element: HTMLElement) => []);
+        div.querySelectorAll =
+          mockFn as unknown as typeof div["querySelectorAll"];
+
+        const refs = targetRefs(div, {
+          optional: HTMLElement,
+          required: { type: HTMLElement, required: true },
+        });
+
+        // Optional ref should be undefined
+        expectTypeOf<typeof refs.optional>().toEqualTypeOf<
+          HTMLElement | undefined
+        >();
+        const optional = refs.optional;
+        expectTypeOf<typeof optional>().toEqualTypeOf<
+          HTMLElement | undefined
+        >();
+
+        // Required ref should throw error when accessed
+        expectTypeOf<typeof refs.required>().toEqualTypeOf<HTMLElement>();
+        assertThrows(
+          () => refs.required,
+          Error,
+          'Required target "required" not found in <my-element>',
+        );
       },
     });
   },
