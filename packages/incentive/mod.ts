@@ -21,20 +21,14 @@ function findTarget<T>(
   }
 }
 
-type Target<T> = {
-  /** Element type constructor */
-  type: Constructor<T>;
-  /** Whether the target is required. If true and target is not found, an error will be thrown */
-  required?: boolean;
-  /** Custom error message when target is not found */
-  message?: string;
-};
+type Target<T> = Constructor<T> | [Constructor<T>, true];
 
 type TargetMap = Record<string, Target<any>>;
 
-type InferTarget<T extends Target<any>> = T["required"] extends true
-  ? InstanceType<T["type"]>
-  : InstanceType<T["type"]> | undefined;
+type InferTarget<T extends Target<any>> = T extends [any, true]
+  ? InstanceType<T[0]>
+  : T extends Constructor<any> ? InstanceType<T> | undefined
+  : never;
 
 type InferTargets<T extends TargetMap> = {
   [K in keyof T]: InferTarget<T[K]>;
@@ -48,13 +42,9 @@ type InferTargets<T extends TargetMap> = {
  * ```ts
  * const refs = targetRefs(this, {
  *   // Optional target - type will be HTMLElement | undefined
- *   optional: { type: HTMLElement },
+ *   optional: HTMLElement,
  *   // Required target - type will be HTMLInputElement
- *   input: {
- *     type: HTMLInputElement,
- *     required: true,
- *     message: "Input element is required for this component"
- *   }
+ *   input: [HTMLInputElement, true]
  * });
  *
  * // TypeScript knows input is not undefined
@@ -71,14 +61,15 @@ export function targetRefs<T extends TargetMap>(
   const tag = host.tagName.toLowerCase();
 
   for (const [name, config] of Object.entries(targets)) {
+    const [type, required] = Array.isArray(config) ? config : [config, false];
+
     Object.defineProperty(refs, name, {
       get() {
-        const el = findTarget(host, name, config.type);
-        if (config.required && !el) {
+        const el = findTarget(host, name, type);
+        if (required && !el) {
           throw new Error(
-            config.message ??
-              `Required target "${name}" not found in <${tag}>. ` +
-                `Add data-target="${tag}:${name}" to the target element.`,
+            `Required target "${name}" not found in <${tag}>. ` +
+              `Add data-target="${tag}:${name}" to the target element.`,
           );
         }
         return el;

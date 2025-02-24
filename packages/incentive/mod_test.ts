@@ -36,7 +36,7 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const refs = targetRefs(div, {
-          "test-target": { type: HTMLElement },
+          "test-target": HTMLElement,
         });
 
         // Accessing the target should trigger the query
@@ -55,8 +55,8 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const refs = targetRefs(div, {
-          optional: { type: HTMLElement },
-          required: { type: HTMLElement, required: true },
+          optional: HTMLElement,
+          required: [HTMLElement, true],
         });
 
         // Optional target should be undefined
@@ -79,37 +79,12 @@ Deno.test({
     });
 
     await t.step({
-      name: "supports custom error messages",
-      fn() {
-        const div = document.createElement("my-element");
-        const mockFn = spy((_element: HTMLElement) => []);
-        div.querySelectorAll =
-          mockFn as unknown as typeof div["querySelectorAll"];
-
-        const customMessage = "Custom error message";
-        const refs = targetRefs(div, {
-          custom: {
-            type: HTMLElement,
-            required: true,
-            message: customMessage,
-          },
-        });
-
-        assertThrows(
-          () => refs.custom,
-          Error,
-          customMessage,
-        );
-      },
-    });
-
-    await t.step({
       name: "enforces type safety",
       fn() {
         const div = document.createElement("my-element");
         const refs = targetRefs(div, {
-          input: { type: HTMLInputElement },
-          button: { type: HTMLButtonElement, required: true },
+          input: HTMLInputElement,
+          button: [HTMLButtonElement, true],
         });
 
         // TypeScript should know these types
