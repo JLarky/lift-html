@@ -9,6 +9,7 @@
     "bump:solid": "deno run -A jsr:@kellnerd/bump --file packages/solid/deno.jsonc --tag @lift-html/solid@ --commit \"release @lift-html/solid@\"",
     "bump:alien": "deno run -A jsr:@kellnerd/bump --file packages/alien/deno.jsonc --tag @lift-html/alien@ --commit \"release @lift-html/alien@\"",
     "bump:incentive": "deno run -A jsr:@kellnerd/bump --file packages/incentive/deno.jsonc --tag @lift-html/incentive@ --commit \"release @lift-html/incentive@\"",
+    "bump:tiny": "deno run -A jsr:@kellnerd/bump --file packages/tiny/deno.jsonc --tag @lift-html/tiny@ --commit \"release @lift-html/tiny@\"",
     "lume:start": "cd examples/lume; deno task serve --port=8080"
   },
   "compilerOptions": {
