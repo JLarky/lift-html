@@ -8,36 +8,45 @@ Deno.test({
   name: "targetRefs",
   async fn(t) {
     const myHTMLElement = class {
-      constructor(public tagName: string) {}
+      constructor(public tagName: string) {
+        this.dataset = {};
+      }
       querySelectorAll() {
         return [];
       }
       closest(_selector: string) {
         return null;
       }
+      dataset: Record<string, string>;
     };
     const myHTMLDivElement = class extends myHTMLElement {
       constructor() {
-        super("div");
+        super("DIV");
       }
     };
     const myHTMLSpanElement = class extends myHTMLElement {
       constructor() {
-        super("span");
+        super("SPAN");
       }
     };
     globalThis.HTMLElement = myHTMLElement as unknown as typeof HTMLElement;
-    globalThis.HTMLInputElement = class
-      extends myHTMLElement {} as unknown as typeof HTMLInputElement;
-    globalThis.HTMLButtonElement = class
-      extends myHTMLElement {} as unknown as typeof HTMLButtonElement;
+    globalThis.HTMLInputElement = class extends myHTMLElement {
+      constructor() {
+        super("INPUT");
+      }
+    } as unknown as typeof HTMLInputElement;
+    globalThis.HTMLButtonElement = class extends myHTMLElement {
+      constructor() {
+        super("BUTTON");
+      }
+    } as unknown as typeof HTMLButtonElement;
     globalThis.HTMLDivElement =
       myHTMLDivElement as unknown as typeof HTMLDivElement;
     globalThis.HTMLSpanElement =
       myHTMLSpanElement as unknown as typeof HTMLSpanElement;
     globalThis.document = {
       createElement: (tagName: string) =>
-        new myHTMLElement(tagName) as unknown as HTMLElement,
+        new myHTMLElement(tagName.toUpperCase()) as unknown as HTMLElement,
     } as unknown as Document;
 
     await t.step({
@@ -50,7 +59,7 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const refs = targetRefs(div, {
-          "test-target": [HTMLElement, null],
+          "test-target": [HTMLElement],
         });
 
         // Accessing the target should trigger the query
@@ -65,7 +74,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "supports optional and required targets",
+      name: "supports array and single targets",
       fn() {
         const div = document.createElement("my-element");
         const mockFn = spy((_element: HTMLElement) => []);
@@ -73,26 +82,20 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const refs = targetRefs(div, {
-          optional: [HTMLElement, null],
-          required: [HTMLElement],
+          array: [HTMLElement],
+          required: HTMLElement,
         });
 
-        // Optional target should be null
-        expectTypeOf<typeof refs.optional>().toEqualTypeOf<
-          HTMLElement | null
-        >();
-        const optional = refs.optional;
-        expectTypeOf<typeof optional>().toEqualTypeOf<
-          HTMLElement | null
-        >();
-        assertEquals(optional, null);
+        // Array target should be empty array
+        const array: HTMLElement[] = refs.array;
+        assertEquals(array, []);
 
         // Required target should throw error when accessed
         expectTypeOf<typeof refs.required>().toEqualTypeOf<HTMLElement>();
         assertThrows(
           () => refs.required,
           Error,
-          'Missing required target "required" in <my-element>',
+          'Required target "required" not found in <my-element>',
         );
       },
     });
@@ -100,21 +103,49 @@ Deno.test({
     await t.step({
       name: "enforces type safety",
       fn() {
-        const div = document.createElement("my-element");
+        const div = document.createElement("MY-ELEMENT");
+        const input =
+          new (globalThis.HTMLInputElement as any)() as HTMLInputElement;
+        const button =
+          new (globalThis.HTMLButtonElement as any)() as HTMLButtonElement;
+        const divEl = new myHTMLDivElement() as unknown as HTMLDivElement;
+        const spanEl = new myHTMLSpanElement() as unknown as HTMLSpanElement;
+
+        // Add data-target attributes
+        input.dataset.target = "my-element:input";
+        button.dataset.target = "my-element:button";
+        divEl.dataset.target = "my-element:multi";
+        spanEl.dataset.target = "my-element:multi";
+
+        // Mock closest behavior
+        const mockClosest = () => div;
+        input.closest = mockClosest;
+        button.closest = mockClosest;
+        divEl.closest = mockClosest;
+        spanEl.closest = mockClosest;
+
+        // Mock querySelectorAll to return the correct elements
+        div.querySelectorAll = ((selector: string) => {
+          if (selector.includes("input")) return [input];
+          if (selector.includes("button")) return [button];
+          if (selector.includes("multi")) return [divEl, spanEl];
+          return [];
+        }) as unknown as typeof div["querySelectorAll"];
+
         const refs = targetRefs(div, {
           input: HTMLInputElement,
           button: [HTMLButtonElement],
-          div: [HTMLDivElement, null],
-          span: [HTMLSpanElement, null],
+          multi: [HTMLDivElement, HTMLSpanElement],
         });
 
         // TypeScript should know these types
-        expectTypeOf<typeof refs.input>().toEqualTypeOf<HTMLInputElement>();
-        expectTypeOf<typeof refs.button>().toEqualTypeOf<HTMLButtonElement>();
-        expectTypeOf<typeof refs.div>().toEqualTypeOf<HTMLDivElement | null>();
-        expectTypeOf<typeof refs.span>().toEqualTypeOf<
-          HTMLSpanElement | null
-        >();
+        const inputEl: HTMLInputElement = refs.input;
+        const buttons: HTMLButtonElement[] = refs.button;
+        const multi: Array<HTMLDivElement | HTMLSpanElement> = refs.multi;
+
+        assertEquals(inputEl, input);
+        assertEquals(buttons, [button]);
+        assertEquals(multi, [divEl, spanEl]);
 
         // @ts-expect-error unknown fields do not exist
         refs.unknown;
@@ -126,23 +157,25 @@ Deno.test({
       fn() {
         const div = document.createElement("my-element");
         const target = new myHTMLDivElement() as unknown as HTMLDivElement;
-        const mockFn = spy(() => [target]);
-        div.querySelectorAll =
-          mockFn as unknown as typeof div["querySelectorAll"];
+        target.dataset.target = "my-element:target";
 
-        // Mock closest to return null to simulate element not being a child
-        (target as unknown as { closest: () => HTMLElement | null }).closest =
-          () => null;
-        const refs = targetRefs(div, {
-          target: [HTMLDivElement, null],
-        });
-        assertEquals(refs.target, null);
-
-        // Mock closest to return the host element
+        // Mock closest behavior
         (target as unknown as { closest: () => HTMLElement | null }).closest =
           () => div;
-        const refs2 = targetRefs(div, {
+
+        // Mock querySelectorAll to return the target
+        div.querySelectorAll = ((selector: string) => {
+          if (selector.includes("target")) return [target];
+          return [];
+        }) as unknown as typeof div["querySelectorAll"];
+
+        const refs = targetRefs(div, {
           target: [HTMLDivElement],
+        });
+        assertEquals(refs.target, [target]);
+
+        const refs2 = targetRefs(div, {
+          target: HTMLDivElement,
         });
         assertEquals(refs2.target, target);
       },
@@ -155,36 +188,27 @@ Deno.test({
         const divTarget = new myHTMLDivElement() as unknown as HTMLDivElement;
         const spanTarget =
           new myHTMLSpanElement() as unknown as HTMLSpanElement;
-        let currentTarget: Element | null = null;
-        const mockFn = spy(() => currentTarget ? [currentTarget] : []);
-        div.querySelectorAll =
-          mockFn as unknown as typeof div["querySelectorAll"];
 
-        // Set up closest behavior
+        divTarget.dataset.target = "my-element:multi";
+        spanTarget.dataset.target = "my-element:multi";
+
+        // Mock closest behavior
         (divTarget as unknown as { closest: () => HTMLElement | null })
           .closest = () => div;
         (spanTarget as unknown as { closest: () => HTMLElement | null })
           .closest = () => div;
 
+        // Mock querySelectorAll to return the correct elements
+        div.querySelectorAll = ((selector: string) => {
+          if (selector.includes("multi")) return [divTarget, spanTarget];
+          return [];
+        }) as unknown as typeof div["querySelectorAll"];
+
         const refs = targetRefs(div, {
-          div: [HTMLDivElement, null],
-          span: [HTMLSpanElement, null],
+          multi: [HTMLDivElement, HTMLSpanElement],
         });
 
-        // Should find div element
-        currentTarget = divTarget;
-        assertEquals(refs.div, divTarget);
-        assertEquals(refs.span, null);
-
-        // Should find span element
-        currentTarget = spanTarget;
-        assertEquals(refs.div, null);
-        assertEquals(refs.span, spanTarget);
-
-        // Should return null when no element found
-        currentTarget = null;
-        assertEquals(refs.div, null);
-        assertEquals(refs.span, null);
+        assertEquals(refs.multi, [divTarget, spanTarget]);
       },
     });
   },
