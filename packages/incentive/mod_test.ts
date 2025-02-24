@@ -73,7 +73,7 @@ Deno.test({
         assertThrows(
           () => refs.required,
           Error,
-          'Required target "required" not found in <my-element>',
+          'Missing required target "required" in <my-element>',
         );
       },
     });

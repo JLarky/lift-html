@@ -9,7 +9,6 @@ const packages = [
   "packages/core",
   "packages/tiny",
   "packages/incentive",
-  "packages/cli",
   "packages/alien",
 ];
 
@@ -50,7 +49,6 @@ async function getBundleSize(entryPoint: string, options: BuildOptions = {}) {
         "@lift-html/alien",
         "@lift-html/incentive",
         "@lift-html/tiny",
-        "@lift-html/cli",
       ],
       ...options,
       logLevel: "silent",

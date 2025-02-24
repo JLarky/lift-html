@@ -12,10 +12,11 @@ function findTarget<T>(
   type: Constructor<T>,
 ): T | undefined {
   const selector = `[data-target~="${host.tagName.toLowerCase()}:${name}"]`;
-  const element = host.querySelector(selector);
-  return element?.closest(host.tagName) === host && element instanceof type
-    ? element
-    : undefined;
+  for (const element of host.querySelectorAll(selector)) {
+    if (element.closest(host.tagName) === host && element instanceof type) {
+      return element;
+    }
+  }
 }
 
 type Target<T> = Constructor<T> | [Constructor<T>, true];
