@@ -42,11 +42,23 @@ type Target<T> = Constructor<T> | Constructor<T>[];
 
 type TargetMap = Record<string, Target<any>>;
 
-type InferTarget<T> = T extends readonly Constructor<infer U>[] ? U[]
-  : T extends Constructor<infer U> ? U
-  : never;
+type UnwrapConstructor<T> = T extends Constructor<infer U> ? U : never;
 
-type InferTargets<T extends TargetMap> = { [K in keyof T]: InferTarget<T[K]> };
+/**
+ * Flatten type output to improve type hints shown in editors
+ */
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type InferTarget<T> = Simplify<
+  T extends Constructor<any>[] ? UnwrapConstructor<T[number]>[]
+    : UnwrapConstructor<T>
+>;
+
+type InferTargets<T extends TargetMap> = Simplify<
+  {
+    [K in keyof T]: InferTarget<T[K]>;
+  }
+>;
 
 /**
  * Define and access element targets with type safety and validation.
