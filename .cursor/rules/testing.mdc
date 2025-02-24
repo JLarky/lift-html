@@ -2,4 +2,4 @@
 description: Deno tests
 globs: 
 ---
-To run tests please run `deno task test` and `deno lint`
+To run tests please run `deno task test` and `deno lint`. When testing for bundle size with `deno task bundle-size` keep in mind that optimizations like writing `const e =` instead of `const element =` do not actually affect gzip size of the bundle.

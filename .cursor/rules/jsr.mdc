@@ -1,0 +1,5 @@
+---
+description: jsr and npm
+globs: 
+---
+for internal scripts prefer to use `jsr:` for packages in packages folder prefer `npm:` because the code is going to be shared to npm as well as jsr

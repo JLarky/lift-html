@@ -11,28 +11,22 @@ function findTarget<T>(
   name: string,
   type: Constructor<T>,
 ): T | undefined {
-  const tag = host.tagName.toLowerCase();
-  for (
-    const el of host.querySelectorAll(`[data-target~="${tag}:${name}"]`)
-  ) {
-    if (el.closest(tag) === host && el instanceof type) {
-      return el;
-    }
-  }
+  const selector = `[data-target~="${host.tagName.toLowerCase()}:${name}"]`;
+  const element = host.querySelector(selector);
+  return element?.closest(host.tagName) === host && element instanceof type
+    ? element
+    : undefined;
 }
 
 type Target<T> = Constructor<T> | [Constructor<T>, true];
 
 type TargetMap = Record<string, Target<any>>;
 
-type InferTarget<T extends Target<any>> = T extends [any, true]
-  ? InstanceType<T[0]>
+type InferTarget<T> = T extends readonly [any, true] ? InstanceType<T[0]>
   : T extends Constructor<any> ? InstanceType<T> | undefined
   : never;
 
-type InferTargets<T extends TargetMap> = {
-  [K in keyof T]: InferTarget<T[K]>;
-};
+type InferTargets<T extends TargetMap> = { [K in keyof T]: InferTarget<T[K]> };
 
 /**
  * Define and access element targets with type safety and validation.
@@ -58,24 +52,19 @@ export function targetRefs<T extends TargetMap>(
   targets: T,
 ): InferTargets<T> {
   const refs = {} as InferTargets<T>;
-  const tag = host.tagName.toLowerCase();
-
   for (const [name, config] of Object.entries(targets)) {
     const [type, required] = Array.isArray(config) ? config : [config, false];
-
     Object.defineProperty(refs, name, {
-      get() {
+      get: () => {
         const el = findTarget(host, name, type);
         if (required && !el) {
           throw new Error(
-            `Required target "${name}" not found in <${tag}>. ` +
-              `Add data-target="${tag}:${name}" to the target element.`,
+            `Missing required target "${name}" in <${host.tagName.toLowerCase()}>. Use data-target="${host.tagName.toLowerCase()}:${name}"`,
           );
         }
         return el;
       },
     });
   }
-
   return refs;
 }
