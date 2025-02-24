@@ -42,6 +42,11 @@ await $`./build_solid.ts`;
 
 await npmPublish("solid", dryRun);
 
+// alien
+await $`./build_alien.ts`;
+
+await npmPublish("alien", dryRun);
+
 // incentive
 
 await $`./build_incentive.ts`;
