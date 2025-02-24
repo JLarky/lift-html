@@ -7,6 +7,7 @@
     "jsr:@david/which@~0.4.1": "0.4.1",
     "jsr:@davidbonnet/astring@1.8.6": "1.8.6",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
+    "jsr:@eta-dev/eta@*": "3.5.0",
     "jsr:@std/assert@*": "1.0.10",
     "jsr:@std/assert@0.221": "0.221.0",
     "jsr:@std/assert@^1.0.10": "1.0.10",
@@ -101,6 +102,9 @@
         "jsr:@std/fmt@1.0.3",
         "jsr:@std/io@0.225.0"
       ]
+    },
+    "@eta-dev/eta@3.5.0": {
+      "integrity": "6b70827efc14c7cbf08498ac7a922ecab003641caf3852a6cb5b1b12ee58fb37"
     },
     "@std/assert@0.221.0": {
       "integrity": "a5f1aa6e7909dbea271754fd4ab3f4e687aeff4873b4cef9a320af813adb489a"

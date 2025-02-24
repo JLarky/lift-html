@@ -34,6 +34,18 @@ jobs:
       - name: test
         run: deno test -A
 
+      - name: Generate files
+        run: deno task generate
+
+      - name: Check if generated files are up to date
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Generated files are not up to date. Please run 'deno task generate' and commit the changes."
+            git status
+            git diff
+            exit 1
+          fi
+
   publish_npm:
     runs-on: ubuntu-latest
 

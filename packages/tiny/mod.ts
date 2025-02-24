@@ -124,6 +124,26 @@ export type Reactify<Base, T> = {
 };
 
 /**
+ * Add this to your app.d.ts file to make all lift-html components available
+ * as Svelte elements. You only need to do this once per project.
+ *
+ * @example
+ * ```ts
+ * import type { HTMLAttributes } from "svelte/elements";
+ * import type { Sveltify, KnownElements } from "@lift-html/tiny";
+ *
+ * declare global {
+ *   namespace svelteHTML {
+ *     interface IntrinsicElements extends Sveltify<HTMLAttributes<HTMLSpanElement>, KnownElements> {}
+ *   }
+ * }
+ * ```
+ */
+export type Sveltify<Base, T> = {
+  [P in keyof T]?: Base & ResolveProps<T[P]>;
+};
+
+/**
  * Converts a type of `KnownElements` to a type that can be used in
  * `HTMLElementTagNameMap` to make all lift-html components available as
  * global HTML elements. You only need to do this once per project.

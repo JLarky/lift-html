@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-read=. --allow-write=../packages,./packages --watch
+#!/usr/bin/env -S deno run --allow-read=. --allow-write=../packages,./packages
 
 import $ from "jsr:@david/dax";
 import { Eta } from "jsr:@eta-dev/eta";
