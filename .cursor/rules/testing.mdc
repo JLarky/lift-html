@@ -1,0 +1,5 @@
+---
+description: Deno tests
+globs: 
+---
+To run tests please run `deno task test` and `deno lint`
