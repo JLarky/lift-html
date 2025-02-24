@@ -1,0 +1,8 @@
+{
+  "name": "@lift-html/alien",
+  "version": "0.0.1",
+  "exports": "./mod.ts",
+  "imports": {
+    "alien-signals": "npm:alien-signals@^1.0.4"
+  }
+}

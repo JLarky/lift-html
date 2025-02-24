@@ -177,6 +177,33 @@ Deno.test({
       },
     });
 
+    await t.step({
+      name: "alien: check reaction to attribute change",
+      async fn() {
+        const page = await browser.newPage(
+          `http://localhost:${PORT}/alien`,
+        );
+        await page.waitForSelector(".loaded");
+        const value = await page.evaluate(() => {
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value,
+          '<lift-counter count="1"><div class="loaded">1</div></lift-counter>',
+        );
+        const value2 = await page.evaluate(() => {
+          const counter = document.querySelector("lift-counter");
+          if (!counter) throw new Error("Counter not found");
+          counter.setAttribute("count", "2");
+          return document.body.innerHTML.trim();
+        });
+        assertEquals(
+          value2,
+          '<lift-counter count="2"><div class="loaded">2</div></lift-counter>',
+        );
+      },
+    });
+
     server.stop();
     await browser.close();
   },

@@ -2,11 +2,14 @@
   "nodeModulesDir": "auto",
   "tasks": {
     "generate": "./src/generate.ts",
+    "test:unit": "deno test -A packages/*",
     "test": "deno test -A",
     "bump:cli": "deno run -A jsr:@kellnerd/bump --file packages/cli/deno.jsonc --tag @lift-html/cli@ --commit \"release @lift-html/cli@\"",
     "bump:core": "deno run -A jsr:@kellnerd/bump --file packages/core/deno.jsonc --tag @lift-html/core@ --commit \"release @lift-html/core@\"",
     "bump:solid": "deno run -A jsr:@kellnerd/bump --file packages/solid/deno.jsonc --tag @lift-html/solid@ --commit \"release @lift-html/solid@\"",
+    "bump:alien": "deno run -A jsr:@kellnerd/bump --file packages/alien/deno.jsonc --tag @lift-html/alien@ --commit \"release @lift-html/alien@\"",
     "bump:incentive": "deno run -A jsr:@kellnerd/bump --file packages/incentive/deno.jsonc --tag @lift-html/incentive@ --commit \"release @lift-html/incentive@\"",
+    "bump:tiny": "deno run -A jsr:@kellnerd/bump --file packages/tiny/deno.jsonc --tag @lift-html/tiny@ --commit \"release @lift-html/tiny@\"",
     "lume:start": "cd examples/lume; deno task serve --port=8080"
   },
   "compilerOptions": {
@@ -18,6 +21,7 @@
     "packages/tiny",
     "packages/incentive",
     "packages/cli",
+    "packages/alien",
     "examples/lume"
   ],
   "exclude": ["**/npm"]

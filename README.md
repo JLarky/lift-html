@@ -5,6 +5,7 @@
 | @lift-html/tiny                                        | <img src="https://deno.bundlejs.com/?q=@lift-html/tiny&badge=detailed&badge-style=for-the-badge&treeshake=[{tinyLift}]" height="28" valign="middle">                 |
 | @lift-html/core                                        | <img src="https://deno.bundlejs.com/?q=@lift-html/core&badge=detailed&badge-style=for-the-badge&treeshake=[{liftHtml}]" height="28" valign="middle">                 |
 | @lift-html/solid (includes solid-js)                   | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid}]" height="28" valign="middle">               |
+| @lift-html/alien (includes alien-signals)              | <img src="https://deno.bundlejs.com/?q=@lift-html/alien&badge=detailed&badge-style=for-the-badge&treeshake=[{liftAlien}]" height="28" valign="middle">               |
 | @lift-html/solid (includes solid-js and useAttributes) | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid,useAttributes}]" height="28" valign="middle"> |
 
 ## Welcome to the non-isomorphic web
