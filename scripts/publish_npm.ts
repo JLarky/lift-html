@@ -24,31 +24,18 @@ async function isVersionDifferent(name: string) {
   return version !== npmVersion;
 }
 
-// core
+// List of all packages to build and publish
+const packages = [
+  ["core", "build_core.ts"],
+  ["tiny", "build_tiny.ts"],
+  ["solid", "build_solid.ts"],
+  ["alien", "build_alien.ts"],
+  ["incentive", "build_incentive.ts"],
+] as const;
 
-await $`./build_core.ts`;
-
-await npmPublish("core", dryRun);
-
-// tiny
-
-await $`./build_tiny.ts`;
-
-await npmPublish("tiny", dryRun);
-
-// solid
-
-await $`./build_solid.ts`;
-
-await npmPublish("solid", dryRun);
-
-// alien
-await $`./build_alien.ts`;
-
-await npmPublish("alien", dryRun);
-
-// incentive
-
-await $`./build_incentive.ts`;
-
-await npmPublish("incentive", dryRun);
+// Process all packages
+for (const [name, buildScript] of packages) {
+  console.log(`\nProcessing @lift-html/${name}...`);
+  await $`./${buildScript}`;
+  await npmPublish(name, dryRun);
+}
