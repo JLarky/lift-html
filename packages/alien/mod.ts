@@ -1,6 +1,6 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/solid/mod.ts
 
-import { createRoot, createSignal } from "npm:solid-js@^1.9";
+import { effectScope, signal } from "npm:alien-signals@^1.0.4";
 import {
   type Attributes,
   type LiftBaseClass,
@@ -21,27 +21,27 @@ export type {
 
 /**
  * Creates a custom element. The `init` function is called when the element is
- * connected to the DOM, and you can safely use Solid's reactive primitives like
- * `createEffect` and `onCleanup` and `createSignal` inside it.
+ * connected to the DOM, and you can safely use alien-signals reactive primitives like
+ * `effect` and `signal` inside it.
  *
  * @example
  *```ts
  * // rendered with <hello-el name="world"></hello-el>
- * import { liftSolid, useAttributes } from "@lift-html/solid";
- * import { createEffect } from "solid-js";
+ * import { liftAlien, useAttributes } from "@lift-html/alien";
+ * import { effect } from "alien-signals";
  *
- * liftSolid("hello-el", {
+ * liftAlien("hello-el", {
  *   observedAttributes: ["name"],
  *   init() {
  *     const props = useAttributes(this);
- *     createEffect(() => {
+ *     effect(() => {
  *       this.innerText = "Hello, " + props.name;
  *     });
  *   },
  * });
 ```
  */
-export function liftSolid<
+export function liftAlien<
   TAttributes extends Attributes,
   Options extends LiftOptions<TAttributes>,
 >(
@@ -51,30 +51,40 @@ export function liftSolid<
   return liftHtml(tagName, {
     ...opts,
     init(onCleanup) {
-      createRoot((dispose) => {
+      onCleanup(effectScope(() => {
         opts.init?.call(this, onCleanup);
-        onCleanup(dispose);
-      });
+      }));
     },
   });
 }
 
 /**
- * Makes attributes reactive. Returns an object where each key is an attribute
+ * Makes attributes reactive. Returns an object where each key is a signal
  * based on the `options.observedAttributes` of the component.
  */
 export function useAttributes<TAttributes extends Attributes>(
   instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-): Record<NonNullable<TAttributes>[number], string | null> {
+): Record<NonNullable<TAttributes>[number], () => string | null> {
   const attributes = instance.options.observedAttributes as TAttributes;
-  const props = {} as Record<NonNullable<TAttributes>[number], string | null>;
+  const props = {} as Record<
+    NonNullable<TAttributes>[number],
+    () => string | null
+  >;
+  type SignalType = ReturnType<typeof signal<string | null>>;
+  const signals = new Map<string, SignalType>();
+
   if (attributes) {
     for (const key of attributes) {
-      const [get, set] = createSignal(instance.getAttribute(key));
-      Object.defineProperty(props, key, { get, set });
+      const sig = signal<string | null>(instance.getAttribute(key));
+      signals.set(key, sig);
+      // Cast key to the correct type since we know it's from attributes
+      props[key as NonNullable<TAttributes>[number]] = () => sig();
     }
-    instance.acb = (attrName, newValue) => {
-      props[attrName as keyof typeof props] = newValue;
+    instance.acb = (attrName: string, newValue: string | null) => {
+      const sig = signals.get(attrName);
+      if (sig) {
+        sig(newValue);
+      }
     };
   }
   return props;

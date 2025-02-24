@@ -19,6 +19,7 @@
     "packages/tiny",
     "packages/incentive",
     "packages/cli",
+    "packages/alien",
     "examples/lume"
   ],
   "exclude": ["**/npm"]
