@@ -2,10 +2,10 @@ import { expectTypeOf } from "npm:expect-type";
 import { assertSpyCallArgs, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 import { assertThrows } from "jsr:@std/assert";
 
-import { findTarget, targetRefs } from "./mod.ts";
+import { targetRefs } from "./mod.ts";
 
 Deno.test({
-  name: "test",
+  name: "targetRefs",
   async fn(t) {
     const myHTMLElement = class {
       constructor(public tagName: string) {}
@@ -17,53 +17,37 @@ Deno.test({
       }
     };
     globalThis.HTMLElement = myHTMLElement as unknown as typeof HTMLElement;
+    globalThis.HTMLInputElement = class
+      extends myHTMLElement {} as unknown as typeof HTMLInputElement;
+    globalThis.HTMLButtonElement = class
+      extends myHTMLElement {} as unknown as typeof HTMLButtonElement;
     globalThis.document = {
       createElement: (tagName: string) =>
         new myHTMLElement(tagName) as unknown as HTMLElement,
     } as unknown as Document;
 
     await t.step({
-      name: "findTarget calls querySelectorAll",
+      name: "finds targets using querySelectorAll",
       fn() {
         const expect = '[data-target~="my-element:test-target"]';
         const mockFn = spy((_element: HTMLElement) => []);
         const div = document.createElement("my-element");
         div.querySelectorAll =
           mockFn as unknown as typeof div["querySelectorAll"];
-        const testElement = findTarget(div, "test-target");
-        expectTypeOf<typeof testElement>().toEqualTypeOf<
-          HTMLElement | undefined
-        >();
+
+        const refs = targetRefs(div, {
+          "test-target": { type: HTMLElement },
+        });
+
+        // Accessing the target should trigger the query
+        refs["test-target"];
         assertSpyCallArgs(mockFn, 0, [expect]);
         assertSpyCalls(mockFn, 1);
       },
     });
 
     await t.step({
-      name: "targetRefs calls querySelectorAll",
-      fn() {
-        const expect = '[data-target~="my-element:test-target"]';
-        const mockFn = spy((_element: HTMLElement) => []);
-        const div = document.createElement("my-element");
-        div.querySelectorAll =
-          mockFn as unknown as typeof div["querySelectorAll"];
-        const refs = targetRefs(div, { "test-target": HTMLElement });
-        assertSpyCalls(mockFn, 0);
-        const testElement = refs["test-target"];
-        expectTypeOf<typeof testElement>().toEqualTypeOf<
-          HTMLElement | undefined
-        >();
-        // @ts-expect-error unknown fields do not exist
-        expectTypeOf<typeof refs["test-target2"]>().toEqualTypeOf<
-          HTMLElement | undefined
-        >();
-        assertSpyCallArgs(mockFn, 0, [expect]);
-        assertSpyCalls(mockFn, 1);
-      },
-    });
-
-    await t.step({
-      name: "targetRefs supports required refs",
+      name: "supports optional and required targets",
       fn() {
         const div = document.createElement("my-element");
         const mockFn = spy((_element: HTMLElement) => []);
@@ -71,11 +55,11 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const refs = targetRefs(div, {
-          optional: HTMLElement,
-          required: { type: HTMLElement, required: true, validate: "lazy" },
+          optional: { type: HTMLElement },
+          required: { type: HTMLElement, required: true },
         });
 
-        // Optional ref should be undefined
+        // Optional target should be undefined
         expectTypeOf<typeof refs.optional>().toEqualTypeOf<
           HTMLElement | undefined
         >();
@@ -84,7 +68,7 @@ Deno.test({
           HTMLElement | undefined
         >();
 
-        // Required ref should throw error when accessed
+        // Required target should throw error when accessed
         expectTypeOf<typeof refs.required>().toEqualTypeOf<HTMLElement>();
         assertThrows(
           () => refs.required,
@@ -95,55 +79,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "targetRefs supports validation modes",
-      fn() {
-        const div = document.createElement("my-element");
-        const mockFn = spy((_element: HTMLElement) => []);
-        div.querySelectorAll =
-          mockFn as unknown as typeof div["querySelectorAll"];
-
-        // Immediate validation should throw right away
-        assertThrows(
-          () =>
-            targetRefs(div, {
-              immediate: {
-                type: HTMLElement,
-                required: true,
-                validate: "immediate",
-              },
-            }),
-          Error,
-          'Required target "immediate" not found in <my-element>',
-        );
-
-        // Lazy validation should only throw when accessed
-        const refs = targetRefs(div, {
-          lazy: {
-            type: HTMLElement,
-            required: true,
-            validate: "lazy",
-          },
-        });
-        assertThrows(
-          () => refs.lazy,
-          Error,
-          'Required target "lazy" not found in <my-element>',
-        );
-
-        // No validation should return undefined without throwing
-        const noValidation = targetRefs(div, {
-          none: {
-            type: HTMLElement,
-            required: true,
-            validate: "none",
-          },
-        });
-        noValidation.none; // Should not throw
-      },
-    });
-
-    await t.step({
-      name: "targetRefs supports custom error messages",
+      name: "supports custom error messages",
       fn() {
         const div = document.createElement("my-element");
         const mockFn = spy((_element: HTMLElement) => []);
@@ -151,19 +87,39 @@ Deno.test({
           mockFn as unknown as typeof div["querySelectorAll"];
 
         const customMessage = "Custom error message";
+        const refs = targetRefs(div, {
+          custom: {
+            type: HTMLElement,
+            required: true,
+            message: customMessage,
+          },
+        });
+
         assertThrows(
-          () =>
-            targetRefs(div, {
-              custom: {
-                type: HTMLElement,
-                required: true,
-                validate: "immediate",
-                errorMessage: customMessage,
-              },
-            }),
+          () => refs.custom,
           Error,
           customMessage,
         );
+      },
+    });
+
+    await t.step({
+      name: "enforces type safety",
+      fn() {
+        const div = document.createElement("my-element");
+        const refs = targetRefs(div, {
+          input: { type: HTMLInputElement },
+          button: { type: HTMLButtonElement, required: true },
+        });
+
+        // TypeScript should know these types
+        expectTypeOf<typeof refs.input>().toEqualTypeOf<
+          HTMLInputElement | undefined
+        >();
+        expectTypeOf<typeof refs.button>().toEqualTypeOf<HTMLButtonElement>();
+
+        // @ts-expect-error unknown fields do not exist
+        refs.unknown;
       },
     });
   },

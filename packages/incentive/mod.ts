@@ -1,177 +1,87 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/incentive/mod.ts
 
-export type Constructor<T = object, A extends any[] = any[], Static = {}> =
-  & (new (...a: A) => T)
-  & Static;
+export type Constructor<T = object> = new (...args: any[]) => T;
 
-// inspired by @github/catalyst
 /**
- * This is a wrapper around `querySelector` that finds the first element with a
- * specified target name. To make things more explicit you have to specify the
- * name of the custom element as a prefix, the second difference is that if you
- * have nested components selector will ignore targets from nested ones.
- *
- * @example
- * ```html
- * <my-element>
- *   <button data-target="my-element:button">Click me</button>
- *   <input data-target="my-element:input" />
- * </my-element>
- * <script>
- * import { liftHtml } from '@lift-html/core';
- * import { findTarget } from '@lift-html/incentive';
- *
- * liftHtml('my-element', {
- *   init() {
- *     const button = findTarget(this, 'button');
- *     const input = findTarget(this, 'input', HTMLInputElement);
- *     // note that typescript will know that input has the `value` property
- *     button.onclick = () => input.value = 'Hello world';
- *   }
- * });
- * </script>
- * ```
+ * Find a target element by name. Returns undefined if not found.
+ * @internal
  */
-export function findTarget<T = HTMLElement>(
-  wcElement: HTMLElement,
+function findTarget<T>(
+  host: HTMLElement,
   name: string,
-  targetType: Constructor<T> = HTMLElement as Constructor<T>,
+  type: Constructor<T>,
 ): T | undefined {
-  const tag = wcElement.tagName.toLowerCase();
+  const tag = host.tagName.toLowerCase();
   for (
-    const el of wcElement.querySelectorAll(`[data-target~="${tag}:${name}"]`)
+    const el of host.querySelectorAll(`[data-target~="${tag}:${name}"]`)
   ) {
-    if (el.closest(tag) === wcElement) {
-      return el instanceof targetType ? el : undefined;
+    if (el.closest(tag) === host && el instanceof type) {
+      return el;
     }
   }
-  return undefined;
 }
 
-type ValidationMode = "immediate" | "lazy" | "none";
-
-type TargetConfig<T> = {
+type Target<T> = {
+  /** Element type constructor */
   type: Constructor<T>;
+  /** Whether the target is required. If true and target is not found, an error will be thrown */
   required?: boolean;
-  /**
-   * Validation mode:
-   * - 'immediate': validate when targetRefs is called (default for required refs)
-   * - 'lazy': validate when the ref is accessed (default for optional refs)
-   * - 'none': no validation, refs will be undefined if not found
-   */
-  validate?: ValidationMode;
-  /**
-   * Custom error message when target is not found.
-   * If not provided, a default message will be used.
-   */
-  errorMessage?: string;
+  /** Custom error message when target is not found */
+  message?: string;
 };
 
-type TargetDefinition<T> = Constructor<T> | TargetConfig<T>;
+type TargetMap = Record<string, Target<any>>;
 
-type InferTargetType<T extends TargetDefinition<any>> = T extends
-  Constructor<infer U> ? U
-  : T extends TargetConfig<infer U> ? U
-  : never;
+type InferTarget<T extends Target<any>> = T["required"] extends true
+  ? InstanceType<T["type"]>
+  : InstanceType<T["type"]> | undefined;
 
-type InferTargetRequired<T extends TargetDefinition<any>> = T extends
-  Constructor<any> ? false
-  : T extends TargetConfig<any> ? T["required"] extends true ? true
-    : false
-  : never;
-
-type TargetsConfig = Record<string, TargetDefinition<any>>;
-
-type InferTargetTypes<T extends TargetsConfig> = {
-  [K in keyof T]: InferTargetRequired<T[K]> extends true ? InferTargetType<T[K]>
-    : InferTargetType<T[K]> | undefined;
+type InferTargets<T extends TargetMap> = {
+  [K in keyof T]: InferTarget<T[K]>;
 };
-
-function getDefaultErrorMessage(
-  key: string,
-  tagName: string,
-): string {
-  return `Required target "${key}" not found in <${tagName.toLowerCase()}>. ` +
-    `Make sure the element has data-target="${tagName.toLowerCase()}:${key}" attribute.`;
-}
 
 /**
- * This is a wrapper around `querySelector` that finds elements with specified target names.
- * You can mark targets as required and customize validation behavior.
+ * Define and access element targets with type safety and validation.
+ * Required targets will throw an error if not found.
  *
  * @example
- * ```html
- * <my-element>
- *   <button data-target="my-element:button">Click me</button>
- *   <input data-target="my-element:input" />
- * </my-element>
- * <script>
- * import { liftHtml } from '@lift-html/core';
- * import { targetRefs } from '@lift-html/incentive';
- *
- * liftHtml('my-element', {
- *   init() {
- *     const refs = targetRefs(this, {
- *       // Optional target - type will be HTMLElement | undefined
- *       button: HTMLElement,
- *       // Required target with immediate validation
- *       input: {
- *         type: HTMLInputElement,
- *         required: true,
- *         validate: 'immediate',
- *         errorMessage: 'Input element is required for this component to work'
- *       },
- *       // Required target with lazy validation (only throws when accessed)
- *       label: {
- *         type: HTMLElement,
- *         required: true,
- *         validate: 'lazy'
- *       }
- *     });
- *     // TypeScript knows input is not undefined
- *     refs.button?.onclick = () => refs.input.value = 'Hello world';
+ * ```ts
+ * const refs = targetRefs(this, {
+ *   // Optional target - type will be HTMLElement | undefined
+ *   optional: { type: HTMLElement },
+ *   // Required target - type will be HTMLInputElement
+ *   input: {
+ *     type: HTMLInputElement,
+ *     required: true,
+ *     message: "Input element is required for this component"
  *   }
  * });
- * </script>
+ *
+ * // TypeScript knows input is not undefined
+ * refs.input.value = "Hello";
+ * // TypeScript knows optional might be undefined
+ * refs.optional?.focus();
  * ```
  */
-export function targetRefs<Targets extends TargetsConfig>(
-  self: HTMLElement,
-  targets: Targets,
-): InferTargetTypes<Targets> {
-  const refs = {} as InferTargetTypes<Targets>;
+export function targetRefs<T extends TargetMap>(
+  host: HTMLElement,
+  targets: T,
+): InferTargets<T> {
+  const refs = {} as InferTargets<T>;
+  const tag = host.tagName.toLowerCase();
 
-  for (const [key, config] of Object.entries(targets)) {
-    const targetType = typeof config === "function" ? config : config.type;
-    const required = typeof config === "function"
-      ? false
-      : config.required ?? false;
-    const validate = typeof config === "function"
-      ? "lazy"
-      : config.validate ?? (required ? "immediate" : "lazy");
-    const errorMessage = typeof config === "function"
-      ? undefined
-      : config.errorMessage;
-
-    // Immediate validation for required refs
-    if (validate === "immediate") {
-      const element = findTarget(self, key, targetType);
-      if (required && !element) {
-        throw new Error(
-          errorMessage ?? getDefaultErrorMessage(key, self.tagName),
-        );
-      }
-    }
-
-    Object.defineProperty(refs, key, {
+  for (const [name, config] of Object.entries(targets)) {
+    Object.defineProperty(refs, name, {
       get() {
-        const element = findTarget(self, key, targetType);
-        if (required && !element && validate !== "none") {
+        const el = findTarget(host, name, config.type);
+        if (config.required && !el) {
           throw new Error(
-            errorMessage ?? getDefaultErrorMessage(key, self.tagName),
+            config.message ??
+              `Required target "${name}" not found in <${tag}>. ` +
+                `Add data-target="${tag}:${name}" to the target element.`,
           );
         }
-        return element;
+        return el;
       },
     });
   }
