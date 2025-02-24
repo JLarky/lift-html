@@ -5,7 +5,7 @@ liftHtml("lift-counter", {
   observedAttributes: ["count"] as const,
   init() {
     const refs = targetRefs(this, {
-      output: [HTMLDivElement, true],
+      output: [HTMLDivElement],
     });
 
     const div = document.createElement("div");
