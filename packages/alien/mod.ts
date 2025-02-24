@@ -21,8 +21,8 @@ export type {
 
 /**
  * Creates a custom element. The `init` function is called when the element is
- * connected to the DOM, and you can safely use alien-signals reactive primitives like
- * `effect` and `signal` inside it.
+ * connected to the DOM, and you can safely use alien-signals reactive primitives
+ * like `effect` and `signal` inside it.
  *
  * @example
  *```ts
