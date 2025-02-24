@@ -13,51 +13,29 @@ function findTargets<T extends Element>(
   required = false,
 ): T[] | T {
   const tag = host.tagName.toLowerCase();
-  const selector = `[data-target~="${tag}:${name}"]`;
-  const typeArray = Array.isArray(types) ? types : [types];
+  const elements = (Array.isArray(types) ? types : [types]).flatMap((type) =>
+    [...host.querySelectorAll(`[data-target~="${tag}:${name}"]`)]
+      .filter((el) => el.closest(host.tagName) === host && el instanceof type)
+  ) as T[];
 
-  const elements = typeArray.flatMap((type) => {
-    const found: T[] = [];
-    for (const element of host.querySelectorAll(selector)) {
-      if (element.closest(host.tagName) === host && element instanceof type) {
-        found.push(element as T);
-      }
-    }
-    return found;
-  });
-
-  if (required) {
-    if (elements.length === 0) {
-      throw new Error(
-        `Required target "${name}" not found in <${tag}>. Use data-target="${tag}:${name}"`,
-      );
-    }
-    return elements[0];
+  if (!required) return elements;
+  if (!elements.length) {
+    throw new Error(
+      `Required target "${name}" not found in <${tag}>. Use data-target="${tag}:${name}"`,
+    );
   }
-
-  return elements;
+  return elements[0];
 }
 
 type Target<T> = Constructor<T> | Constructor<T>[];
-
 type TargetMap = Record<string, Target<any>>;
-
-type UnwrapConstructor<T> = T extends Constructor<infer U> ? U : never;
-
-/**
- * Flatten type output to improve type hints shown in editors
- */
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
-
-type InferTarget<T> = Simplify<
-  T extends Constructor<any>[] ? UnwrapConstructor<T[number]>[]
-    : UnwrapConstructor<T>
->;
-
+type UnwrapConstructor<T> = T extends Constructor<infer U> ? U : never;
+type InferTarget<T> = T extends Constructor<any>[]
+  ? UnwrapConstructor<T[number]>[]
+  : UnwrapConstructor<T>;
 type InferTargets<T extends TargetMap> = Simplify<
-  {
-    [K in keyof T]: InferTarget<T[K]>;
-  }
+  { [K in keyof T]: InferTarget<T[K]> }
 >;
 
 /**
