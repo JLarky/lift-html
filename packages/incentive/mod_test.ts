@@ -12,6 +12,9 @@ Deno.test({
       querySelectorAll() {
         return [];
       }
+      closest(_selector: string) {
+        return this;
+      }
     };
     globalThis.HTMLElement = myHTMLElement as unknown as typeof HTMLElement;
     globalThis.document = {
@@ -69,7 +72,7 @@ Deno.test({
 
         const refs = targetRefs(div, {
           optional: HTMLElement,
-          required: { type: HTMLElement, required: true },
+          required: { type: HTMLElement, required: true, validate: "lazy" },
         });
 
         // Optional ref should be undefined
@@ -87,6 +90,79 @@ Deno.test({
           () => refs.required,
           Error,
           'Required target "required" not found in <my-element>',
+        );
+      },
+    });
+
+    await t.step({
+      name: "targetRefs supports validation modes",
+      fn() {
+        const div = document.createElement("my-element");
+        const mockFn = spy((_element: HTMLElement) => []);
+        div.querySelectorAll =
+          mockFn as unknown as typeof div["querySelectorAll"];
+
+        // Immediate validation should throw right away
+        assertThrows(
+          () =>
+            targetRefs(div, {
+              immediate: {
+                type: HTMLElement,
+                required: true,
+                validate: "immediate",
+              },
+            }),
+          Error,
+          'Required target "immediate" not found in <my-element>',
+        );
+
+        // Lazy validation should only throw when accessed
+        const refs = targetRefs(div, {
+          lazy: {
+            type: HTMLElement,
+            required: true,
+            validate: "lazy",
+          },
+        });
+        assertThrows(
+          () => refs.lazy,
+          Error,
+          'Required target "lazy" not found in <my-element>',
+        );
+
+        // No validation should return undefined without throwing
+        const noValidation = targetRefs(div, {
+          none: {
+            type: HTMLElement,
+            required: true,
+            validate: "none",
+          },
+        });
+        noValidation.none; // Should not throw
+      },
+    });
+
+    await t.step({
+      name: "targetRefs supports custom error messages",
+      fn() {
+        const div = document.createElement("my-element");
+        const mockFn = spy((_element: HTMLElement) => []);
+        div.querySelectorAll =
+          mockFn as unknown as typeof div["querySelectorAll"];
+
+        const customMessage = "Custom error message";
+        assertThrows(
+          () =>
+            targetRefs(div, {
+              custom: {
+                type: HTMLElement,
+                required: true,
+                validate: "immediate",
+                errorMessage: customMessage,
+              },
+            }),
+          Error,
+          customMessage,
         );
       },
     });

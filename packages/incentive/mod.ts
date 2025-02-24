@@ -48,9 +48,23 @@ export function findTarget<T = HTMLElement>(
   return undefined;
 }
 
+type ValidationMode = "immediate" | "lazy" | "none";
+
 type TargetConfig<T> = {
   type: Constructor<T>;
   required?: boolean;
+  /**
+   * Validation mode:
+   * - 'immediate': validate when targetRefs is called (default for required refs)
+   * - 'lazy': validate when the ref is accessed (default for optional refs)
+   * - 'none': no validation, refs will be undefined if not found
+   */
+  validate?: ValidationMode;
+  /**
+   * Custom error message when target is not found.
+   * If not provided, a default message will be used.
+   */
+  errorMessage?: string;
 };
 
 type TargetDefinition<T> = Constructor<T> | TargetConfig<T>;
@@ -73,9 +87,17 @@ type InferTargetTypes<T extends TargetsConfig> = {
     : InferTargetType<T[K]> | undefined;
 };
 
+function getDefaultErrorMessage(
+  key: string,
+  tagName: string,
+): string {
+  return `Required target "${key}" not found in <${tagName.toLowerCase()}>. ` +
+    `Make sure the element has data-target="${tagName.toLowerCase()}:${key}" attribute.`;
+}
+
 /**
  * This is a wrapper around `querySelector` that finds elements with specified target names.
- * You can mark targets as required to ensure they exist at runtime.
+ * You can mark targets as required and customize validation behavior.
  *
  * @example
  * ```html
@@ -92,8 +114,19 @@ type InferTargetTypes<T extends TargetsConfig> = {
  *     const refs = targetRefs(this, {
  *       // Optional target - type will be HTMLElement | undefined
  *       button: HTMLElement,
- *       // Required target - type will be HTMLInputElement
- *       input: { type: HTMLInputElement, required: true },
+ *       // Required target with immediate validation
+ *       input: {
+ *         type: HTMLInputElement,
+ *         required: true,
+ *         validate: 'immediate',
+ *         errorMessage: 'Input element is required for this component to work'
+ *       },
+ *       // Required target with lazy validation (only throws when accessed)
+ *       label: {
+ *         type: HTMLElement,
+ *         required: true,
+ *         validate: 'lazy'
+ *       }
  *     });
  *     // TypeScript knows input is not undefined
  *     refs.button?.onclick = () => refs.input.value = 'Hello world';
@@ -113,14 +146,29 @@ export function targetRefs<Targets extends TargetsConfig>(
     const required = typeof config === "function"
       ? false
       : config.required ?? false;
+    const validate = typeof config === "function"
+      ? "lazy"
+      : config.validate ?? (required ? "immediate" : "lazy");
+    const errorMessage = typeof config === "function"
+      ? undefined
+      : config.errorMessage;
+
+    // Immediate validation for required refs
+    if (validate === "immediate") {
+      const element = findTarget(self, key, targetType);
+      if (required && !element) {
+        throw new Error(
+          errorMessage ?? getDefaultErrorMessage(key, self.tagName),
+        );
+      }
+    }
 
     Object.defineProperty(refs, key, {
       get() {
         const element = findTarget(self, key, targetType);
-        if (required && !element) {
+        if (required && !element && validate !== "none") {
           throw new Error(
-            `Required target "${key}" not found in <${self.tagName.toLowerCase()}>. ` +
-              `Make sure the element has data-target="${self.tagName.toLowerCase()}:${key}" attribute.`,
+            errorMessage ?? getDefaultErrorMessage(key, self.tagName),
           );
         }
         return element;
