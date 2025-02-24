@@ -6,21 +6,15 @@
     "bump:cli": "deno run -A jsr:@kellnerd/bump --file packages/cli/deno.jsonc --tag @lift-html/cli@ --commit \"release @lift-html/cli@\"",
     "bump:core": "deno run -A jsr:@kellnerd/bump --file packages/core/deno.jsonc --tag @lift-html/core@ --commit \"release @lift-html/core@\"",
     "bump:solid": "deno run -A jsr:@kellnerd/bump --file packages/solid/deno.jsonc --tag @lift-html/solid@ --commit \"release @lift-html/solid@\"",
-    "bump:svelte": "deno run -A jsr:@kellnerd/bump --file packages/svelte/deno.jsonc --tag @lift-html/svelte@ --commit \"release @lift-html/svelte@\"",
     "bump:incentive": "deno run -A jsr:@kellnerd/bump --file packages/incentive/deno.jsonc --tag @lift-html/incentive@ --commit \"release @lift-html/incentive@\"",
-    "lume:start": "cd examples/lume; deno task serve --port=8080",
-    "demo:start": "cd demo && vinxi dev",
-    "demo:build": "cd demo && vinxi build",
-    "demo:preview": "cd demo && vinxi preview"
+    "lume:start": "cd examples/lume; deno task serve --port=8080"
   },
   "compilerOptions": {
     "lib": ["deno.ns", "esnext", "dom", "dom.iterable"]
   },
   "workspace": [
-    "demo",
     "packages/solid",
     "packages/core",
-    "packages/svelte",
     "packages/tiny",
     "packages/incentive",
     "packages/cli",

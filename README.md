@@ -34,9 +34,7 @@ After this you may enjoy a buffet of opt-in (and tree-shakeable) features like
 [GitHub Catalyst](https://github.github.io/catalyst/guide-v2/targets)-like API
 to work with targets inside of your components. Or various integrations to make
 your attributes reactive like `@lift-html/solid` that also gives you ability to
-use APIs like `createSignal` and `createEffect` inside of your components;
-`@lift-html/svelte` that gives you ability to use Runes like `state$` and
-`effect$` inside of your components.
+use APIs like `createSignal` and `createEffect` inside of your components.
 
 ## What is lift-html
 
