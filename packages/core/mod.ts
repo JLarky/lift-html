@@ -31,7 +31,7 @@ export interface LiftOptions<TAttributes extends Attributes> {
   formAssociated?: boolean | undefined;
   init(
     this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-    onCleanup: (dispose: () => void) => void,
+    deinit: (dispose: () => void) => void,
   ): void;
   noHMR?: boolean;
 }
@@ -89,8 +89,7 @@ export abstract class LiftBaseClass<
 
 /**
  * Creates a custom element. The `init` function is called when the element is
- * connected to the DOM, and you can safely use Solid's reactive primitives like
- * `createEffect` and `onCleanup` and `createSignal` inside it.
+ * connected to the DOM.
  *
  * @example
  *```ts

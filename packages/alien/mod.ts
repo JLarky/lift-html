@@ -50,9 +50,9 @@ export function liftAlien<
 ): LiftBaseConstructor<TAttributes, Options> {
   return liftHtml(tagName, {
     ...opts,
-    init(onCleanup) {
-      onCleanup(effectScope(() => {
-        opts.init?.call(this, onCleanup);
+    init(deinit) {
+      deinit(effectScope(() => {
+        opts.init?.call(this, deinit);
       }));
     },
   });
