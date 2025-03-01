@@ -7,25 +7,37 @@ Deno.test({
   name: "Browser test",
   async fn(t) {
     const PORT = 3000 + Math.floor(Math.random() * 1000);
-    const [server, browser] = await Promise.all([
+    const browserPromise = launch();
+    const res = Promise.all([
       (async () => {
         const dirname = import.meta.dirname;
         if (!dirname) throw new Error("dirname not found");
         await $`deno task build`.cwd(dirname).quiet();
         const root = `${dirname}/_site`;
-        const server = new Server({ root, port: PORT });
-        server.start();
-        return server;
+        return root;
       })(),
-      (() => launch())(),
+      browserPromise,
+      browserPromise.then((browser) => browser.newPage()),
     ]);
+
+    await t.step({
+      name: `starting server http://localhost:${PORT}`,
+      async fn() {
+        await res;
+      },
+    });
+
+    const [root, browser, page] = await res;
+
+    const server = new Server({ root, port: PORT });
+    server.start();
 
     await t.step({
       name: "core: check reaction to attribute change",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/core`,
-        );
+        await page.goto(`http://localhost:${PORT}/core`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
@@ -50,9 +62,9 @@ Deno.test({
     await t.step({
       name: "solid: check reaction to attribute change",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/solid`,
-        );
+        await page.goto(`http://localhost:${PORT}/solid`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
@@ -77,9 +89,9 @@ Deno.test({
     await t.step({
       name: "solid: works with HMR",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/solid`,
-        );
+        await page.goto(`http://localhost:${PORT}/solid`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
@@ -114,9 +126,9 @@ Deno.test({
     await t.step({
       name: "tiny: check reaction to attribute change",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/tiny`,
-        );
+        await page.goto(`http://localhost:${PORT}/tiny`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
@@ -142,9 +154,9 @@ Deno.test({
     await t.step({
       name: "tiny: check reconnection behavior",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/tiny`,
-        );
+        await page.goto(`http://localhost:${PORT}/tiny`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
 
         // Initial state
@@ -180,9 +192,9 @@ Deno.test({
     await t.step({
       name: "alien: check reaction to attribute change",
       async fn() {
-        const page = await browser.newPage(
-          `http://localhost:${PORT}/alien`,
-        );
+        await page.goto(`http://localhost:${PORT}/alien`, {
+          waitUntil: "load",
+        });
         await page.waitForSelector(".loaded");
         const value = await page.evaluate(() => {
           return document.body.innerHTML.trim();
