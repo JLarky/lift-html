@@ -50,10 +50,10 @@ export function liftSolid<
 ): LiftBaseConstructor<TAttributes, Options> {
   return liftHtml(tagName, {
     ...opts,
-    init(onCleanup) {
+    init(deinit) {
       createRoot((dispose) => {
-        opts.init?.call(this, onCleanup);
-        onCleanup(dispose);
+        opts.init?.call(this, deinit);
+        deinit(dispose);
       });
     },
   });
