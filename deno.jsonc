@@ -1,7 +1,6 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
-    "generate": "./src/generate.ts",
     "test:unit": "deno test -A packages/*",
     "test": "deno test -A",
     "bump:cli": "deno run -A jsr:@kellnerd/bump --file packages/cli/deno.jsonc --tag @lift-html/cli@ --commit \"release @lift-html/cli@\"",
