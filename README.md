@@ -37,6 +37,8 @@ to work with targets inside of your components. Or various integrations to make
 your attributes reactive like `@lift-html/solid` that also gives you ability to
 use APIs like `createSignal` and `createEffect` inside of your components.
 
+For a comprehensive guide on using lift-html from scratch, please see our [Usage Guide (USAGE.MD)](./USAGE.MD).
+
 ## What is lift-html
 
 lift-html is a tiny library for building HTML Web Components (and CSS Web
