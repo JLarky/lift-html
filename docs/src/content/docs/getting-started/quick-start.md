@@ -5,7 +5,8 @@ description: Build your first lift-html component in minutes
 
 # Quick Start
 
-Get up and running with Lift HTML in just a few minutes. This guide will walk you through creating your first component.
+Get up and running with Lift HTML in just a few minutes. This guide will walk
+you through creating your first component.
 
 ## Your First Component
 
@@ -16,21 +17,21 @@ Let's create a simple counter component to demonstrate the basics of Lift HTML.
 Create a new file called `counter.js`:
 
 ```javascript
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 const Counter = defineComponent({
-  name: 'my-counter',
-  
+  name: "my-counter",
+
   props: {
-    initial: { type: Number, default: 0 }
+    initial: { type: Number, default: 0 },
   },
-  
+
   data() {
     return {
-      count: this.initial
+      count: this.initial,
     };
   },
-  
+
   template: `
     <div class="counter">
       <h3>Counter: {{ count }}</h3>
@@ -39,20 +40,20 @@ const Counter = defineComponent({
       <button @click="reset">Reset</button>
     </div>
   `,
-  
+
   methods: {
     increment() {
       this.count++;
     },
-    
+
     decrement() {
       this.count--;
     },
-    
+
     reset() {
       this.count = this.initial;
-    }
-  }
+    },
+  },
 });
 
 // Register the component
@@ -66,44 +67,44 @@ In your HTML file:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lift HTML Counter</title>
     <style>
-        .counter {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            max-width: 300px;
-            margin: 20px auto;
-        }
-        
-        button {
-            margin: 0 5px;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            background: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        
-        button:hover {
-            background: #0056b3;
-        }
+      .counter {
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        max-width: 300px;
+        margin: 20px auto;
+      }
+
+      button {
+        margin: 0 5px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Lift HTML Quick Start</h1>
-    
+
     <!-- Use the component -->
     <my-counter initial="5"></my-counter>
     <my-counter initial="10"></my-counter>
-    
+
     <script type="module" src="./counter.js"></script>
-</body>
+  </body>
 </html>
 ```
 
@@ -122,7 +123,8 @@ npx serve .
 php -S localhost:8000
 ```
 
-Open your browser and navigate to `http://localhost:8000` to see your counter component in action!
+Open your browser and navigate to `http://localhost:8000` to see your counter
+component in action!
 
 ## What Just Happened?
 
@@ -165,22 +167,27 @@ Now that you've built your first component, explore more advanced features:
 
 - [Basic Usage](/guides/basic-usage/) - Learn about props, events, and lifecycle
 - [Components](/guides/components/) - Build more complex components
-- [Interoperability](/guides/interoperability/) - Use Lift HTML with other frameworks
+- [Interoperability](/guides/interoperability/) - Use Lift HTML with other
+  frameworks
 
 ## Troubleshooting
 
 ### Common Issues
 
 **Component not rendering?**
+
 - Make sure you called `Counter.register()`
 - Check that the script is loaded as a module (`type="module"`)
 
 **Props not working?**
+
 - Verify the prop name matches exactly (case-sensitive)
 - Check that the prop type is correct
 
 **Events not firing?**
+
 - Ensure the event name is correct (e.g., `@click`, not `@onclick`)
 - Check that the method name exists in the component
 
-Need help? Check out the [GitHub repository](https://github.com/JLarky/lift-html) or open an issue!
+Need help? Check out the
+[GitHub repository](https://github.com/JLarky/lift-html) or open an issue!

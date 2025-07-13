@@ -5,7 +5,9 @@ description: Use lift-html with other frameworks and libraries
 
 # Interoperability
 
-Lift HTML is designed to work seamlessly with existing frameworks and libraries. This guide shows you how to integrate Lift HTML components with React, Vue, Angular, and other popular tools.
+Lift HTML is designed to work seamlessly with existing frameworks and libraries.
+This guide shows you how to integrate Lift HTML components with React, Vue,
+Angular, and other popular tools.
 
 ## Framework Integration
 
@@ -15,23 +17,23 @@ Lift HTML components can be used directly in React applications.
 
 ```jsx
 // React component using Lift HTML
-import React, { useEffect, useRef } from 'react';
-import { defineComponent } from 'lift-html';
+import React, { useEffect, useRef } from "react";
+import { defineComponent } from "lift-html";
 
 // Define a Lift HTML component
 const Counter = defineComponent({
-  name: 'lift-counter',
-  
+  name: "lift-counter",
+
   props: {
-    initial: { type: Number, default: 0 }
+    initial: { type: Number, default: 0 },
   },
-  
+
   data() {
     return {
-      count: this.initial
+      count: this.initial,
     };
   },
-  
+
   template: `
     <div class="counter">
       <h3>Count: {{ count }}</h3>
@@ -40,23 +42,23 @@ const Counter = defineComponent({
       <button @click="reset">Reset</button>
     </div>
   `,
-  
+
   methods: {
     increment() {
       this.count++;
-      this.$emit('change', this.count);
+      this.$emit("change", this.count);
     },
-    
+
     decrement() {
       this.count--;
-      this.$emit('change', this.count);
+      this.$emit("change", this.count);
     },
-    
+
     reset() {
       this.count = this.initial;
-      this.$emit('change', this.count);
-    }
-  }
+      this.$emit("change", this.count);
+    },
+  },
 });
 
 // Register the component
@@ -65,21 +67,21 @@ Counter.register();
 // React wrapper component
 const LiftCounter = ({ initial = 0, onChange }) => {
   const counterRef = useRef(null);
-  
+
   useEffect(() => {
     if (counterRef.current) {
       const counter = counterRef.current;
-      
+
       // Listen for changes
-      counter.addEventListener('change', (event) => {
+      counter.addEventListener("change", (event) => {
         onChange?.(event.detail);
       });
     }
   }, [onChange]);
-  
+
   return (
     <div>
-      <lift-counter 
+      <lift-counter
         ref={counterRef}
         initial={initial}
       />
@@ -90,13 +92,13 @@ const LiftCounter = ({ initial = 0, onChange }) => {
 // Usage in React app
 function App() {
   const [count, setCount] = useState(0);
-  
+
   return (
     <div>
       <h1>React + Lift HTML</h1>
-      <LiftCounter 
-        initial={5} 
-        onChange={setCount} 
+      <LiftCounter
+        initial={5}
+        onChange={setCount}
       />
       <p>React state: {count}</p>
     </div>
@@ -110,16 +112,16 @@ Lift HTML components work naturally with Vue.js.
 
 ```javascript
 // Vue.js component using Lift HTML
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 const DataTable = defineComponent({
-  name: 'lift-data-table',
-  
+  name: "lift-data-table",
+
   props: {
     data: { type: Array, default: () => [] },
-    columns: { type: Array, default: () => [] }
+    columns: { type: Array, default: () => [] },
   },
-  
+
   template: `
     <div class="data-table">
       <table>
@@ -139,7 +141,7 @@ const DataTable = defineComponent({
         </tbody>
       </table>
     </div>
-  `
+  `,
 });
 
 DataTable.register();
@@ -181,52 +183,52 @@ Use Lift HTML components in Angular applications.
 
 ```typescript
 // Angular component using Lift HTML
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { defineComponent } from 'lift-html';
+import { Component, ElementRef, OnInit } from "@angular/core";
+import { defineComponent } from "lift-html";
 
 const Chart = defineComponent({
-  name: 'lift-chart',
-  
+  name: "lift-chart",
+
   props: {
     data: { type: Array, default: () => [] },
-    type: { type: String, default: 'bar' }
+    type: { type: String, default: "bar" },
   },
-  
+
   template: `
     <div class="chart">
       <canvas ref="chartCanvas"></canvas>
     </div>
   `,
-  
+
   mounted() {
     this.renderChart();
   },
-  
+
   methods: {
     renderChart() {
       const canvas = this.$refs.chartCanvas;
-      const ctx = canvas.getContext('2d');
-      
+      const ctx = canvas.getContext("2d");
+
       // Chart rendering logic
       // This is a simplified example
-      ctx.fillStyle = '#007bff';
+      ctx.fillStyle = "#007bff";
       this.data.forEach((item, index) => {
         ctx.fillRect(index * 50, 100 - item.value, 40, item.value);
       });
-    }
+    },
   },
-  
+
   watch: {
     data() {
       this.renderChart();
-    }
-  }
+    },
+  },
 });
 
 Chart.register();
 
 @Component({
-  selector: 'app-chart',
+  selector: "app-chart",
   template: `
     <div>
       <h3>Angular + Lift HTML Chart</h3>
@@ -235,17 +237,17 @@ Chart.register();
         type="bar"
       ></lift-chart>
     </div>
-  `
+  `,
 })
 export class ChartComponent implements OnInit {
   chartData = [
-    { label: 'A', value: 10 },
-    { label: 'B', value: 20 },
-    { label: 'C', value: 15 }
+    { label: "A", value: 10 },
+    { label: "B", value: 20 },
+    { label: "C", value: 15 },
   ];
-  
+
   constructor(private elementRef: ElementRef) {}
-  
+
   ngOnInit() {
     // Angular lifecycle management
   }
@@ -258,19 +260,19 @@ export class ChartComponent implements OnInit {
 
 ```javascript
 // Lift HTML component with Redux integration
-import { defineComponent } from 'lift-html';
-import { store } from './store.js';
+import { defineComponent } from "lift-html";
+import { store } from "./store.js";
 
 const TodoList = defineComponent({
-  name: 'lift-todo-list',
-  
+  name: "lift-todo-list",
+
   data() {
     return {
       todos: [],
-      newTodo: ''
+      newTodo: "",
     };
   },
-  
+
   template: `
     <div class="todo-list">
       <input 
@@ -295,46 +297,46 @@ const TodoList = defineComponent({
       </ul>
     </div>
   `,
-  
+
   methods: {
     addTodo() {
       if (this.newTodo.trim()) {
         const todo = {
           id: Date.now(),
           text: this.newTodo,
-          completed: false
+          completed: false,
         };
-        
+
         // Dispatch to Redux store
-        store.dispatch({ type: 'ADD_TODO', payload: todo });
-        this.newTodo = '';
+        store.dispatch({ type: "ADD_TODO", payload: todo });
+        this.newTodo = "";
       }
     },
-    
+
     toggleTodo(id) {
-      store.dispatch({ type: 'TOGGLE_TODO', payload: id });
+      store.dispatch({ type: "TOGGLE_TODO", payload: id });
     },
-    
+
     removeTodo(id) {
-      store.dispatch({ type: 'REMOVE_TODO', payload: id });
-    }
+      store.dispatch({ type: "REMOVE_TODO", payload: id });
+    },
   },
-  
+
   mounted() {
     // Subscribe to store changes
     this.unsubscribe = store.subscribe(() => {
       this.todos = store.getState().todos;
     });
-    
+
     // Initial load
     this.todos = store.getState().todos;
   },
-  
+
   destroyed() {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
-  }
+  },
 });
 ```
 
@@ -342,17 +344,17 @@ const TodoList = defineComponent({
 
 ```javascript
 // Lift HTML component styled with Material-UI classes
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 const MaterialButton = defineComponent({
-  name: 'material-button',
-  
+  name: "material-button",
+
   props: {
-    variant: { type: String, default: 'contained' },
-    color: { type: String, default: 'primary' },
-    disabled: { type: Boolean, default: false }
+    variant: { type: String, default: "contained" },
+    color: { type: String, default: "primary" },
+    disabled: { type: Boolean, default: false },
   },
-  
+
   template: `
     <button 
       class="MuiButton-root MuiButton-{{ variant }} MuiButton-color{{ color }}"
@@ -361,33 +363,33 @@ const MaterialButton = defineComponent({
     >
       <slot></slot>
     </button>
-  `
+  `,
 });
 
 const MaterialCard = defineComponent({
-  name: 'material-card',
-  
+  name: "material-card",
+
   props: {
-    elevation: { type: Number, default: 1 }
+    elevation: { type: Number, default: 1 },
   },
-  
+
   template: `
     <div class="MuiPaper-root MuiPaper-elevation{{ elevation }} MuiCard-root">
       <div class="MuiCardContent-root">
         <slot></slot>
       </div>
     </div>
-  `
+  `,
 });
 
 // Usage
 const UserCard = defineComponent({
-  name: 'user-card',
-  
+  name: "user-card",
+
   props: {
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
   },
-  
+
   template: `
     <material-card elevation="2">
       <h3>{{ user.name }}</h3>
@@ -401,12 +403,12 @@ const UserCard = defineComponent({
       </material-button>
     </material-card>
   `,
-  
+
   methods: {
     editUser() {
-      this.$emit('edit', this.user);
-    }
-  }
+      this.$emit("edit", this.user);
+    },
+  },
 });
 ```
 
@@ -414,19 +416,19 @@ const UserCard = defineComponent({
 
 ```javascript
 // Lift HTML component with Formik integration
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 const FormField = defineComponent({
-  name: 'form-field',
-  
+  name: "form-field",
+
   props: {
     name: { type: String, required: true },
-    label: { type: String, default: '' },
-    type: { type: String, default: 'text' },
-    value: { type: String, default: '' },
-    error: { type: String, default: '' }
+    label: { type: String, default: "" },
+    type: { type: String, default: "text" },
+    value: { type: String, default: "" },
+    error: { type: String, default: "" },
   },
-  
+
   template: `
     <div class="form-field">
       <label v-if="label">{{ label }}</label>
@@ -441,23 +443,23 @@ const FormField = defineComponent({
       <span v-if="error" class="error-message">{{ error }}</span>
     </div>
   `,
-  
+
   methods: {
     handleInput(event) {
-      this.$emit('input', event.target.value);
+      this.$emit("input", event.target.value);
     },
-    
+
     handleBlur(event) {
-      this.$emit('blur', event);
-    }
-  }
+      this.$emit("blur", event);
+    },
+  },
 });
 
 // React component using Lift HTML with Formik
 const FormikForm = () => {
   return (
     <Formik
-      initialValues={{ name: '', email: '' }}
+      initialValues={{ name: "", email: "" }}
       onSubmit={(values) => {
         console.log(values);
       }}
@@ -495,14 +497,14 @@ const FormikForm = () => {
 
 ```javascript
 // vite.config.js
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
   // Vite automatically handles ES modules
   // Lift HTML components work out of the box
   optimizeDeps: {
-    include: ['lift-html']
-  }
+    include: ["lift-html"],
+  },
 });
 ```
 
@@ -519,14 +521,14 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      }
-    ]
-  }
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+    ],
+  },
 };
 ```
 
@@ -534,7 +536,7 @@ module.exports = {
 
 ```typescript
 // types/lift-html.d.ts
-declare module 'lift-html' {
+declare module "lift-html" {
   export interface ComponentOptions {
     name: string;
     props?: Record<string, any>;
@@ -548,12 +550,12 @@ declare module 'lift-html' {
       destroyed?: () => void;
     };
   }
-  
+
   export function defineComponent(options: ComponentOptions): any;
 }
 
 // Usage with TypeScript
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 interface User {
   id: number;
@@ -562,18 +564,18 @@ interface User {
 }
 
 const UserCard = defineComponent({
-  name: 'user-card',
-  
+  name: "user-card",
+
   props: {
-    user: { type: Object as () => User, required: true }
+    user: { type: Object as () => User, required: true },
   },
-  
+
   template: `
     <div class="user-card">
       <h3>{{ user.name }}</h3>
       <p>{{ user.email }}</p>
     </div>
-  `
+  `,
 });
 ```
 
@@ -581,8 +583,10 @@ const UserCard = defineComponent({
 
 ### Component Design for Interoperability
 
-1. **Use Standard Web APIs**: Leverage native browser APIs for better compatibility
-2. **Emit Standard Events**: Use custom events that frameworks can easily listen to
+1. **Use Standard Web APIs**: Leverage native browser APIs for better
+   compatibility
+2. **Emit Standard Events**: Use custom events that frameworks can easily listen
+   to
 3. **Avoid Framework-Specific Code**: Keep components framework-agnostic
 4. **Provide Clear Interfaces**: Use well-defined props and events
 
@@ -591,28 +595,28 @@ const UserCard = defineComponent({
 ```javascript
 // Lazy load components for better performance
 const LazyComponent = defineComponent({
-  name: 'lazy-component',
-  
+  name: "lazy-component",
+
   data() {
     return {
       Component: null,
-      loading: false
+      loading: false,
     };
   },
-  
+
   async mounted() {
     this.loading = true;
-    const module = await import('./HeavyComponent.js');
+    const module = await import("./HeavyComponent.js");
     this.Component = module.default;
     this.loading = false;
   },
-  
+
   template: `
     <div>
       <div v-if="loading">Loading...</div>
       <Component v-else />
     </div>
-  `
+  `,
 });
 ```
 
@@ -621,15 +625,15 @@ const LazyComponent = defineComponent({
 ```javascript
 // Error boundary component
 const ErrorBoundary = defineComponent({
-  name: 'error-boundary',
-  
+  name: "error-boundary",
+
   data() {
     return {
       hasError: false,
-      error: null
+      error: null,
     };
   },
-  
+
   template: `
     <div>
       <div v-if="hasError" class="error-boundary">
@@ -640,26 +644,27 @@ const ErrorBoundary = defineComponent({
       <slot v-else></slot>
     </div>
   `,
-  
+
   methods: {
     reset() {
       this.hasError = false;
       this.error = null;
-    }
+    },
   },
-  
+
   mounted() {
     // Global error handler
-    window.addEventListener('error', (event) => {
+    window.addEventListener("error", (event) => {
       this.hasError = true;
       this.error = event.error;
     });
-  }
+  },
 });
 ```
 
 ## Next Steps
 
-- [Best Practices](/guides/best-practices/) - Learn advanced patterns and optimization
+- [Best Practices](/guides/best-practices/) - Learn advanced patterns and
+  optimization
 - [Testing](/guides/testing/) - Test your components effectively
 - [Deployment](/guides/deployment/) - Deploy your applications

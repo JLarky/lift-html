@@ -5,14 +5,18 @@ description: Welcome to lift-html documentation
 
 # Welcome to Lift HTML
 
-Lift HTML is a modern framework for building web components and HTML-based applications. It provides a simple, powerful way to create reusable components and build interactive web applications using standard HTML, CSS, and JavaScript.
+Lift HTML is a modern framework for building web components and HTML-based
+applications. It provides a simple, powerful way to create reusable components
+and build interactive web applications using standard HTML, CSS, and JavaScript.
 
 ## What is Lift HTML?
 
 Lift HTML is designed to make web development more accessible and efficient by:
 
-- **Simplifying component creation** - Build reusable components with standard HTML
-- **Enhancing interoperability** - Works seamlessly with existing frameworks and libraries
+- **Simplifying component creation** - Build reusable components with standard
+  HTML
+- **Enhancing interoperability** - Works seamlessly with existing frameworks and
+  libraries
 - **Improving developer experience** - Clean, intuitive API that's easy to learn
 - **Maintaining web standards** - Built on top of native web technologies
 
@@ -42,7 +46,8 @@ const MyComponent = defineComponent({
 
 ## Next Steps
 
-- [Installation Guide](/getting-started/installation/) - Set up Lift HTML in your project
+- [Installation Guide](/getting-started/installation/) - Set up Lift HTML in
+  your project
 - [Quick Start](/getting-started/quick-start/) - Build your first component
 - [Basic Usage](/guides/basic-usage/) - Learn the fundamentals
 - [Components](/guides/components/) - Create reusable components
@@ -50,6 +55,9 @@ const MyComponent = defineComponent({
 
 ## Community
 
-- [GitHub Repository](https://github.com/JLarky/lift-html) - Source code and issues
-- [Discussions](https://github.com/JLarky/lift-html/discussions) - Community discussions
-- [Examples](https://github.com/JLarky/lift-html/tree/main/examples) - Code examples and demos
+- [GitHub Repository](https://github.com/JLarky/lift-html) - Source code and
+  issues
+- [Discussions](https://github.com/JLarky/lift-html/discussions) - Community
+  discussions
+- [Examples](https://github.com/JLarky/lift-html/tree/main/examples) - Code
+  examples and demos

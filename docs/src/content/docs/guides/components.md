@@ -5,24 +5,26 @@ description: Build complex, reusable components with lift-html
 
 # Components
 
-Learn how to build sophisticated, reusable components with Lift HTML. This guide covers component composition, slots, events, and advanced patterns.
+Learn how to build sophisticated, reusable components with Lift HTML. This guide
+covers component composition, slots, events, and advanced patterns.
 
 ## Component Composition
 
-Components can be composed together to build complex UIs. Here's how to create and use nested components.
+Components can be composed together to build complex UIs. Here's how to create
+and use nested components.
 
 ### Basic Composition
 
 ```javascript
 // Button component
 const Button = defineComponent({
-  name: 'my-button',
-  
+  name: "my-button",
+
   props: {
-    variant: { type: String, default: 'primary' },
-    disabled: { type: Boolean, default: false }
+    variant: { type: String, default: "primary" },
+    disabled: { type: Boolean, default: false },
   },
-  
+
   template: `
     <button 
       class="btn btn-{{ variant }}" 
@@ -31,18 +33,18 @@ const Button = defineComponent({
     >
       <slot></slot>
     </button>
-  `
+  `,
 });
 
 // Card component
 const Card = defineComponent({
-  name: 'my-card',
-  
+  name: "my-card",
+
   props: {
-    title: { type: String, default: '' },
-    padding: { type: String, default: 'medium' }
+    title: { type: String, default: "" },
+    padding: { type: String, default: "medium" },
   },
-  
+
   template: `
     <div class="card card-padding-{{ padding }}">
       <div v-if="title" class="card-header">
@@ -52,17 +54,17 @@ const Card = defineComponent({
         <slot></slot>
       </div>
     </div>
-  `
+  `,
 });
 
 // User profile component using composition
 const UserProfile = defineComponent({
-  name: 'user-profile',
-  
+  name: "user-profile",
+
   props: {
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
   },
-  
+
   template: `
     <my-card title="User Profile">
       <div class="user-info">
@@ -77,34 +79,35 @@ const UserProfile = defineComponent({
       </div>
     </my-card>
   `,
-  
+
   methods: {
     editProfile() {
-      this.$emit('edit', this.user);
+      this.$emit("edit", this.user);
     },
-    
+
     deleteProfile() {
-      this.$emit('delete', this.user);
-    }
-  }
+      this.$emit("delete", this.user);
+    },
+  },
 });
 ```
 
 ## Slots
 
-Slots allow you to pass content into components, making them more flexible and reusable.
+Slots allow you to pass content into components, making them more flexible and
+reusable.
 
 ### Default Slots
 
 ```javascript
 const Modal = defineComponent({
-  name: 'my-modal',
-  
+  name: "my-modal",
+
   props: {
-    title: { type: String, default: '' },
-    visible: { type: Boolean, default: false }
+    title: { type: String, default: "" },
+    visible: { type: Boolean, default: false },
   },
-  
+
   template: `
     <div v-if="visible" class="modal-overlay" @click="closeModal">
       <div class="modal" @click.stop>
@@ -118,12 +121,12 @@ const Modal = defineComponent({
       </div>
     </div>
   `,
-  
+
   methods: {
     closeModal() {
-      this.$emit('close');
-    }
-  }
+      this.$emit("close");
+    },
+  },
 });
 ```
 
@@ -131,8 +134,8 @@ const Modal = defineComponent({
 
 ```javascript
 const Layout = defineComponent({
-  name: 'my-layout',
-  
+  name: "my-layout",
+
   template: `
     <div class="layout">
       <header class="header">
@@ -153,7 +156,7 @@ const Layout = defineComponent({
         <slot name="footer">Default Footer</slot>
       </footer>
     </div>
-  `
+  `,
 });
 ```
 
@@ -168,19 +171,19 @@ const Layout = defineComponent({
       <a href="/about">About</a>
     </nav>
   </template>
-  
+
   <template #sidebar>
     <ul>
       <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/settings">Settings</a></li>
     </ul>
   </template>
-  
+
   <template #content>
     <h2>Welcome to the application!</h2>
     <p>This is the main content area.</p>
   </template>
-  
+
   <template #footer>
     <p>&copy; 2024 My Application</p>
   </template>
@@ -195,20 +198,20 @@ Components communicate through events. Here's how to emit and handle events.
 
 ```javascript
 const FormInput = defineComponent({
-  name: 'form-input',
-  
+  name: "form-input",
+
   props: {
-    value: { type: String, default: '' },
-    placeholder: { type: String, default: '' },
-    type: { type: String, default: 'text' }
+    value: { type: String, default: "" },
+    placeholder: { type: String, default: "" },
+    type: { type: String, default: "text" },
   },
-  
+
   data() {
     return {
-      internalValue: this.value
+      internalValue: this.value,
     };
   },
-  
+
   template: `
     <div class="form-input">
       <input
@@ -221,28 +224,28 @@ const FormInput = defineComponent({
       />
     </div>
   `,
-  
+
   methods: {
     handleInput(event) {
       this.internalValue = event.target.value;
-      this.$emit('input', this.internalValue);
-      this.$emit('change', this.internalValue);
+      this.$emit("input", this.internalValue);
+      this.$emit("change", this.internalValue);
     },
-    
+
     handleBlur(event) {
-      this.$emit('blur', event);
+      this.$emit("blur", event);
     },
-    
+
     handleFocus(event) {
-      this.$emit('focus', event);
-    }
+      this.$emit("focus", event);
+    },
   },
-  
+
   watch: {
     value(newValue) {
       this.internalValue = newValue;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -250,19 +253,19 @@ const FormInput = defineComponent({
 
 ```javascript
 const ContactForm = defineComponent({
-  name: 'contact-form',
-  
+  name: "contact-form",
+
   data() {
     return {
       formData: {
-        name: '',
-        email: '',
-        message: ''
+        name: "",
+        email: "",
+        message: "",
       },
-      errors: {}
+      errors: {},
     };
   },
-  
+
   template: `
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
@@ -299,53 +302,53 @@ const ContactForm = defineComponent({
       <button type="submit">Send Message</button>
     </form>
   `,
-  
+
   methods: {
     validateField(field) {
       const value = this.formData[field];
-      
+
       switch (field) {
-        case 'name':
+        case "name":
           if (!value.trim()) {
-            this.errors.name = 'Name is required';
+            this.errors.name = "Name is required";
           } else {
             delete this.errors.name;
           }
           break;
-          
-        case 'email':
+
+        case "email":
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!value.trim()) {
-            this.errors.email = 'Email is required';
+            this.errors.email = "Email is required";
           } else if (!emailRegex.test(value)) {
-            this.errors.email = 'Please enter a valid email';
+            this.errors.email = "Please enter a valid email";
           } else {
             delete this.errors.email;
           }
           break;
-          
-        case 'message':
+
+        case "message":
           if (!value.trim()) {
-            this.errors.message = 'Message is required';
+            this.errors.message = "Message is required";
           } else {
             delete this.errors.message;
           }
           break;
       }
     },
-    
+
     handleSubmit() {
       // Validate all fields
-      ['name', 'email', 'message'].forEach(field => {
+      ["name", "email", "message"].forEach((field) => {
         this.validateField(field);
       });
-      
+
       // Check if there are any errors
       if (Object.keys(this.errors).length === 0) {
-        this.$emit('submit', this.formData);
+        this.$emit("submit", this.formData);
       }
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -360,12 +363,12 @@ Create wrapper components that add functionality to other components.
 function withLoading(Component) {
   return defineComponent({
     name: `${Component.name}-with-loading`,
-    
+
     props: {
       loading: { type: Boolean, default: false },
-      error: { type: String, default: '' }
+      error: { type: String, default: "" },
     },
-    
+
     template: `
       <div class="with-loading">
         <div v-if="loading" class="loading-spinner">
@@ -377,10 +380,10 @@ function withLoading(Component) {
         <Component v-else v-bind="$props" v-on="$listeners" />
       </div>
     `,
-    
+
     components: {
-      Component
-    }
+      Component,
+    },
   });
 }
 
@@ -392,20 +395,20 @@ const UserListWithLoading = withLoading(UserList);
 
 ```javascript
 const DataProvider = defineComponent({
-  name: 'data-provider',
-  
+  name: "data-provider",
+
   props: {
-    url: { type: String, required: true }
+    url: { type: String, required: true },
   },
-  
+
   data() {
     return {
       data: null,
       loading: false,
-      error: null
+      error: null,
     };
   },
-  
+
   template: `
     <div>
       <slot 
@@ -416,12 +419,12 @@ const DataProvider = defineComponent({
       ></slot>
     </div>
   `,
-  
+
   methods: {
     async fetchData() {
       this.loading = true;
       this.error = null;
-      
+
       try {
         const response = await fetch(this.url);
         this.data = await response.json();
@@ -430,12 +433,12 @@ const DataProvider = defineComponent({
       } finally {
         this.loading = false;
       }
-    }
+    },
   },
-  
+
   mounted() {
     this.fetchData();
-  }
+  },
 });
 ```
 
@@ -446,7 +449,7 @@ const DataProvider = defineComponent({
   <template #default="{ data, loading, error, refresh }">
     <div>
       <button @click="refresh">Refresh</button>
-      
+
       <div v-if="loading">Loading users...</div>
       <div v-else-if="error">Error: {{ error }}</div>
       <div v-else>
@@ -468,37 +471,30 @@ Organize related components into libraries.
 
 ```javascript
 // components/ui/index.js
-import Button from './Button.js';
-import Card from './Card.js';
-import Modal from './Modal.js';
-import FormInput from './FormInput.js';
+import Button from "./Button.js";
+import Card from "./Card.js";
+import Modal from "./Modal.js";
+import FormInput from "./FormInput.js";
 
-export {
-  Button,
-  Card,
-  Modal,
-  FormInput
-};
+export { Button, Card, FormInput, Modal };
 
 // components/forms/index.js
-import ContactForm from './ContactForm.js';
-import LoginForm from './LoginForm.js';
-import RegistrationForm from './RegistrationForm.js';
+import ContactForm from "./ContactForm.js";
+import LoginForm from "./LoginForm.js";
+import RegistrationForm from "./RegistrationForm.js";
 
-export {
-  ContactForm,
-  LoginForm,
-  RegistrationForm
-};
+export { ContactForm, LoginForm, RegistrationForm };
 
 // main.js
-import { Button, Card, Modal, FormInput } from './components/ui/index.js';
-import { ContactForm, LoginForm } from './components/forms/index.js';
+import { Button, Card, FormInput, Modal } from "./components/ui/index.js";
+import { ContactForm, LoginForm } from "./components/forms/index.js";
 
 // Register all components
-[Button, Card, Modal, FormInput, ContactForm, LoginForm].forEach(Component => {
-  Component.register();
-});
+[Button, Card, Modal, FormInput, ContactForm, LoginForm].forEach(
+  (Component) => {
+    Component.register();
+  },
+);
 ```
 
 ## Best Practices
@@ -507,7 +503,8 @@ import { ContactForm, LoginForm } from './components/forms/index.js';
 
 1. **Single Responsibility**: Each component should have one clear purpose
 2. **Props Down, Events Up**: Pass data down via props, emit events up
-3. **Composition over Inheritance**: Use slots and composition instead of inheritance
+3. **Composition over Inheritance**: Use slots and composition instead of
+   inheritance
 4. **Consistent Naming**: Use kebab-case for component names and props
 
 ### Performance
@@ -515,46 +512,48 @@ import { ContactForm, LoginForm } from './components/forms/index.js';
 ```javascript
 // Use v-memo for expensive computations
 const ExpensiveList = defineComponent({
-  name: 'expensive-list',
-  
+  name: "expensive-list",
+
   template: `
     <div>
       <div v-for="item in items" :key="item.id" v-memo="[item.id, item.status]">
         <expensive-item :item="item" />
       </div>
     </div>
-  `
+  `,
 });
 
 // Lazy load components
 const LazyComponent = defineComponent({
-  name: 'lazy-component',
-  
+  name: "lazy-component",
+
   data() {
     return {
       Component: null,
-      loading: false
+      loading: false,
     };
   },
-  
+
   async mounted() {
     this.loading = true;
-    const module = await import('./HeavyComponent.js');
+    const module = await import("./HeavyComponent.js");
     this.Component = module.default;
     this.loading = false;
   },
-  
+
   template: `
     <div>
       <div v-if="loading">Loading...</div>
       <Component v-else />
     </div>
-  `
+  `,
 });
 ```
 
 ## Next Steps
 
-- [Interoperability](/guides/interoperability/) - Use Lift HTML with other frameworks
-- [Best Practices](/guides/best-practices/) - Learn advanced patterns and optimization
+- [Interoperability](/guides/interoperability/) - Use Lift HTML with other
+  frameworks
+- [Best Practices](/guides/best-practices/) - Learn advanced patterns and
+  optimization
 - [Testing](/guides/testing/) - Test your components effectively

@@ -5,7 +5,8 @@ description: How to install and set up lift-html in your project
 
 # Installation
 
-Lift HTML can be installed in several ways depending on your project setup and preferences.
+Lift HTML can be installed in several ways depending on your project setup and
+preferences.
 
 ## Prerequisites
 
@@ -39,13 +40,14 @@ pnpm add lift-html
 
 ```html
 <script type="module">
-  import { defineComponent } from 'https://esm.sh/lift-html';
+  import { defineComponent } from "https://esm.sh/lift-html";
 </script>
 ```
 
 ## TypeScript Support
 
-Lift HTML includes full TypeScript support out of the box. If you're using TypeScript, you'll get:
+Lift HTML includes full TypeScript support out of the box. If you're using
+TypeScript, you'll get:
 
 - Full type checking for component definitions
 - IntelliSense support in your IDE
@@ -68,7 +70,7 @@ npm install lift-html
 export default {
   // Your existing Vite config
   // Lift HTML works out of the box
-}
+};
 ```
 
 ### Webpack
@@ -82,7 +84,7 @@ npm install lift-html
 module.exports = {
   // Your existing Webpack config
   // Lift HTML works out of the box
-}
+};
 ```
 
 ### Create React App
@@ -93,7 +95,7 @@ npm install lift-html
 
 ```javascript
 // You can use Lift HTML components alongside React components
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 ```
 
 ### Next.js
@@ -108,9 +110,9 @@ npm install lift-html
 const nextConfig = {
   // Your existing Next.js config
   // Lift HTML works out of the box
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 ```
 
 ## Verification
@@ -118,11 +120,11 @@ module.exports = nextConfig
 To verify your installation, create a simple test:
 
 ```javascript
-import { defineComponent } from 'lift-html';
+import { defineComponent } from "lift-html";
 
 const TestComponent = defineComponent({
-  name: 'test-component',
-  template: '<div>Hello from Lift HTML!</div>'
+  name: "test-component",
+  template: "<div>Hello from Lift HTML!</div>",
 });
 
 // Register the component
@@ -135,7 +137,8 @@ Then in your HTML:
 <test-component></test-component>
 ```
 
-If you see "Hello from Lift HTML!" in your browser, the installation was successful!
+If you see "Hello from Lift HTML!" in your browser, the installation was
+successful!
 
 ## Next Steps
 

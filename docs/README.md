@@ -1,6 +1,8 @@
 # Lift HTML Documentation
 
-This is the documentation site for [lift-html](https://github.com/JLarky/lift-html), built with [Astro Starlight](https://starlight.astro.build/).
+This is the documentation site for
+[lift-html](https://github.com/JLarky/lift-html), built with
+[Astro Starlight](https://starlight.astro.build/).
 
 ## 🚀 Quick Start
 
@@ -45,7 +47,9 @@ docs/
 
 ## 🌐 Deployment
 
-This documentation site is automatically deployed to GitHub Pages when changes are pushed to the `main` branch. The deployment is handled by the GitHub Actions workflow in `.github/workflows/deploy-docs.yml`.
+This documentation site is automatically deployed to GitHub Pages when changes
+are pushed to the `main` branch. The deployment is handled by the GitHub Actions
+workflow in `.github/workflows/deploy-docs.yml`.
 
 ### Manual Deployment
 
@@ -56,7 +60,8 @@ If you need to deploy manually:
    npm run build
    ```
 
-2. The built files will be in the `dist/` directory, ready for deployment to any static hosting service.
+2. The built files will be in the `dist/` directory, ready for deployment to any
+   static hosting service.
 
 ## 🔧 Configuration
 
@@ -84,11 +89,13 @@ description: Brief description of the page
 Your documentation content goes here...
 ```
 
-3. The page will automatically appear in the navigation based on its location in the file structure.
+3. The page will automatically appear in the navigation based on its location in
+   the file structure.
 
 ### Customizing the Sidebar
 
-Edit the `sidebar` configuration in `astro.config.mjs` to customize the navigation structure.
+Edit the `sidebar` configuration in `astro.config.mjs` to customize the
+navigation structure.
 
 ## 🎨 Customization
 
@@ -102,7 +109,8 @@ The site uses Starlight's default theme. You can customize it by:
 
 ### Components
 
-Starlight supports custom components. Place them in `src/components/` and import them in your markdown files.
+Starlight supports custom components. Place them in `src/components/` and import
+them in your markdown files.
 
 ## 📚 Documentation Content
 
@@ -116,11 +124,13 @@ The documentation covers:
 
 ## 🔍 Search
 
-The site includes full-text search powered by Pagefind. Search indexes are automatically generated during the build process.
+The site includes full-text search powered by Pagefind. Search indexes are
+automatically generated during the build process.
 
 ## 📱 Responsive Design
 
-The documentation site is fully responsive and works well on desktop, tablet, and mobile devices.
+The documentation site is fully responsive and works well on desktop, tablet,
+and mobile devices.
 
 ## 🤝 Contributing
 
@@ -133,7 +143,8 @@ To contribute to the documentation:
 
 ## � License
 
-This documentation is part of the lift-html project and follows the same license terms.
+This documentation is part of the lift-html project and follows the same license
+terms.
 
 ## 🔗 Links
 
