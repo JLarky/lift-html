@@ -6,58 +6,76 @@ description: Build your first lift-html component in minutes
 # Quick Start
 
 Get up and running with Lift HTML in just a few minutes. This guide will walk
-you through creating your first component.
+you through creating your first component using both the core and solid
+packages.
 
 ## Your First Component
 
 Let's create a simple counter component to demonstrate the basics of Lift HTML.
+We'll show you how to build it with both `@lift-html/core` and
+`@lift-html/solid`.
 
-### 1. Create the Component
+### Using @lift-html/core
 
 Create a new file called `counter.js`:
 
 ```javascript
-import { defineComponent } from "lift-html";
+import { liftHtml } from "@lift-html/core";
 
-const Counter = defineComponent({
-  name: "my-counter",
+const Counter = liftHtml("my-counter", {
+  observedAttributes: ["initial"],
+  init() {
+    const button = this.querySelector("button");
+    if (!button) throw new Error("<my-counter> must contain a <button>");
 
-  props: {
-    initial: { type: Number, default: 0 },
-  },
+    // Get initial value from attribute or default to 0
+    let count = parseInt(this.getAttribute("initial") || "0");
 
-  data() {
-    return {
-      count: this.initial,
+    // Update button text
+    const updateCount = () => {
+      button.textContent = `Clicks: ${count}`;
     };
-  },
 
-  template: `
-    <div class="counter">
-      <h3>Counter: {{ count }}</h3>
-      <button @click="increment">+</button>
-      <button @click="decrement">-</button>
-      <button @click="reset">Reset</button>
-    </div>
-  `,
+    // Set up click handler
+    button.onclick = () => {
+      count++;
+      updateCount();
+    };
 
-  methods: {
-    increment() {
-      this.count++;
-    },
-
-    decrement() {
-      this.count--;
-    },
-
-    reset() {
-      this.count = this.initial;
-    },
+    // Initialize
+    updateCount();
   },
 });
+```
 
-// Register the component
-Counter.register();
+### Using @lift-html/solid
+
+Create a new file called `counter-solid.js`:
+
+```javascript
+import { liftSolid } from "@lift-html/solid";
+import { createEffect, createSignal } from "solid-js";
+
+const Counter = liftSolid("my-counter", {
+  observedAttributes: ["initial"],
+  init() {
+    const button = this.querySelector("button");
+    if (!button) throw new Error("<my-counter> must contain a <button>");
+
+    // Create reactive signal
+    const [count, setCount] = createSignal(
+      parseInt(this.getAttribute("initial") || "0"),
+    );
+
+    // Set up click handler
+    button.onclick = () => setCount(count() + 1);
+
+    // Reactive effect to update button text
+    createEffect(() => {
+      button.textContent = `Clicks: ${count()}`;
+    });
+  },
+});
 ```
 
 ### 2. Use the Component
@@ -100,10 +118,18 @@ In your HTML file:
     <h1>Lift HTML Quick Start</h1>
 
     <!-- Use the component -->
-    <my-counter initial="5"></my-counter>
-    <my-counter initial="10"></my-counter>
+    <my-counter initial="5">
+      <button disabled>Loading...</button>
+    </my-counter>
 
+    <my-counter initial="10">
+      <button disabled>Loading...</button>
+    </my-counter>
+
+    <!-- Choose one of these script tags based on your approach -->
     <script type="module" src="./counter.js"></script>
+    <!-- OR -->
+    <!-- <script type="module" src="./counter-solid.js"></script> -->
   </body>
 </html>
 ```
@@ -133,33 +159,107 @@ Let's break down the key concepts:
 ### Component Definition
 
 ```javascript
-const Counter = defineComponent({
-  name: 'my-counter',        // Custom element name
-  props: { ... },           // Component properties
-  data() { ... },           // Component state
-  template: `...`,          // HTML template
-  methods: { ... }          // Component methods
+const Counter = liftHtml("my-counter", {
+  observedAttributes: ["initial"], // Attributes to watch for changes
+  init() { // Called when element connects to DOM
+    // Component logic here
+  },
 });
 ```
 
 ### Key Features Demonstrated
 
-- **Props**: The `initial` prop allows you to set the starting count
-- **Reactive Data**: The `count` data property automatically updates the UI
-- **Event Handling**: `@click` directives handle user interactions
-- **Template Syntax**: `{{ count }}` displays reactive data
-- **Methods**: Component logic is organized in methods
+- **HTML Web Components**: The component enhances existing HTML rather than
+  rendering it
+- **Attribute Observation**: The `observedAttributes` array tells the component
+  which attributes to watch
+- **DOM Enhancement**: We find and enhance the existing `<button>` element
+- **Event Handling**: Direct DOM event handling with `onclick`
+- **Reactive Updates**: With solid, `createEffect` automatically updates the UI
+  when state changes
 
 ### Multiple Instances
 
 Notice how you can use multiple instances of the same component:
 
 ```html
-<my-counter initial="5"></my-counter>
-<my-counter initial="10"></my-counter>
+<my-counter initial="5">
+  <button disabled>Loading...</button>
+</my-counter>
+<my-counter initial="10">
+  <button disabled>Loading...</button>
+</my-counter>
 ```
 
 Each instance maintains its own state independently.
+
+## TypeScript Support
+
+For better type safety, you can add TypeScript declarations:
+
+```typescript
+// For @lift-html/core
+declare module "@lift-html/core" {
+  interface KnownElements {
+    "my-counter": typeof Counter;
+  }
+}
+
+// For @lift-html/solid
+declare module "@lift-html/solid" {
+  interface KnownElements {
+    "my-counter": typeof Counter;
+  }
+}
+```
+
+## CDN Version
+
+For quick prototyping, you can use the CDN version:
+
+### Core Version
+
+```html
+<script type="module">
+  import { liftHtml } from "https://esm.sh/@lift-html/core";
+
+  liftHtml("my-counter", {
+    init() {
+      const button = this.querySelector("button");
+      if (!button) throw new Error("<my-counter> must contain a <button>");
+
+      let count = 0;
+      button.onclick = () => {
+        count++;
+        button.textContent = `Clicks: ${count}`;
+      };
+      button.textContent = `Clicks: ${count}`;
+    },
+  });
+</script>
+```
+
+### Solid Version
+
+```html
+<script type="module">
+  import { liftSolid } from "https://esm.sh/@lift-html/solid";
+  import { createEffect, createSignal } from "https://esm.sh/solid-js";
+
+  liftSolid("my-counter", {
+    init() {
+      const button = this.querySelector("button");
+      if (!button) throw new Error("<my-counter> must contain a <button>");
+
+      const [count, setCount] = createSignal(0);
+      button.onclick = () => setCount(count() + 1);
+      createEffect(() => {
+        button.textContent = `Clicks: ${count()}`;
+      });
+    },
+  });
+</script>
+```
 
 ## Next Steps
 
@@ -176,18 +276,25 @@ Now that you've built your first component, explore more advanced features:
 
 **Component not rendering?**
 
-- Make sure you called `Counter.register()`
+- Make sure your HTML contains the expected elements (like `<button>` in our
+  example)
 - Check that the script is loaded as a module (`type="module"`)
 
-**Props not working?**
+**Attributes not working?**
 
-- Verify the prop name matches exactly (case-sensitive)
-- Check that the prop type is correct
+- Verify the attribute name is in the `observedAttributes` array
+- Check that the attribute value is being read correctly with `getAttribute()`
 
 **Events not firing?**
 
-- Ensure the event name is correct (e.g., `@click`, not `@onclick`)
-- Check that the method name exists in the component
+- Ensure you're setting up event handlers correctly (e.g., `button.onclick`)
+- Check that the element exists before adding event listeners
+
+**Solid effects not working?**
+
+- Make sure you're using `createEffect` inside the `init` function
+- Verify that you're calling the signal setter (e.g., `setCount`) to trigger
+  updates
 
 Need help? Check out the
 [GitHub repository](https://github.com/JLarky/lift-html) or open an issue!
