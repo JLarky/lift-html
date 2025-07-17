@@ -75,7 +75,7 @@ const Card = liftHtml("my-card", {
       const title = this.getAttribute("title");
       if (title) {
         header.textContent = title;
-      } else {
+      } else if (header.parentElement) {
         header.parentElement.style.display = "none";
       }
     }
@@ -173,24 +173,34 @@ const SearchBox = liftHtml("search-box", {
         const searchResults = await response.json();
         
         if (results) {
-          results.innerHTML = searchResults.map(item => `
-            <div class="result" data-id="${item.id}">
-              <h4>${item.title}</h4>
-              <p>${item.description}</p>
-            </div>
-          `).join("");
+          results.innerHTML = ""; // Clear previous results
+          searchResults.forEach(item => {
+            const resultEl = document.createElement("div");
+            resultEl.className = "result";
+            resultEl.dataset.id = item.id;
+
+            const titleEl = document.createElement("h4");
+            titleEl.textContent = item.title;
+
+            const descEl = document.createElement("p");
+            descEl.textContent = item.description;
+
+            resultEl.appendChild(titleEl);
+            resultEl.appendChild(descEl);
+            results.appendChild(resultEl);
+          });
         }
       } catch (error) {
         console.error("Search failed:", error);
-        if (results) results.innerHTML = "<div class="error">Search failed</div>";
+        if (results) results.innerHTML = '<div class="error">Search failed</div>';
       }
     };
     
     // Set up event listeners
-    input.oninput = (e) => {
+    input.oninput = () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        performSearch(e.target.value);
+        performSearch(input.value);
       }, debounceMs);
     };
     
@@ -457,13 +467,13 @@ const DataTable = liftSolid("data-table", {
     // Reactive rendering
     createEffect(() => {
       const data = processedData();
-      tbody.innerHTML = data.map((item) => `
-        <tr>
-          <td>${item.name}</td>
-          <td>${item.email}</td>
-          <td>${item.role}</td>
-        </tr>
-      `).join("");
+      tbody.innerHTML = ""; // Clear previous data
+      data.forEach(item => {
+        const row = tbody.insertRow();
+        row.insertCell().textContent = item.name;
+        row.insertCell().textContent = item.email;
+        row.insertCell().textContent = item.role;
+      });
     });
   },
 });

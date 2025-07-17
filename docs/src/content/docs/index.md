@@ -61,6 +61,7 @@ const MyButton = liftHtml("my-button", {
   init() {
     const button = this.querySelector("button");
     if (!button) throw new Error("<my-button> must contain a <button>");
+    button.disabled = false;
 
     let count = 0;
     button.onclick = () => {
@@ -74,7 +75,7 @@ const MyButton = liftHtml("my-button", {
 
 ```html
 <my-button>
-  <button disabled>Loading...</button>
+  <button aria-disabled="true" class="disabled">Loading...</button>
 </my-button>
 ```
 
@@ -130,7 +131,7 @@ Here's a complete example that works right now:
 
 ```html
 <my-button>
-  <button disabled>
+  <button aria-disabled="true" class="disabled">
     Loading...
   </button>
 </my-button>
@@ -142,7 +143,8 @@ Here's a complete example that works right now:
     init() {
       const button = this.querySelector("button");
       if (!button) throw new Error("<my-button> must contain a <button>");
-      button.disabled = false;
+      button.removeAttribute('aria-disabled');
+      button.classList.remove('disabled');
       const [count, setCount] = createSignal(0);
       button.onclick = () => setCount(count() + 1);
       createEffect(() => {

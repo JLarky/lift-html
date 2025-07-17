@@ -27,6 +27,7 @@ const Counter = liftHtml("my-counter", {
   init() {
     const button = this.querySelector("button");
     if (!button) throw new Error("<my-counter> must contain a <button>");
+    button.disabled = false;
 
     // Get initial value from attribute or default to 0
     let count = parseInt(this.getAttribute("initial") || "0");
@@ -61,6 +62,7 @@ const Counter = liftSolid("my-counter", {
   init() {
     const button = this.querySelector("button");
     if (!button) throw new Error("<my-counter> must contain a <button>");
+    button.disabled = false;
 
     // Create reactive signal
     const [count, setCount] = createSignal(
@@ -126,7 +128,7 @@ In your HTML file:
       <button disabled>Loading...</button>
     </my-counter>
 
-    <!-- Choose one of these script tags based on your approach -->
+    <!-- Choose one of these script tags based on your approach, not both -->
     <script type="module" src="./counter.js"></script>
     <!-- OR -->
     <!-- <script type="module" src="./counter-solid.js"></script> -->

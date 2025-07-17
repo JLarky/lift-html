@@ -210,14 +210,18 @@ const TodoList = liftHtml("todo-list", {
     };
 
     const renderTodos = () => {
-      list.innerHTML = todos.map((todo) => `
-        <li>
-          ${todo.text}
-          <button onclick="this.closest('todo-list').removeTodo(${todo.id})">
-            Delete
-          </button>
-        </li>
-      `).join("");
+      list.innerHTML = ""; // Clear previous todos
+      todos.forEach(todo => {
+        const li = document.createElement("li");
+        li.textContent = todo.text;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.dataset.id = todo.id;
+        li.appendChild(deleteButton);
+
+        list.appendChild(li);
+      });
     };
 
     // Event listeners
@@ -226,8 +230,11 @@ const TodoList = liftHtml("todo-list", {
       if (e.key === "Enter") addTodo();
     };
 
-    // Expose methods to global scope for inline event handlers
-    this.removeTodo = removeTodo;
+    list.addEventListener("click", (e) => {
+      if (e.target.tagName === "BUTTON" && e.target.dataset.id) {
+        removeTodo(parseInt(e.target.dataset.id));
+      }
+    });
   },
 });
 ```

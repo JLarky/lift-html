@@ -166,13 +166,12 @@ const MyCounter = liftSolid("my-counter", {
 
     // Get configuration from attributes
     const initial = parseInt(this.getAttribute("initial") || "0");
-    const min = parseInt(this.getAttribute("min") || "-Infinity");
-    const max = parseInt(this.getAttribute("max") || "Infinity");
+    const min = Number(this.getAttribute("min") ?? -Infinity);
+    const max = Number(this.getAttribute("max") ??  Infinity);
     const step = parseInt(this.getAttribute("step") || "1");
 
     // Create reactive state
     const [count, setCount] = createSignal(initial);
-    const [isDisabled, setIsDisabled] = createSignal(false);
 
     // Enable the button
     button.disabled = false;
@@ -195,10 +194,7 @@ const MyCounter = liftSolid("my-counter", {
       // Update disabled state based on bounds
       const atMin = currentCount <= min;
       const atMax = currentCount >= max;
-      setIsDisabled(atMin || atMax);
-
-      // Update button disabled state
-      button.disabled = isDisabled();
+      button.disabled = atMin || atMax;
 
       // Add visual feedback
       if (atMin) {
@@ -215,14 +211,14 @@ const MyCounter = liftSolid("my-counter", {
     });
 
     // Emit events for external listeners
-    createEffect(() => {
+    createEffect(on(count, () => {
       this.dispatchEvent(
         new CustomEvent("count-change", {
           detail: { count: count() },
           bubbles: true,
         }),
       );
-    });
+    }, { defer: true }));
   },
 });
 ```

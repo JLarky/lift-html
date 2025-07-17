@@ -16,21 +16,21 @@ The core package providing the basic `liftHtml` function for creating web
 components. Perfect for simple components that don't need reactive state
 management.
 
-**Bundle size:** ~600 bytes gzipped
+**Bundle size:** <img src="https://deno.bundlejs.com/?q=@lift-html/core&badge=detailed&badge-style=for-the-badge&treeshake=[{liftHtml}]" height="28" valign="middle">
 
 ### @lift-html/solid
 
 Includes the core functionality plus SolidJS integration for reactive
 components. Provides `liftSolid` function and `useAttributes` helper.
 
-**Bundle size:** ~3.4kb gzipped (includes solid-js)
+**Bundle size:** <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid,useAttributes}]" height="28" valign="middle">
 
 ### @lift-html/tiny
 
 Minimal package for the most basic use cases. Provides just the essential
 functionality.
 
-**Bundle size:** ~150 bytes gzipped
+**Bundle size:** <img src="https://deno.bundlejs.com/?q=@lift-html/tiny&badge=detailed&badge-style=for-the-badge&treeshake=[{tinyLift}]" height="28" valign="middle">
 
 ## Prerequisites
 

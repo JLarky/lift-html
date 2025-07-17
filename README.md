@@ -4,18 +4,17 @@
 | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | @lift-html/tiny                                        | <img src="https://deno.bundlejs.com/?q=@lift-html/tiny&badge=detailed&badge-style=for-the-badge&treeshake=[{tinyLift}]" height="28" valign="middle">                 |
 | @lift-html/core                                        | <img src="https://deno.bundlejs.com/?q=@lift-html/core&badge=detailed&badge-style=for-the-badge&treeshake=[{liftHtml}]" height="28" valign="middle">                 |
-| @lift-html/solid (includes solid-js)                   | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid}]" height="28" valign="middle">               |
-| @lift-html/alien (includes alien-signals)              | <img src="https://deno.bundlejs.com/?q=@lift-html/alien&badge=detailed&badge-style=for-the-badge&treeshake=[{liftAlien}]" height="28" valign="middle">               |
 | @lift-html/solid (includes solid-js and useAttributes) | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid,useAttributes}]" height="28" valign="middle"> |
+| @lift-html/alien (includes alien-signals)              | <img src="https://deno.bundlejs.com/?q=@lift-html/alien&badge=detailed&badge-style=for-the-badge&treeshake=[{liftAlien}]" height="28" valign="middle">               |
 
 ## Welcome to the non-isomorphic web
 
 Lift HTML is a new way to build your JavaScript applications, especially if all
 that you know is isomorphic libraries like React, Vue, Preact, Angular, Lit,
 Svelte, SolidJS, Ember and Qwik. It's going to be less new if you have
-experience with primerally server-side frameworks like Rails, Django, Laravel.
+experience with primarily server-side frameworks like Rails, Django, Laravel.
 Those are built with expectation that you are going to write a lot of HTML+CSS
-and plop a couple of script tags here are there.
+and plop a couple of script tags here and there.
 
 With lift-html you can start with as low overhead as 150 bytes
 (`@lift-html/tiny`) to get type safety when declaring your custom elements and
@@ -25,7 +24,7 @@ simplified API (I tested that every web component used in
 If you jump up to `@lift-html/core`, in the less than 600 bytes you get HMR (Hot
 Module Replacement) support, full support of web components features like
 `formAssociated` and `observedAttributes` with type safety and nice API: `init`
-and `deInit` callbacks instead of `constructor`, `connectedCallback`,
+and `deinit` callbacks instead of `constructor`, `connectedCallback`,
 `adoptedCallback`, `disconnectedCallback` (I yet to find an example of a web
 component that can't be written with `@lift-html/core`).
 
