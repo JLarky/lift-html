@@ -25,6 +25,9 @@ jobs:
         with:
           deno-version: v2.1
 
+      - name: format
+        run: deno fmt --check
+
       - name: lint
         run: deno lint
 
