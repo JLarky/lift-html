@@ -5,22 +5,30 @@ description: How to install and set up lift-html in your project
 
 # Installation
 
-Lift HTML is available as multiple packages depending on your needs. Choose the package that best fits your project requirements.
+Lift HTML is available as multiple packages depending on your needs. Choose the
+package that best fits your project requirements.
 
 ## Available Packages
 
 ### @lift-html/core
-The core package providing the basic `liftHtml` function for creating web components. Perfect for simple components that don't need reactive state management.
+
+The core package providing the basic `liftHtml` function for creating web
+components. Perfect for simple components that don't need reactive state
+management.
 
 **Bundle size:** ~600 bytes gzipped
 
 ### @lift-html/solid
-Includes the core functionality plus SolidJS integration for reactive components. Provides `liftSolid` function and `useAttributes` helper.
+
+Includes the core functionality plus SolidJS integration for reactive
+components. Provides `liftSolid` function and `useAttributes` helper.
 
 **Bundle size:** ~3.4kb gzipped (includes solid-js)
 
 ### @lift-html/tiny
-Minimal package for the most basic use cases. Provides just the essential functionality.
+
+Minimal package for the most basic use cases. Provides just the essential
+functionality.
 
 **Bundle size:** ~150 bytes gzipped
 
@@ -37,11 +45,13 @@ Before installing Lift HTML, make sure you have:
 ### NPM (Recommended)
 
 For core functionality:
+
 ```bash
 npm install @lift-html/core
 ```
 
 For SolidJS integration:
+
 ```bash
 npm install @lift-html/solid
 ```
@@ -49,11 +59,13 @@ npm install @lift-html/solid
 ### Yarn
 
 For core functionality:
+
 ```bash
 yarn add @lift-html/core
 ```
 
 For SolidJS integration:
+
 ```bash
 yarn add @lift-html/solid
 ```
@@ -61,11 +73,13 @@ yarn add @lift-html/solid
 ### PNPM
 
 For core functionality:
+
 ```bash
 pnpm add @lift-html/core
 ```
 
 For SolidJS integration:
+
 ```bash
 pnpm add @lift-html/solid
 ```
@@ -73,6 +87,7 @@ pnpm add @lift-html/solid
 ### CDN (for quick prototyping)
 
 For core functionality:
+
 ```html
 <script type="module">
   import { liftHtml } from "https://esm.sh/@lift-html/core";
@@ -80,16 +95,21 @@ For core functionality:
 ```
 
 For SolidJS integration:
+
 ```html
 <script type="module">
-  import { liftSolid, useAttributes } from "https://esm.sh/@lift-html/solid";
-  import { createSignal, createEffect } from "https://esm.sh/solid-js";
+  import {
+    liftSolid,
+    useAttributes,
+  } from "https://esm.sh/@lift-html/solid";
+  import { createEffect, createSignal } from "https://esm.sh/solid-js";
 </script>
 ```
 
 ## TypeScript Support
 
-Lift HTML includes full TypeScript support out of the box. If you're using TypeScript, you'll get:
+Lift HTML includes full TypeScript support out of the box. If you're using
+TypeScript, you'll get:
 
 - Full type checking for component definitions
 - IntelliSense support in your IDE
@@ -204,7 +224,8 @@ Then in your HTML:
 <test-component></test-component>
 ```
 
-If you see the expected message in your browser, the installation was successful!
+If you see the expected message in your browser, the installation was
+successful!
 
 ## Next Steps
 
