@@ -5,246 +5,300 @@ description: Build complex, reusable components with lift-html
 
 # Components
 
-Learn how to build sophisticated, reusable components with Lift HTML. This guide
-covers component composition, slots, events, and advanced patterns.
+Learn how to build sophisticated, reusable components with Lift HTML. This guide covers component composition, working with existing HTML, events, and advanced patterns.
 
 ## Component Composition
 
-Components can be composed together to build complex UIs. Here's how to create
-and use nested components.
+Components can be composed together to build complex UIs. Since Lift HTML enhances existing HTML, composition happens at the HTML level rather than in JavaScript.
 
 ### Basic Composition
 
+```html
+<!-- HTML structure -->
+<user-profile user='{"name":"John Doe","email":"john@example.com"}'>
+  <my-card title="User Profile">
+    <div class="user-info">
+      <h4>John Doe</h4>
+      <p>john@example.com</p>
+      <p>Member since: 2024</p>
+      
+      <div class="actions">
+        <my-button variant="primary">Edit Profile</my-button>
+        <my-button variant="danger">Delete</my-button>
+      </div>
+    </div>
+  </my-card>
+</user-profile>
+```
+
 ```javascript
 // Button component
-const Button = defineComponent({
-  name: "my-button",
-
-  props: {
-    variant: { type: String, default: "primary" },
-    disabled: { type: Boolean, default: false },
+const Button = liftHtml("my-button", {
+  observedAttributes: ["variant", "disabled"],
+  init() {
+    const button = this.querySelector("button");
+    if (!button) return;
+    
+    // Apply variant class
+    const variant = this.getAttribute("variant") || "primary";
+    button.className = `btn btn-${variant}`;
+    
+    // Handle disabled state
+    if (this.hasAttribute("disabled")) {
+      button.disabled = true;
+    }
+    
+    // Handle click events
+    button.onclick = (e) => {
+      this.dispatchEvent(new CustomEvent("click", { 
+        detail: { originalEvent: e },
+        bubbles: true 
+      }));
+    };
   },
-
-  template: `
-    <button 
-      class="btn btn-{{ variant }}" 
-      :disabled="disabled"
-      @click="$emit('click')"
-    >
-      <slot></slot>
-    </button>
-  `,
 });
 
 // Card component
-const Card = defineComponent({
-  name: "my-card",
-
-  props: {
-    title: { type: String, default: "" },
-    padding: { type: String, default: "medium" },
+const Card = liftHtml("my-card", {
+  observedAttributes: ["title", "padding"],
+  init() {
+    const header = this.querySelector(".card-header h3");
+    const body = this.querySelector(".card-body");
+    
+    if (header) {
+      const title = this.getAttribute("title");
+      if (title) {
+        header.textContent = title;
+      } else {
+        header.parentElement.style.display = "none";
+      }
+    }
+    
+    if (body) {
+      const padding = this.getAttribute("padding") || "medium";
+      body.className = `card-body card-padding-${padding}`;
+    }
   },
-
-  template: `
-    <div class="card card-padding-{{ padding }}">
-      <div v-if="title" class="card-header">
-        <h3>{{ title }}</h3>
-      </div>
-      <div class="card-body">
-        <slot></slot>
-      </div>
-    </div>
-  `,
 });
 
-// User profile component using composition
-const UserProfile = defineComponent({
-  name: "user-profile",
-
-  props: {
-    user: { type: Object, required: true },
-  },
-
-  template: `
-    <my-card title="User Profile">
-      <div class="user-info">
-        <h4>{{ user.name }}</h4>
-        <p>{{ user.email }}</p>
-        <p>Member since: {{ user.joinDate }}</p>
-        
-        <div class="actions">
-          <my-button @click="editProfile">Edit Profile</my-button>
-          <my-button variant="danger" @click="deleteProfile">Delete</my-button>
-        </div>
-      </div>
-    </my-card>
-  `,
-
-  methods: {
-    editProfile() {
-      this.$emit("edit", this.user);
-    },
-
-    deleteProfile() {
-      this.$emit("delete", this.user);
-    },
+// User profile component
+const UserProfile = liftHtml("user-profile", {
+  observedAttributes: ["user"],
+  init() {
+    const userData = this.getAttribute("user");
+    if (!userData) return;
+    
+    try {
+      const user = JSON.parse(userData);
+      
+      // Update user info
+      const nameEl = this.querySelector("h4");
+      const emailEl = this.querySelector("p");
+      
+      if (nameEl) nameEl.textContent = user.name;
+      if (emailEl) emailEl.textContent = user.email;
+      
+      // Set up action buttons
+      const editBtn = this.querySelector('my-button[variant="primary"] button');
+      const deleteBtn = this.querySelector('my-button[variant="danger"] button');
+      
+      if (editBtn) {
+        editBtn.onclick = () => {
+          this.dispatchEvent(new CustomEvent("edit", { 
+            detail: { user },
+            bubbles: true 
+          }));
+        };
+      }
+      
+      if (deleteBtn) {
+        deleteBtn.onclick = () => {
+          this.dispatchEvent(new CustomEvent("delete", { 
+            detail: { user },
+            bubbles: true 
+          }));
+        };
+      }
+    } catch (error) {
+      console.error("Invalid user data:", error);
+    }
   },
 });
 ```
 
-## Slots
+## Working with Existing HTML
 
-Slots allow you to pass content into components, making them more flexible and
-reusable.
+Lift HTML components enhance existing HTML rather than rendering it. This means you work with the DOM structure that's already present.
 
-### Default Slots
+### Finding and Enhancing Elements
 
 ```javascript
-const Modal = defineComponent({
-  name: "my-modal",
-
-  props: {
-    title: { type: String, default: "" },
-    visible: { type: Boolean, default: false },
-  },
-
-  template: `
-    <div v-if="visible" class="modal-overlay" @click="closeModal">
-      <div class="modal" @click.stop>
-        <div class="modal-header">
-          <h3>{{ title }}</h3>
-          <button @click="closeModal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <slot></slot>
-        </div>
-      </div>
-    </div>
-  `,
-
-  methods: {
-    closeModal() {
-      this.$emit("close");
-    },
+const SearchBox = liftHtml("search-box", {
+  observedAttributes: ["placeholder", "debounce"],
+  init() {
+    const input = this.querySelector("input");
+    const results = this.querySelector(".results");
+    const clearBtn = this.querySelector(".clear-btn");
+    
+    if (!input) {
+      console.warn("<search-box> must contain an <input> element");
+      return;
+    }
+    
+    // Set up search functionality
+    let searchTimeout;
+    const debounceMs = parseInt(this.getAttribute("debounce") || "300");
+    
+    const performSearch = async (query) => {
+      if (query.length < 2) {
+        if (results) results.innerHTML = "";
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const searchResults = await response.json();
+        
+        if (results) {
+          results.innerHTML = searchResults.map(item => `
+            <div class="result" data-id="${item.id}">
+              <h4>${item.title}</h4>
+              <p>${item.description}</p>
+            </div>
+          `).join("");
+        }
+      } catch (error) {
+        console.error("Search failed:", error);
+        if (results) results.innerHTML = "<div class="error">Search failed</div>";
+      }
+    };
+    
+    // Set up event listeners
+    input.oninput = (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        performSearch(e.target.value);
+      }, debounceMs);
+    };
+    
+    if (clearBtn) {
+      clearBtn.onclick = () => {
+        input.value = "";
+        if (results) results.innerHTML = "";
+        input.focus();
+      };
+    }
+    
+    // Set placeholder from attribute
+    const placeholder = this.getAttribute("placeholder");
+    if (placeholder) input.placeholder = placeholder;
   },
 });
 ```
 
-### Named Slots
+### Conditional Rendering
+
+Since you're working with existing HTML, conditional rendering is handled through CSS or DOM manipulation:
 
 ```javascript
-const Layout = defineComponent({
-  name: "my-layout",
-
-  template: `
-    <div class="layout">
-      <header class="header">
-        <slot name="header">Default Header</slot>
-      </header>
+const TabPanel = liftHtml("tab-panel", {
+  observedAttributes: ["active-tab"],
+  init() {
+    const tabs = this.querySelectorAll("[role='tab']");
+    const panels = this.querySelectorAll("[role='tabpanel']");
+    
+    const showTab = (tabId) => {
+      // Hide all panels
+      panels.forEach(panel => {
+        panel.style.display = "none";
+        panel.setAttribute("aria-hidden", "true");
+      });
       
-      <main class="main">
-        <aside class="sidebar">
-          <slot name="sidebar">Default Sidebar</slot>
-        </aside>
-        
-        <div class="content">
-          <slot name="content">Default Content</slot>
-        </div>
-      </main>
+      // Deactivate all tabs
+      tabs.forEach(tab => {
+        tab.setAttribute("aria-selected", "false");
+        tab.classList.remove("active");
+      });
       
-      <footer class="footer">
-        <slot name="footer">Default Footer</slot>
-      </footer>
-    </div>
-  `,
+      // Show selected panel
+      const activePanel = this.querySelector(`[role='tabpanel'][id='${tabId}']`);
+      if (activePanel) {
+        activePanel.style.display = "block";
+        activePanel.setAttribute("aria-hidden", "false");
+      }
+      
+      // Activate selected tab
+      const activeTab = this.querySelector(`[role='tab'][aria-controls='${tabId}']`);
+      if (activeTab) {
+        activeTab.setAttribute("aria-selected", "true");
+        activeTab.classList.add("active");
+      }
+    };
+    
+    // Set up tab click handlers
+    tabs.forEach(tab => {
+      tab.onclick = (e) => {
+        e.preventDefault();
+        const targetId = tab.getAttribute("aria-controls");
+        if (targetId) {
+          showTab(targetId);
+          this.setAttribute("active-tab", targetId);
+        }
+      };
+    });
+    
+    // Show initial tab
+    const initialTab = this.getAttribute("active-tab");
+    if (initialTab) {
+      showTab(initialTab);
+    } else if (tabs.length > 0) {
+      const firstTab = tabs[0];
+      const firstTabId = firstTab.getAttribute("aria-controls");
+      if (firstTabId) showTab(firstTabId);
+    }
+  },
 });
-```
-
-### Using Named Slots
-
-```html
-<my-layout>
-  <template #header>
-    <h1>My Application</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-    </nav>
-  </template>
-
-  <template #sidebar>
-    <ul>
-      <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/settings">Settings</a></li>
-    </ul>
-  </template>
-
-  <template #content>
-    <h2>Welcome to the application!</h2>
-    <p>This is the main content area.</p>
-  </template>
-
-  <template #footer>
-    <p>&copy; 2024 My Application</p>
-  </template>
-</my-layout>
 ```
 
 ## Events and Communication
 
-Components communicate through events. Here's how to emit and handle events.
+Components communicate through standard DOM events. Here's how to emit and handle events.
 
 ### Emitting Events
 
 ```javascript
-const FormInput = defineComponent({
-  name: "form-input",
-
-  props: {
-    value: { type: String, default: "" },
-    placeholder: { type: String, default: "" },
-    type: { type: String, default: "text" },
-  },
-
-  data() {
-    return {
-      internalValue: this.value,
+const FormInput = liftHtml("form-input", {
+  observedAttributes: ["value", "type", "required"],
+  init() {
+    const input = this.querySelector("input");
+    if (!input) return;
+    
+    // Set up input attributes
+    const type = this.getAttribute("type") || "text";
+    const required = this.hasAttribute("required");
+    
+    input.type = type;
+    input.required = required;
+    
+    // Handle value changes
+    input.oninput = (e) => {
+      this.setAttribute("value", e.target.value);
+      this.dispatchEvent(new CustomEvent("input", {
+        detail: { value: e.target.value },
+        bubbles: true
+      }));
     };
-  },
-
-  template: `
-    <div class="form-input">
-      <input
-        :type="type"
-        :placeholder="placeholder"
-        :value="internalValue"
-        @input="handleInput"
-        @blur="handleBlur"
-        @focus="handleFocus"
-      />
-    </div>
-  `,
-
-  methods: {
-    handleInput(event) {
-      this.internalValue = event.target.value;
-      this.$emit("input", this.internalValue);
-      this.$emit("change", this.internalValue);
-    },
-
-    handleBlur(event) {
-      this.$emit("blur", event);
-    },
-
-    handleFocus(event) {
-      this.$emit("focus", event);
-    },
-  },
-
-  watch: {
-    value(newValue) {
-      this.internalValue = newValue;
-    },
+    
+    input.onchange = (e) => {
+      this.dispatchEvent(new CustomEvent("change", {
+        detail: { value: e.target.value },
+        bubbles: true
+      }));
+    };
+    
+    // Set initial value
+    const initialValue = this.getAttribute("value");
+    if (initialValue) input.value = initialValue;
   },
 });
 ```
@@ -252,308 +306,249 @@ const FormInput = defineComponent({
 ### Handling Events
 
 ```javascript
-const ContactForm = defineComponent({
-  name: "contact-form",
-
-  data() {
-    return {
-      formData: {
-        name: "",
-        email: "",
-        message: "",
-      },
-      errors: {},
+const Form = liftHtml("my-form", {
+  init() {
+    const form = this.querySelector("form");
+    if (!form) return;
+    
+    // Handle form submission
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      
+      // Collect form data
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      
+      // Emit submit event
+      this.dispatchEvent(new CustomEvent("submit", {
+        detail: { data },
+        bubbles: true
+      }));
     };
-  },
-
-  template: `
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label>Name:</label>
-        <form-input
-          v-model="formData.name"
-          placeholder="Enter your name"
-          @blur="validateField('name')"
-        />
-        <span v-if="errors.name" class="error">{{ errors.name }}</span>
-      </div>
-      
-      <div class="form-group">
-        <label>Email:</label>
-        <form-input
-          type="email"
-          v-model="formData.email"
-          placeholder="Enter your email"
-          @blur="validateField('email')"
-        />
-        <span v-if="errors.email" class="error">{{ errors.email }}</span>
-      </div>
-      
-      <div class="form-group">
-        <label>Message:</label>
-        <textarea
-          v-model="formData.message"
-          placeholder="Enter your message"
-          @blur="validateField('message')"
-        ></textarea>
-        <span v-if="errors.message" class="error">{{ errors.message }}</span>
-      </div>
-      
-      <button type="submit">Send Message</button>
-    </form>
-  `,
-
-  methods: {
-    validateField(field) {
-      const value = this.formData[field];
-
-      switch (field) {
-        case "name":
-          if (!value.trim()) {
-            this.errors.name = "Name is required";
-          } else {
-            delete this.errors.name;
-          }
-          break;
-
-        case "email":
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!value.trim()) {
-            this.errors.email = "Email is required";
-          } else if (!emailRegex.test(value)) {
-            this.errors.email = "Please enter a valid email";
-          } else {
-            delete this.errors.email;
-          }
-          break;
-
-        case "message":
-          if (!value.trim()) {
-            this.errors.message = "Message is required";
-          } else {
-            delete this.errors.message;
-          }
-          break;
-      }
-    },
-
-    handleSubmit() {
-      // Validate all fields
-      ["name", "email", "message"].forEach((field) => {
-        this.validateField(field);
-      });
-
-      // Check if there are any errors
-      if (Object.keys(this.errors).length === 0) {
-        this.$emit("submit", this.formData);
-      }
-    },
+    
+    // Listen for input changes
+    this.addEventListener("input", (e) => {
+      console.log("Input changed:", e.detail.value);
+    });
+    
+    // Listen for validation errors
+    this.addEventListener("validation-error", (e) => {
+      console.log("Validation error:", e.detail.message);
+    });
   },
 });
 ```
 
 ## Advanced Patterns
 
-### Higher-Order Components
+### Component Registry
 
-Create wrapper components that add functionality to other components.
+Create a registry to manage component dependencies:
 
 ```javascript
-// HOC for loading states
-function withLoading(Component) {
-  return defineComponent({
-    name: `${Component.name}-with-loading`,
-
-    props: {
-      loading: { type: Boolean, default: false },
-      error: { type: String, default: "" },
-    },
-
-    template: `
-      <div class="with-loading">
-        <div v-if="loading" class="loading-spinner">
-          Loading...
-        </div>
-        <div v-else-if="error" class="error-message">
-          {{ error }}
-        </div>
-        <Component v-else v-bind="$props" v-on="$listeners" />
-      </div>
-    `,
-
-    components: {
-      Component,
-    },
-  });
+// component-registry.js
+class ComponentRegistry {
+  constructor() {
+    this.components = new Map();
+    this.dependencies = new Map();
+  }
+  
+  register(name, component, deps = []) {
+    this.components.set(name, component);
+    this.dependencies.set(name, deps);
+  }
+  
+  get(name) {
+    return this.components.get(name);
+  }
+  
+  getDependencies(name) {
+    return this.dependencies.get(name) || [];
+  }
 }
 
-// Usage
-const UserListWithLoading = withLoading(UserList);
+const registry = new ComponentRegistry();
+
+// Register components
+registry.register("my-button", Button);
+registry.register("my-card", Card);
+registry.register("user-profile", UserProfile, ["my-button", "my-card"]);
+
+export default registry;
 ```
 
-### Render Props Pattern
+### Reactive Components with Solid
+
+For more complex state management, use the solid package:
 
 ```javascript
-const DataProvider = defineComponent({
-  name: "data-provider",
+import { liftSolid, useAttributes } from "@lift-html/solid";
+import { createSignal, createEffect, createMemo } from "solid-js";
 
-  props: {
-    url: { type: String, required: true },
-  },
-
-  data() {
-    return {
-      data: null,
-      loading: false,
-      error: null,
-    };
-  },
-
-  template: `
-    <div>
-      <slot 
-        :data="data" 
-        :loading="loading" 
-        :error="error"
-        :refresh="fetchData"
-      ></slot>
-    </div>
-  `,
-
-  methods: {
-    async fetchData() {
-      this.loading = true;
-      this.error = null;
-
+const DataTable = liftSolid("data-table", {
+  observedAttributes: ["data", "sort-by", "filter"],
+  init() {
+    const table = this.querySelector("table");
+    const tbody = table?.querySelector("tbody");
+    if (!table || !tbody) return;
+    
+    const props = useAttributes(this);
+    
+    // Reactive data processing
+    const processedData = createMemo(() => {
+      const dataStr = props.data;
+      if (!dataStr) return [];
+      
       try {
-        const response = await fetch(this.url);
-        this.data = await response.json();
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false;
+        let data = JSON.parse(dataStr);
+        
+        // Apply filter
+        const filter = props.filter;
+        if (filter) {
+          data = data.filter(item => 
+            Object.values(item).some(val => 
+              String(val).toLowerCase().includes(filter.toLowerCase())
+            )
+          );
+        }
+        
+        // Apply sorting
+        const sortBy = props["sort-by"];
+        if (sortBy) {
+          data.sort((a, b) => {
+            const aVal = a[sortBy];
+            const bVal = b[sortBy];
+            return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+          });
+        }
+        
+        return data;
+      } catch (error) {
+        console.error("Invalid data:", error);
+        return [];
       }
-    },
-  },
-
-  mounted() {
-    this.fetchData();
+    });
+    
+    // Reactive rendering
+    createEffect(() => {
+      const data = processedData();
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.email}</td>
+          <td>${item.role}</td>
+        </tr>
+      `).join("");
+    });
   },
 });
 ```
 
-### Using Render Props
+### Form Association
 
-```html
-<data-provider url="/api/users">
-  <template #default="{ data, loading, error, refresh }">
-    <div>
-      <button @click="refresh">Refresh</button>
-
-      <div v-if="loading">Loading users...</div>
-      <div v-else-if="error">Error: {{ error }}</div>
-      <div v-else>
-        <h3>Users ({{ data.length }})</h3>
-        <ul>
-          <li v-for="user in data" :key="user.id">
-            {{ user.name }} - {{ user.email }}
-          </li>
-        </ul>
-      </div>
-    </div>
-  </template>
-</data-provider>
-```
-
-### Component Libraries
-
-Organize related components into libraries.
+Create form-associated custom elements:
 
 ```javascript
-// components/ui/index.js
-import Button from "./Button.js";
-import Card from "./Card.js";
-import Modal from "./Modal.js";
-import FormInput from "./FormInput.js";
-
-export { Button, Card, FormInput, Modal };
-
-// components/forms/index.js
-import ContactForm from "./ContactForm.js";
-import LoginForm from "./LoginForm.js";
-import RegistrationForm from "./RegistrationForm.js";
-
-export { ContactForm, LoginForm, RegistrationForm };
-
-// main.js
-import { Button, Card, FormInput, Modal } from "./components/ui/index.js";
-import { ContactForm, LoginForm } from "./components/forms/index.js";
-
-// Register all components
-[Button, Card, Modal, FormInput, ContactForm, LoginForm].forEach(
-  (Component) => {
-    Component.register();
+const CustomSelect = liftHtml("custom-select", {
+  formAssociated: true,
+  observedAttributes: ["value", "options"],
+  init() {
+    const select = this.querySelector("select");
+    if (!select) return;
+    
+    // Form association
+    this.internals = this.attachInternals();
+    
+    // Parse options from attribute
+    const optionsStr = this.getAttribute("options");
+    if (optionsStr) {
+      try {
+        const options = JSON.parse(optionsStr);
+        select.innerHTML = options.map(opt => 
+          `<option value="${opt.value}">${opt.label}</option>`
+        ).join("");
+      } catch (error) {
+        console.error("Invalid options:", error);
+      }
+    }
+    
+    // Handle value changes
+    select.onchange = (e) => {
+      const value = e.target.value;
+      this.setAttribute("value", value);
+      this.internals.setFormValue(value);
+      
+      this.dispatchEvent(new CustomEvent("change", {
+        detail: { value },
+        bubbles: true
+      }));
+    };
+    
+    // Set initial value
+    const initialValue = this.getAttribute("value");
+    if (initialValue) {
+      select.value = initialValue;
+      this.internals.setFormValue(initialValue);
+    }
   },
-);
+});
 ```
 
 ## Best Practices
 
-### Component Design
+### 1. Error Handling
 
-1. **Single Responsibility**: Each component should have one clear purpose
-2. **Props Down, Events Up**: Pass data down via props, emit events up
-3. **Composition over Inheritance**: Use slots and composition instead of
-   inheritance
-4. **Consistent Naming**: Use kebab-case for component names and props
-
-### Performance
+Always check for required elements and handle missing HTML gracefully:
 
 ```javascript
-// Use v-memo for expensive computations
-const ExpensiveList = defineComponent({
-  name: "expensive-list",
-
-  template: `
-    <div>
-      <div v-for="item in items" :key="item.id" v-memo="[item.id, item.status]">
-        <expensive-item :item="item" />
-      </div>
-    </div>
-  `,
-});
-
-// Lazy load components
-const LazyComponent = defineComponent({
-  name: "lazy-component",
-
-  data() {
-    return {
-      Component: null,
-      loading: false,
-    };
+const MyComponent = liftHtml("my-component", {
+  init() {
+    const requiredElement = this.querySelector(".required");
+    if (!requiredElement) {
+      console.warn("<my-component> must contain a .required element");
+      return;
+    }
+    
+    // Component logic here
   },
-
-  async mounted() {
-    this.loading = true;
-    const module = await import("./HeavyComponent.js");
-    this.Component = module.default;
-    this.loading = false;
-  },
-
-  template: `
-    <div>
-      <div v-if="loading">Loading...</div>
-      <Component v-else />
-    </div>
-  `,
 });
+```
+
+### 2. Cleanup
+
+Use the `deinit` callback to clean up resources:
+
+```javascript
+const MyComponent = liftHtml("my-component", {
+  init(deinit) {
+    const button = this.querySelector("button");
+    const handler = () => console.log("clicked");
+    
+    button.addEventListener("click", handler);
+    
+    deinit(() => {
+      button.removeEventListener("click", handler);
+    });
+  },
+});
+```
+
+### 3. TypeScript Declarations
+
+Add TypeScript declarations for better IDE support:
+
+```typescript
+declare module "@lift-html/core" {
+  interface KnownElements {
+    "my-button": typeof Button;
+    "my-card": typeof Card;
+    "user-profile": typeof UserProfile;
+  }
+}
 ```
 
 ## Next Steps
 
-- [Interoperability](/guides/interoperability/) - Use Lift HTML with other
-  frameworks
-- [Best Practices](/guides/best-practices/) - Learn advanced patterns and
-  optimization
-- [Testing](/guides/testing/) - Test your components effectively
+- [Interoperability](/guides/interoperability/) - Use Lift HTML with other frameworks
+- [Examples](/guides/example/) - See more examples
+- [Advanced Patterns](/guides/advanced/) - Learn advanced component patterns
