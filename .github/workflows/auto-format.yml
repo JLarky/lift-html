@@ -60,7 +60,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A
           git commit -m "🔧 Auto-format code with deno fmt"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: Comment on PR
         if: steps.check-format.outputs.formatted == 'false' && steps.changes.outputs.has_changes == 'true'
