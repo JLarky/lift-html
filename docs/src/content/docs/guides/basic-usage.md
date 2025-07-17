@@ -229,7 +229,7 @@ Lift HTML provides a simple lifecycle with the `init` function:
 
 ```javascript
 const MyComponent = liftHtml("my-component", {
-  init(deinit) {
+  init(deInit) {
     // Component is connected to DOM
     
     // Set up event listeners
@@ -238,7 +238,7 @@ const MyComponent = liftHtml("my-component", {
     button.addEventListener("click", handler);
     
     // Clean up when component is disconnected
-    deinit(() => {
+    deInit(() => {
       button.removeEventListener("click", handler);
     });
   },

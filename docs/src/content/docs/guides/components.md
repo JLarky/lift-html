@@ -516,17 +516,17 @@ const MyComponent = liftHtml("my-component", {
 
 ### 2. Cleanup
 
-Use the `deinit` callback to clean up resources:
+Use the `deInit` callback to clean up resources:
 
 ```javascript
 const MyComponent = liftHtml("my-component", {
-  init(deinit) {
+  init(deInit) {
     const button = this.querySelector("button");
     const handler = () => console.log("clicked");
     
     button.addEventListener("click", handler);
     
-    deinit(() => {
+    deInit(() => {
       button.removeEventListener("click", handler);
     });
   },
