@@ -5,8 +5,32 @@ description: How to install and set up lift-html in your project
 
 # Installation
 
-Lift HTML can be installed in several ways depending on your project setup and
-preferences.
+Lift HTML is available as multiple packages depending on your needs. Choose the
+package that best fits your project requirements.
+
+## Available Packages
+
+### @lift-html/core
+
+The core package providing the basic `liftHtml` function for creating web
+components. Perfect for simple components that don't need reactive state
+management.
+
+**Bundle size:** ~600 bytes gzipped
+
+### @lift-html/solid
+
+Includes the core functionality plus SolidJS integration for reactive
+components. Provides `liftSolid` function and `useAttributes` helper.
+
+**Bundle size:** ~3.4kb gzipped (includes solid-js)
+
+### @lift-html/tiny
+
+Minimal package for the most basic use cases. Provides just the essential
+functionality.
+
+**Bundle size:** ~150 bytes gzipped
 
 ## Prerequisites
 
@@ -20,27 +44,65 @@ Before installing Lift HTML, make sure you have:
 
 ### NPM (Recommended)
 
+For core functionality:
+
 ```bash
-npm install lift-html
+npm install @lift-html/core
+```
+
+For SolidJS integration:
+
+```bash
+npm install @lift-html/solid
 ```
 
 ### Yarn
 
+For core functionality:
+
 ```bash
-yarn add lift-html
+yarn add @lift-html/core
+```
+
+For SolidJS integration:
+
+```bash
+yarn add @lift-html/solid
 ```
 
 ### PNPM
 
+For core functionality:
+
 ```bash
-pnpm add lift-html
+pnpm add @lift-html/core
+```
+
+For SolidJS integration:
+
+```bash
+pnpm add @lift-html/solid
 ```
 
 ### CDN (for quick prototyping)
 
+For core functionality:
+
 ```html
 <script type="module">
-  import { defineComponent } from "https://esm.sh/lift-html";
+  import { liftHtml } from "https://esm.sh/@lift-html/core";
+</script>
+```
+
+For SolidJS integration:
+
+```html
+<script type="module">
+  import {
+    liftSolid,
+    useAttributes,
+  } from "https://esm.sh/@lift-html/solid";
+  import { createEffect, createSignal } from "https://esm.sh/solid-js";
 </script>
 ```
 
@@ -62,7 +124,9 @@ Lift HTML is designed to work with any framework or build tool:
 ### Vite
 
 ```bash
-npm install lift-html
+npm install @lift-html/core
+# or
+npm install @lift-html/solid
 ```
 
 ```javascript
@@ -76,7 +140,9 @@ export default {
 ### Webpack
 
 ```bash
-npm install lift-html
+npm install @lift-html/core
+# or
+npm install @lift-html/solid
 ```
 
 ```javascript
@@ -90,18 +156,24 @@ module.exports = {
 ### Create React App
 
 ```bash
-npm install lift-html
+npm install @lift-html/core
+# or
+npm install @lift-html/solid
 ```
 
 ```javascript
 // You can use Lift HTML components alongside React components
-import { defineComponent } from "lift-html";
+import { liftHtml } from "@lift-html/core";
+// or
+import { liftSolid } from "@lift-html/solid";
 ```
 
 ### Next.js
 
 ```bash
-npm install lift-html
+npm install @lift-html/core
+# or
+npm install @lift-html/solid
 ```
 
 ```javascript
@@ -119,16 +191,31 @@ module.exports = nextConfig;
 
 To verify your installation, create a simple test:
 
+### Using @lift-html/core
+
 ```javascript
-import { defineComponent } from "lift-html";
+import { liftHtml } from "@lift-html/core";
 
-const TestComponent = defineComponent({
-  name: "test-component",
-  template: "<div>Hello from Lift HTML!</div>",
+const TestComponent = liftHtml("test-component", {
+  init() {
+    this.textContent = "Hello from Lift HTML Core!";
+  },
 });
+```
 
-// Register the component
-TestComponent.register();
+### Using @lift-html/solid
+
+```javascript
+import { liftSolid } from "@lift-html/solid";
+import { createSignal } from "solid-js";
+
+const TestComponent = liftSolid("test-component", {
+  init() {
+    const [count, setCount] = createSignal(0);
+    this.textContent = `Hello from Lift HTML Solid! Count: ${count()}`;
+    this.onclick = () => setCount(count() + 1);
+  },
+});
 ```
 
 Then in your HTML:
@@ -137,7 +224,7 @@ Then in your HTML:
 <test-component></test-component>
 ```
 
-If you see "Hello from Lift HTML!" in your browser, the installation was
+If you see the expected message in your browser, the installation was
 successful!
 
 ## Next Steps
