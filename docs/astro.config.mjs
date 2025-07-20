@@ -4,8 +4,7 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://jlarky.github.io",
-  base: "/lift-html",
+  site: "https://lift-html.js.org",
   integrations: [
     starlight({
       title: "Lift HTML Documentation",
