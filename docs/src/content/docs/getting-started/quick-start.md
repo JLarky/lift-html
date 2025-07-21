@@ -44,6 +44,7 @@ const Counter = liftHtml("my-counter", {
 
     // Initialize
     updateCount();
+    button.disabled = false;
   },
 });
 ```
@@ -74,6 +75,8 @@ const Counter = liftSolid("my-counter", {
     createEffect(() => {
       button.textContent = `Clicks: ${count()}`;
     });
+
+    button.disabled = false;
   },
 });
 ```
