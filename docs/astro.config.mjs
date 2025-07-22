@@ -30,6 +30,7 @@ export default defineConfig({
             { label: "Basic Usage", link: "/guides/basic-usage/" },
             { label: "Components", link: "/guides/components/" },
             { label: "Interoperability", link: "/guides/interoperability/" },
+            { label: "Lift vs Lit", link: "/guides/lift-vs-lit/" },
           ],
         },
         {
