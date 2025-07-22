@@ -166,8 +166,8 @@ const MyCounter = liftSolid("my-counter", {
 
     // Get configuration from attributes
     const initial = parseInt(this.getAttribute("initial") || "0");
-    const min = parseInt(this.getAttribute("min") || "-Infinity");
-    const max = parseInt(this.getAttribute("max") || "Infinity");
+    const min = Number(this.getAttribute("min") || "-Infinity");
+    const max = Number(this.getAttribute("max") || "Infinity");
     const step = parseInt(this.getAttribute("step") || "1");
 
     // Create reactive state
