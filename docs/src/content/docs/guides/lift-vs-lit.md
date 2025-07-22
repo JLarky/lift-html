@@ -3,16 +3,17 @@ title: liFt-html vs lit-html
 description: Addressing common misconception lift-html vs lit-html
 ---
 
-## liFt-html vs lit-html
+## Lift vs Lit
 
 I get a lot of people confused when I talk about liFt-html because they think
 it's the same thing as lit-html. Lit stands for string template **lit**eral
 **\`html\`**. And Lift stands for **lift**ing your existing **HTML** to become
 an app. One describes templating strategy, the other describes the approach of
-progressive enhancment. BTW, in the recent years `lit-html` was mostly consumed
-into the Lit framework and barely gets
-[mentioned](https://lit.dev/docs/libraries/standalone-templates/) in the docs
-anymore.
+progressive enhancment.
+
+In recent years, `lit-html` was effectively folded into the **Lit** framework
+and is rarely [mentioned](https://lit.dev/docs/libraries/standalone-templates/)
+on its own anymore.
 
 ### Core Philosophies
 
