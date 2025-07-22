@@ -49,6 +49,44 @@ const Counter = liftHtml("my-counter", {
 });
 ```
 
+### Another example with @lift-html/solid
+
+This example shows how to create a button that counts clicks.
+
+```javascript
+import { liftSolid } from "@lift-html/solid";
+import { createSignal, createEffect } from "solid-js";
+
+// define a custom element
+const MyButton = liftSolid("my-button", {
+  init() {
+    const button = this.querySelector("button");
+    if (!button) throw new Error("<my-button> must contain a <button>");
+    button.disabled = false;
+    const [count, setCount] = createSignal(0);
+    button.onclick = () => setCount(count() + 1);
+    createEffect(() => {
+      button.textContent = `Clicks: ${count()}`;
+    });
+  },
+});
+
+// define types for the custom element
+declare module "@lift-html/solid" {
+  interface KnownElements {
+    "my-button": typeof MyButton;
+  }
+}
+```
+
+And in your HTML:
+
+```html
+<my-button>
+  <button disabled>Loading...</button>
+</my-button>
+```
+
 ### Using @lift-html/solid
 
 Create a new file called `counter-solid.js`:
