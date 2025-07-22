@@ -172,7 +172,6 @@ const MyCounter = liftSolid("my-counter", {
 
     // Create reactive state
     const [count, setCount] = createSignal(initial);
-    const [isDisabled, setIsDisabled] = createSignal(false);
 
     // Enable the button
     button.disabled = false;
@@ -195,10 +194,7 @@ const MyCounter = liftSolid("my-counter", {
       // Update disabled state based on bounds
       const atMin = currentCount <= min;
       const atMax = currentCount >= max;
-      setIsDisabled(atMin || atMax);
-
-      // Update button disabled state
-      button.disabled = isDisabled();
+      button.disabled = atMin || atMax;
 
       // Add visual feedback
       if (atMin) {
