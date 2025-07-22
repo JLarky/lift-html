@@ -173,12 +173,22 @@ const SearchBox = liftHtml("search-box", {
         const searchResults = await response.json();
         
         if (results) {
-          results.innerHTML = searchResults.map(item => `
-            <div class="result" data-id="${item.id}">
-              <h4>${item.title}</h4>
-              <p>${item.description}</p>
-            </div>
-          `).join("");
+          results.innerHTML = ""; // Clear previous results
+          searchResults.forEach(item => {
+            const resultDiv = document.createElement("div");
+            resultDiv.className = "result";
+            resultDiv.dataset.id = item.id;
+
+            const title = document.createElement("h4");
+            title.textContent = item.title;
+
+            const description = document.createElement("p");
+            description.textContent = item.description;
+
+            resultDiv.appendChild(title);
+            resultDiv.appendChild(description);
+            results.appendChild(resultDiv);
+          });
         }
       } catch (error) {
         console.error("Search failed:", error);
