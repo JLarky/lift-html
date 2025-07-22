@@ -1,6 +1,6 @@
 ---
 title: liFt-html vs lit-html
-description: A guide to the differences between Lift HTML and Lit HTML.
+description: Addressing common misconception lift-html vs lit-html
 ---
 
 ## liFt-html vs lit-html
