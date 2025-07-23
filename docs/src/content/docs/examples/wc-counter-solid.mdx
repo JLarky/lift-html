@@ -1,0 +1,34 @@
+---
+title: "WC Counter: Solid"
+description: How to use lift-html with Shadow DOM based Web Components using SolidJS.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import SolidCounter from "../../../components/examples/wc-counter-solid/SolidCounter.astro";
+
+<SolidCounter />
+
+# Code
+
+#### Server markup
+
+
+import SolidCounterText from "/src/components/examples/wc-counter-solid/SolidCounter.astro?raw";
+
+<Code code={SolidCounterText} lang="astro" title='SolidCounter.astro' />
+
+([source](https://github.com/JLarky/lift-html/tree/main/docs/src/components/examples/wc-counter-solid/SolidCounter.astro))
+
+#### Client implementation
+
+import SolidCounterTsText from "/src/components/examples/wc-counter-solid/wc-counter-solid.ts?raw";
+
+<Code code={SolidCounterTsText} lang="ts" title='wc-counter-solid.ts' />
+
+([source](https://github.com/JLarky/lift-html/tree/main/docs/src/components/examples/wc-counter-solid/wc-counter-solid.ts))
+
+## Explanation
+
+While I personally dont't use Shadow DOM you are welcome to do so. In this example you can see that CSS is scoped to the component and even rules like `* { font-size: 200%; }` do not leak outside of the component.
+
+You can also see that the markup that server returns is initially empty that causes a layout shift when the page is (re)loaded.
