@@ -1,0 +1,40 @@
+---
+title: "Lift HTML vs Lit: Clock"
+description: Which one would you use?
+sidebar:
+  hidden: true
+---
+
+# Code
+
+#### Lift
+
+```ts
+import { liftSolid } from "@lift-html/solid";
+import { createSignal, createEffect, onCleanup } from "solid-js";
+
+function useClockController(timeout = 1000) {
+  const [value, setValue] = createSignal(new Date());
+  const timer = setInterval(() => setValue(new Date()), timeout);
+  onCleanup(() => clearInterval(timer));
+  return { get value() { return value() } };
+}
+
+const timeFormat = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric', minute: 'numeric', second: 'numeric',
+});
+
+liftSolid('my-element', {
+  init() {
+    const clock = useClockController(100);
+    createEffect(() => {
+      const formattedTime = timeFormat.format(clock.value);
+      this.textContent = `Current time: ${formattedTime}`;
+    })
+  }
+})
+```
+
+#### Lit
+
+https://lit.dev/docs/composition/controllers/
