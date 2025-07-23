@@ -15,7 +15,7 @@ export class MyButton extends HTMLElement {
 if (typeof customElements !== "undefined") {
   if (customElements.get("my-button")) {
     console.warn(
-      "Can't redefine custom element <my-button>. Page reload required."
+      "Can't redefine custom element <my-button>. Page reload required.",
     );
   }
   customElements.define("my-button", MyButton);
