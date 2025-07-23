@@ -1,4 +1,27 @@
-import { liftHtml } from '../packages/core/mod.ts';
+---
+title: Solid Counter
+description: A simple counter example using SolidJS.
+---
+
+import SolidCounter from "../../../components/SolidCounter.astro";
+
+<SolidCounter />
+
+# Code
+
+## HTML
+
+```html
+<my-button><button>Clicks: 0</button></my-button>
+<script>
+  import "./solid-counter";
+</script>
+```
+
+## script
+
+```typescript
+import { liftHtml } from '@lift-html/core';
 import html from "solid-js/html";
 import { createSignal } from "solid-js";
 import { render } from "solid-js/web";
@@ -23,7 +46,7 @@ const css = /*css*/ `
 	}
 `
 
-export const solidCounter = liftHtml('my-counter', {
+liftHtml('my-counter', {
 	init() {
 		const [count, setCount] = createSignal(0);
 		const App = () => html`
@@ -35,3 +58,4 @@ export const solidCounter = liftHtml('my-counter', {
 		render(App, this.shadowRoot || this.attachShadow( {mode: 'open' }));
 	}
 })
+```
