@@ -33,11 +33,6 @@ export interface LiftOptions<TAttributes extends Attributes> {
     this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
     dispose: (dispose: () => void) => void,
   ): void;
-  /** @deprecated use `dispose` instead */
-  deInit?(
-    this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-    dispose: (dispose: () => void) => void,
-  ): void;
   noHMR?: boolean;
 }
 
@@ -154,12 +149,9 @@ export function liftHtml<
         this.cleanup.pop()!();
       }
       if (this.isConnected && connect) {
-        (LiftElement.options.init ?? LiftElement.options.deInit)?.call(
-          this,
-          (cb) => {
-            this.cleanup.push(cb);
-          },
-        );
+        LiftElement.options.init?.call(this, (dispose) => {
+          this.cleanup.push(dispose);
+        });
       }
       if (!opts.noHMR) {
         LiftElement.hmr.add(this);
