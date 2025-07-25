@@ -25,7 +25,7 @@ simplified API (I tested that every web component used in
 If you jump up to `@lift-html/core`, in the less than 600 bytes you get HMR (Hot
 Module Replacement) support, full support of web components features like
 `formAssociated` and `observedAttributes` with type safety and nice API: `init`
-and `deInit` callbacks instead of `constructor`, `connectedCallback`,
+and `dispose` callbacks instead of `constructor`, `connectedCallback`,
 `adoptedCallback`, `disconnectedCallback` (I yet to find an example of a web
 component that can't be written with `@lift-html/core`).
 
