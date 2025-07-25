@@ -31,7 +31,12 @@ export interface LiftOptions<TAttributes extends Attributes> {
   formAssociated?: boolean | undefined;
   init(
     this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
-    deinit: (dispose: () => void) => void,
+    dispose: (dispose: () => void) => void,
+  ): void;
+  /** @deprecated use `dispose` instead */
+  deInit?(
+    this: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
+    dispose: (dispose: () => void) => void,
   ): void;
   noHMR?: boolean;
 }
@@ -149,9 +154,12 @@ export function liftHtml<
         this.cleanup.pop()!();
       }
       if (this.isConnected && connect) {
-        LiftElement.options.init?.call(this, (cb) => {
-          this.cleanup.push(cb);
-        });
+        (LiftElement.options.init ?? LiftElement.options.deInit)?.call(
+          this,
+          (cb) => {
+            this.cleanup.push(cb);
+          },
+        );
       }
       if (!opts.noHMR) {
         LiftElement.hmr.add(this);

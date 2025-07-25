@@ -74,11 +74,11 @@ Deno.test("init is called for adoptedCallback", () => {
   assertSpyCallArgs(mockFn, 0, [element]);
 });
 
-Deno.test("deinit is called", () => {
+Deno.test("dispose is called", () => {
   const mockFn = spy((_element: HTMLElement) => {});
   const TestElement = liftHtml("test-element", {
-    init(deinit) {
-      deinit(() => {
+    init(dispose) {
+      dispose(() => {
         mockFn(this);
       });
     },
@@ -152,10 +152,10 @@ Deno.test("lifecycle callbacks execute in correct order", () => {
 
   const TestElement = liftHtml("test-element", {
     observedAttributes: ["test"] as const,
-    init(deinit) {
+    init(dispose) {
       mockInit();
       this.acb = () => mockAttrChange();
-      deinit(() => mockCleanup());
+      dispose(() => mockCleanup());
     },
   });
 
