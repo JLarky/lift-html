@@ -10,11 +10,13 @@ export default defineConfig({
       title: "Lift HTML Documentation",
       description:
         "Documentation for lift-html - HTML Web Components framework",
-      social: [{
-        icon: "github",
-        label: "GitHub",
-        href: "https://github.com/JLarky/lift-html",
-      }],
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/JLarky/lift-html",
+        },
+      ],
       sidebar: [
         {
           label: "Getting Started",
