@@ -21,6 +21,7 @@
     "packages/incentive",
     "packages/cli",
     "packages/alien",
+    "packages/observable",
     "examples/lume"
   ],
   "exclude": ["**/npm"]
