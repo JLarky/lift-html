@@ -12,8 +12,8 @@ hydrating it.
 It seems like in modern web development you have to make a choice between huge
 JavaScript-centric framework or haphazard script tags thrown around the page.
 
-And if you want something simpler you can't have nice things like IDE integration
-or HMR.
+And if you want something simpler you can't have nice things like IDE
+integration or HMR.
 
 And if you want something server-driven you have to write everything as string
 attribute and send huge unoptimized bundles to the client.
@@ -25,21 +25,21 @@ Lift HTML is aiming to close the gap between those extremes.
 First of all Lift HTML doesn't try to replace the tools you already use.
 
 On the server you can continue to generate your HTML as usual. Types for your
-Lift HTML components are declared in TypeScript so you will have great time
-with tools that can use that for "Go to definition" and type-checking attributes
+Lift HTML components are declared in TypeScript so you will have great time with
+tools that can use that for "Go to definition" and type-checking attributes
 (Astro, React, Solid and some other already supported, more tool support is
 planned).
 
 On the client you don't have to stop using your favorite JS tooling, we already
 implemented integrations with SolidJS Signals and Alien Signals that could help
-you drive the state of your components, as well as option to render markup
-using your favorite library (see [example](./examples/wc-counter-solid/) using
+you drive the state of your components, as well as option to render markup using
+your favorite library (see [example](./examples/wc-counter-solid/) using
 `render` from SolidJS).
 
-If you already have build pipeline set up for your project you can use it to
-get fanicer features like HMR and dead-code elimination. If you don't you can
-safely use CDN imports and enjoy no-build development and know that you are not
-sending dozens of kilobytes to the client.
+If you already have build pipeline set up for your project you can use it to get
+fanicer features like HMR and dead-code elimination. If you don't you can safely
+use CDN imports and enjoy no-build development and know that you are not sending
+dozens of kilobytes to the client.
 
 ## What is Lift HTML?
 
@@ -94,8 +94,8 @@ const CopyButton = liftHtml("copy-button", {
     const button = this.querySelector("button");
     if (!button) throw new Error("<copy-button> must contain a <button>");
 
-    const textToCopy =
-      this.getAttribute("text") ?? this.textContent?.trim() ?? "";
+    const textToCopy = this.getAttribute("text") ?? this.textContent?.trim() ??
+      "";
 
     button.disabled = false;
     const setLabel = (label) => (button.textContent = label);
