@@ -9,6 +9,38 @@ Lift HTML is a tiny library for building HTML Web Components - components that
 enhance existing HTML on the page instead of rendering it on the client or
 hydrating it.
 
+It seems like in modern web development you have to make a choice between huge
+JavaScript-centric framework or haphazard script tags thrown around the page.
+
+And if you want something simpler you can't have nice things like IDE
+integration or HMR.
+
+And if you want something server-driven you have to write everything as string
+attribute and send huge unoptimized bundles to the client.
+
+Lift HTML is aiming to close the gap between those extremes.
+
+## How it works
+
+First of all Lift HTML doesn't try to replace the tools you already use.
+
+On the server you can continue to generate your HTML as usual. Types for your
+Lift HTML components are declared in TypeScript so you will have great time with
+tools that can use that for "Go to definition" and type-checking attributes
+(Astro, React, Solid and some other already supported, more tool support is
+planned).
+
+On the client you don't have to stop using your favorite JS tooling, we already
+implemented integrations with SolidJS Signals and Alien Signals that could help
+you drive the state of your components, as well as option to render markup using
+your favorite library (see [example](./examples/wc-counter-solid/) using
+`render` from SolidJS).
+
+If you already have build pipeline set up for your project you can use it to get
+fanicer features like HMR and dead-code elimination. If you don't you can safely
+use CDN imports and enjoy no-build development and know that you are not sending
+dozens of kilobytes to the client.
+
 ## What is Lift HTML?
 
 Lift HTML follows the HTML Web Components pattern, which means:
@@ -57,25 +89,35 @@ npm install @lift-html/core
 ```javascript
 import { liftHtml } from "@lift-html/core";
 
-const MyButton = liftHtml("my-button", {
+const CopyButton = liftHtml("copy-button", {
   init() {
     const button = this.querySelector("button");
-    if (!button) throw new Error("<my-button> must contain a <button>");
+    if (!button) throw new Error("<copy-button> must contain a <button>");
 
-    let count = 0;
-    button.onclick = () => {
-      count++;
-      button.textContent = `Clicks: ${count}`;
+    const textToCopy = this.getAttribute("text") ?? this.textContent?.trim() ??
+      "";
+
+    button.disabled = false;
+    const setLabel = (label) => (button.textContent = label);
+    setLabel("Copy");
+
+    button.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        setLabel("Copied!");
+        setTimeout(() => setLabel("Copy"), 1500);
+      } catch {
+        setLabel("Failed");
+      }
     };
-    button.textContent = `Clicks: ${count}`;
   },
 });
 ```
 
 ```html
-<my-button>
-  <button disabled>Loading...</button>
-</my-button>
+<copy-button text="Hello, world!">
+  <button disabled>Copy</button>
+</copy-button>
 ```
 
 ### Using @lift-html/solid
