@@ -33,6 +33,10 @@ export default defineConfig({
             { label: "Components", link: "/guides/components/" },
             { label: "Interoperability", link: "/guides/interoperability/" },
             { label: "Lift vs Lit", link: "/guides/lift-vs-lit/" },
+            {
+              label: "Two Extremes of Web Dev",
+              link: "/guides/two-extremes-of-web-development/",
+            },
           ],
         },
         {
