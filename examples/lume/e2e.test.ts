@@ -216,6 +216,37 @@ Deno.test({
       },
     });
 
+    await t.step({
+      name: "incentive: check reaction to attribute change",
+      async fn() {
+        const page = await browser.newPage(
+          `http://localhost:${PORT}/incentive`,
+        );
+        await page.waitForSelector(".loaded");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        const value = await page.evaluate(() => {
+          const counter = document.querySelector("lift-counter");
+          if (!counter) throw new Error("Counter not found");
+          return counter.outerHTML.trim().replace(/\s+/g, " ");
+        });
+        assertEquals(
+          value,
+          '<lift-counter count="1"><div class="loaded" data-target="lift-counter:output">1</div></lift-counter>',
+        );
+        const value2 = await page.evaluate(async () => {
+          const counter = document.querySelector("lift-counter");
+          if (!counter) throw new Error("Counter not found");
+          counter.setAttribute("count", "2");
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          return counter.outerHTML.trim().replace(/\s+/g, " ");
+        });
+        assertEquals(
+          value2,
+          '<lift-counter count="2"><div class="loaded" data-target="lift-counter:output">2</div></lift-counter>',
+        );
+      },
+    });
+
     server.stop();
     await browser.close();
   },

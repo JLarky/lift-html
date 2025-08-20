@@ -1,95 +1,77 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/incentive/mod.ts
 
-export type Constructor<T = object, A extends any[] = any[], Static = {}> =
-  & (new (...a: A) => T)
-  & Static;
+export type Constructor<T = object> = new (...args: any[]) => T;
 
-// inspired by @github/catalyst
 /**
- * This is a wrapper around `querySelector` that finds the first element with a
- * specified target name. To make things more explicit you have to specify the
- * name of the custom element as a prefix, the second difference is that if you
- * have nested components selector will ignore targets from nested ones.
- *
- * @example
- * ```html
- * <my-element>
- *   <button data-target="my-element:button">Click me</button>
- *   <input data-target="my-element:input" />
- * </my-element>
- * <script>
- * import { liftHtml } from '@lift-html/core';
- * import { findTarget } from '@lift-html/incentive';
- *
- * liftHtml('my-element', {
- *   init() {
- *     const button = findTarget(this, 'button');
- *     const input = findTarget(this, 'input', HTMLInputElement);
- *     // note that typescript will know that input has the `value` property
- *     button.onclick = () => input.value = 'Hello world';
- *   }
- * });
- * </script>
- * ```
+ * Find target elements by name.
+ * @internal
  */
-export function findTarget<T = HTMLElement>(
-  wcElement: HTMLElement,
+function findTargets<T extends Element>(
+  host: HTMLElement,
   name: string,
-  targetType: Constructor<T> = HTMLElement as Constructor<T>,
-): T | undefined {
-  const tag = wcElement.tagName.toLowerCase();
-  for (
-    const el of wcElement.querySelectorAll(`[data-target~="${tag}:${name}"]`)
-  ) {
-    if (el.closest(tag) === wcElement) {
-      return el instanceof targetType ? el : undefined;
-    }
+  types: Constructor<T> | Constructor<T>[],
+  required = false,
+): T[] | T {
+  const tag = host.tagName.toLowerCase();
+  const elements = (Array.isArray(types) ? types : [types]).flatMap((type) =>
+    [...host.querySelectorAll(`[data-target~="${tag}:${name}"]`)]
+      .filter((el) => el.closest(host.tagName) === host && el instanceof type)
+  ) as T[];
+
+  if (!required) return elements;
+  if (!elements.length) {
+    throw new Error(
+      `Required target "${name}" not found in <${tag}>. Use data-target="${tag}:${name}"`,
+    );
   }
-  return undefined;
+  return elements[0];
 }
 
+type Target<T> = Constructor<T> | Constructor<T>[];
+type TargetMap = Record<string, Target<any>>;
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+type UnwrapConstructor<T> = T extends Constructor<infer U> ? U : never;
+type InferTarget<T> = T extends Constructor<any>[]
+  ? UnwrapConstructor<T[number]>[]
+  : UnwrapConstructor<T>;
+type InferTargets<T extends TargetMap> = Simplify<
+  { [K in keyof T]: InferTarget<T[K]> }
+>;
+
 /**
- * This is a wrapper around `querySelector` that finds the first element with a
- * specified target name. To make things more explicit you have to specify the
- * name of the custom element as a prefix, the second difference is that if you
- * have nested components selector will ignore targets from nested ones.
+ * Define and access element targets with type safety and validation.
+ * Required targets will throw an error if not found.
  *
  * @example
- * ```html
- * <my-element>
- *   <button data-target="my-element:button">Click me</button>
- *   <input data-target="my-element:input" />
- * </my-element>
- * <script>
- * import { liftHtml } from '@lift-html/core';
- * import { targetRefs } from '@lift-html/incentive';
- *
- * liftHtml('my-element', {
- *   init() {
- *     const refs = targetRefs(this, {
- *       button: HTMLElement,
- *       input: HTMLInputElement,
- *     });
- *     // note that typescript will know that input has the `value` property
- *     refs.button.onclick = () => refs.input.value = 'Hello world';
- *   }
+ * ```ts
+ * const refs = targetRefs(this, {
+ *   // Optional target - type will be HTMLElement[]
+ *   target1: [HTMLElement],
+ *   // Optional target - type will be [HTMLDivElement | HTMLSpanElement][]
+ *   target2: [HTMLDivElement, HTMLSpanElement],
+ *   // Required target - type will be HTMLInputElement
+ *   target3: HTMLInputElement
  * });
- * </script>
+ *
+ * // TypeScript knows target1[0] might be undefined
+ * refs.target1[0].focus();
+ * // TypeScript knows target3 is not undefined
+ * refs.target3.value = "Hello";
  * ```
  */
-export function targetRefs<Targets extends Record<string, Constructor>>(
-  self: HTMLElement,
-  targets: Targets,
-): { [K in keyof Targets]: InstanceType<Targets[K]> | undefined } {
-  const refs = {} as {
-    [K in keyof Targets]: InstanceType<Targets[K]> | undefined;
-  };
-  for (const [key, targetType] of Object.entries(targets)) {
-    Object.defineProperty(refs, key, {
+export function targetRefs<T extends TargetMap>(
+  host: HTMLElement,
+  targets: T,
+): InferTargets<T> {
+  const refs = {} as InferTargets<T>;
+
+  for (const [name, config] of Object.entries(targets)) {
+    Object.defineProperty(refs, name, {
       get() {
-        return findTarget(self, key, targetType);
+        return findTargets(host, name, config, !Array.isArray(config));
       },
     });
   }
+
   return refs;
 }

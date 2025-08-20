@@ -3,6 +3,7 @@
   "tasks": {
     "test:unit": "deno test -A packages/*",
     "test": "deno test -A",
+    "bundle-size": "deno run -A scripts/bundle-size.ts",
     "bump:cli": "deno run -A jsr:@kellnerd/bump --file packages/cli/deno.jsonc --tag @lift-html/cli@ --commit \"release @lift-html/cli@\"",
     "bump:core": "deno run -A jsr:@kellnerd/bump --file packages/core/deno.jsonc --tag @lift-html/core@ --commit \"release @lift-html/core@\"",
     "bump:solid": "deno run -A jsr:@kellnerd/bump --file packages/solid/deno.jsonc --tag @lift-html/solid@ --commit \"release @lift-html/solid@\"",
