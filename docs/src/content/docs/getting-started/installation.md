@@ -23,7 +23,18 @@ management.
 Includes the core functionality plus SolidJS integration for reactive
 components. Provides `liftSolid` function and `useAttributes` helper.
 
-**Bundle size:** ~3.4kb gzipped (includes solid-js)
+:::note
+
+`@lift-html/solid` 1.0.0 and later require Solid 2.0. If you're on Solid 1.x,
+stay on `@lift-html/solid@0.0.6`:
+
+```sh
+npm install @lift-html/solid@0.0.6
+```
+
+:::
+
+**Bundle size:** ~9.6kb gzipped (includes solid-js 2.0)
 
 ### @lift-html/tiny
 

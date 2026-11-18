@@ -27,8 +27,7 @@ const timeFormat = new Intl.DateTimeFormat('en-US', {
 liftSolid('my-element', {
   init() {
     const clock = useClockController(100);
-    createEffect(() => {
-      const formattedTime = timeFormat.format(clock.value);
+    createEffect(() => timeFormat.format(clock.value), (formattedTime) => {
       this.textContent = `Current time: ${formattedTime}`;
     })
   }

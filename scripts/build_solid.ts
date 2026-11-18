@@ -37,7 +37,7 @@ await build({
     },
     dependencies: {
       "@lift-html/core": "*",
-      "solid-js": "*",
+      "solid-js": "^2.0.0",
     },
   },
   postBuild() {

@@ -57,8 +57,7 @@
     "npm:markdown-it-deflist@3.0.0": "3.0.0",
     "npm:markdown-it@14.1.0": "14.1.0",
     "npm:meriyah@6.0.3": "6.0.3",
-    "npm:solid-js@^1.9.0": "1.9.4_seroval@1.2.0",
-    "npm:solid-js@^1.9.3": "1.9.4_seroval@1.2.0"
+    "npm:solid-js@2": "2.0.0_seroval@1.8.2"
   },
   "jsr": {
     "@astral/astral@0.5.2": {
@@ -245,6 +244,9 @@
         "tslib"
       ]
     },
+    "@solidjs/signals@2.0.0": {
+      "integrity": "sha512-jrcT6XTVvsYRpesRp0At/mSUnsWr6jiprK8C93Oat56B8n7X9BMSe58Rxl6qSZUhBN0L+sxm8GzeO7HdhBXvDw=="
+    },
     "@types/estree@1.0.6": {
       "integrity": "sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw=="
     },
@@ -253,9 +255,6 @@
     },
     "argparse@2.0.1": {
       "integrity": "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="
-    },
-    "csstype@3.1.3": {
-      "integrity": "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="
     },
     "entities@4.5.0": {
       "integrity": "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw=="
@@ -307,19 +306,19 @@
     "punycode.js@2.3.1": {
       "integrity": "sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA=="
     },
-    "seroval-plugins@1.2.0_seroval@1.2.0": {
-      "integrity": "sha512-hULTbfzSe81jGWLH8TAJjkEvw6JWMqOo9Uq+4V4vg+HNq53hyHldM9ZOfjdzokcFysiTp9aFdV2vJpZFqKeDjQ==",
+    "seroval-plugins@1.8.0_seroval@1.8.2": {
+      "integrity": "sha512-96vBb12rDvPPwdKUgWw1op3fGq8AVBFOr0IllbnM72yR5J9WWXF18cQ4g1XfDO7HCyh2dt70P3XdtyRayP8FWg==",
       "dependencies": [
         "seroval"
       ]
     },
-    "seroval@1.2.0": {
-      "integrity": "sha512-GURoU99ko2UiAgUC3qDCk59Jb3Ss4Po8VIMGkG8j5PFo2Q7y0YSMP8QG9NuL/fJCoTz9V1XZUbpNIMXPOfaGpA=="
+    "seroval@1.8.2": {
+      "integrity": "sha512-zmMxi/9MdLK1MKazLmIP6Rk39RuK0Xydd+QHeOYntS37olJeTjB3+nwVj4ce/ZWiZJeRhcO5htfxt0mUzQBscQ=="
     },
-    "solid-js@1.9.4_seroval@1.2.0": {
-      "integrity": "sha512-ipQl8FJ31bFUoBNScDQTG3BjN6+9Rg+Q+f10bUbnO6EOTTf5NGerJeHc7wyu5I4RMHEl/WwZwUmy/PTRgxxZ8g==",
+    "solid-js@2.0.0_seroval@1.8.2": {
+      "integrity": "sha512-9zN4uH2OQeQAYbF4BmIzoaa+L5Hb8Dp6kkP6ZXobHQ1FZVICdmzREPDVDBJY7umzdAE8D6zbFfWhxGtagkyslA==",
       "dependencies": [
-        "csstype",
+        "@solidjs/signals",
         "seroval",
         "seroval-plugins"
       ]
@@ -332,7 +331,9 @@
     }
   },
   "redirects": {
-    "https://esm.sh/solid-js": "https://esm.sh/solid-js@1.9.5"
+    "https://esm.sh/@solidjs/signals@^2.0.0?target=denonext": "https://esm.sh/@solidjs/signals@2.0.0?target=denonext",
+    "https://esm.sh/solid-js": "https://esm.sh/solid-js@1.9.5",
+    "https://esm.sh/solid-js@2": "https://esm.sh/solid-js@2.0.0"
   },
   "remote": {
     "https://deno.land/std@0.170.0/_util/asserts.ts": "d0844e9b62510f89ce1f9878b046f6a57bf88f208a10304aab50efcb48365272",
@@ -564,8 +565,12 @@
     "https://deno.land/x/vento@v1.12.11/src/loader.ts": "c05add67f582e937ee611852075ce2cc038b5e80e3e609eef96fa5ed74a5086c",
     "https://deno.land/x/vento@v1.12.11/src/tokenizer.ts": "127ddad02054f63b8b646e4dfbf555e1e34e9b8dcbd58d86b3729a4de95abd27",
     "https://deno.land/x/vento@v1.12.11/src/transformer.ts": "587a0b107a2bd1437a3093c4c44c07e4fdf3abfaaf8e845767b69bd34a039154",
+    "https://esm.sh/@solidjs/signals@2.0.0/denonext/signals.mjs": "3a66d4d43da5ddaf96b612365f4b6b79dd051ba4e2de661871160165372908ad",
+    "https://esm.sh/@solidjs/signals@2.0.0?target=denonext": "c8a951ad7dd2fdf7889a657e8d3313bf0736c90c0365a58733c47af32eaede5a",
     "https://esm.sh/solid-js@1.9.5": "da5e46cac567aea0192636de05d13b09c0b37a178b2e6bb2eda8ea00f11f06ae",
-    "https://esm.sh/solid-js@1.9.5/denonext/solid-js.mjs": "3c7ed4219bd663583dadc1faa28f0dd03a48c887fc4d659afb173a52254f1b56"
+    "https://esm.sh/solid-js@1.9.5/denonext/solid-js.mjs": "3c7ed4219bd663583dadc1faa28f0dd03a48c887fc4d659afb173a52254f1b56",
+    "https://esm.sh/solid-js@2.0.0": "2b14896debf8e4de8bced3811442a1b031c84fc8c2c4d3160c62a5140c027e8c",
+    "https://esm.sh/solid-js@2.0.0/denonext/solid-js.mjs": "c5f96d7b1f6669e3bfd9a7489b2d0a6bb3d8bcd38c6122bb677ca2251710f9e2"
   },
   "workspace": {
     "members": {
@@ -576,7 +581,7 @@
       },
       "packages/solid": {
         "dependencies": [
-          "npm:solid-js@^1.9.3"
+          "npm:solid-js@2"
         ]
       }
     }

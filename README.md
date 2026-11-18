@@ -8,6 +8,13 @@
 | @lift-html/alien (includes alien-signals)              | <img src="https://deno.bundlejs.com/?q=@lift-html/alien&badge=detailed&badge-style=for-the-badge&treeshake=[{liftAlien}]" height="28" valign="middle">               |
 | @lift-html/solid (includes solid-js and useAttributes) | <img src="https://deno.bundlejs.com/?q=@lift-html/solid&badge=detailed&badge-style=for-the-badge&treeshake=[{liftSolid,useAttributes}]" height="28" valign="middle"> |
 
+> **Solid 1.x users:** `@lift-html/solid` 1.0.0 and later require Solid 2.0. If
+> you're on Solid 1.x, stay on `@lift-html/solid@0.0.6`:
+>
+> ```sh
+> npm install @lift-html/solid@0.0.6
+> ```
+
 ## Welcome to the non-isomorphic web
 
 Lift HTML is a new way to build your JavaScript applications, especially if all
@@ -65,8 +72,8 @@ Code for `liftHtml` is public domain see more in the Vendoring section.
       button.disabled = false;
       const [count, setCount] = createSignal(0);
       button.onclick = () => setCount(count() + 1);
-      createEffect(() => {
-        button.textContent = `Clicks: ${count()}`;
+      createEffect(count, (count) => {
+        button.textContent = `Clicks: ${count}`;
       });
     },
   });
@@ -74,9 +81,7 @@ Code for `liftHtml` is public domain see more in the Vendoring section.
 ```
 
 via [codepen](https://codepen.io/jlarky/pen/vYoPzNE?editors=1000), total code
-size
-[3.41kb gzip](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B%7BliftSolid%7D%5D%2C%5B%7BcreateSignal%2CcreateEffect%7D%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
-and with no-build
+size ~9.6kb gzip with Solid 2.0 (measured in an Astro build) and with no-build
 [8.94kb](https://bundlejs.com/?q=https%3A%2F%2Fesm.sh%2F%40lift-html%2Fsolid%2Chttps%3A%2F%2Fesm.sh%2Fsolid-js&treeshake=%5B*%5D%2C%5B*%5D&share=PTAEBMFMDMEsDtKgIagMYFcDOAXA9gLaiQA2kBk8OAUKMQB4AOeATjunvLqALICeAIQw588UAF5QJWNBwBlPNPAAKAEQE%2BAWgBGw0aoA0oAN606oBLBzKAlCbPmOXdrpGcJoHAAtYWAHQAjhiQLHxypJBo%2BCxqrvo2ANwO5jKgygCEcZx23ix4AO6giIUAoix5MaoAPBo6epwAfKAE2OxonDjICCigVVnwDaqJyXT9fuC%2ByNpk4B7QyCRYkEmOdO3OoADa7RhURks4AMJ4uzgAuh5oLJDIOJBysADm8AvKAAzDq6BjnGjSaABrDy2CRNA7HU7KHZUEEAalAAEZPqsrjc7iVoNBItYQeImqYvqN6vA-Hd6EcOpR2JIAAaHf4ArAALlAABJjNDrDYAL40larbnIujcgxmQUJIA)
 
 ```html

@@ -1,6 +1,7 @@
 import { assertEquals } from "jsr:@std/assert";
 // import { assertSpyCallArgs, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
+import { flush } from "solid-js";
 import { liftSolid, useAttributes } from "./mod.ts";
 
 // Deno.test("this crashes in server build unfortunatelly", () => {
@@ -29,8 +30,10 @@ Deno.test("useAttributes creates props", () => {
   assertEquals(props.count, "1");
   // other props do nothing
   el.acb!("not-count", "10");
+  flush();
   assertEquals(props.count, "1");
   // changing count updates props
   el.acb!("count", "10");
+  flush();
   assertEquals(props.count, "10");
 });
