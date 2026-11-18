@@ -1,7 +1,7 @@
 import { liftHtml } from "@lift-html/core";
-import html from "solid-js/html";
+import html from "@solidjs/html";
 import { createSignal } from "solid-js";
-import { render } from "solid-js/web";
+import { render } from "@solidjs/web";
 
 const css = /*css*/ `
 	* { font-size: 200%; }

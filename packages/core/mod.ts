@@ -101,9 +101,12 @@ export abstract class LiftBaseClass<
      observedAttributes: ["name"],
      init() {
        const props = useAttributes(this);
-       createEffect(() => {
-         this.innerText = "Hello, " + props.name;
-       });
+       createEffect(
+         () => props.name,
+         (name) => {
+           this.innerText = "Hello, " + name;
+         },
+       );
      },
    });
 ```

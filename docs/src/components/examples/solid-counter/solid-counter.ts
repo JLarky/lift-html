@@ -9,8 +9,8 @@ const MyButton = liftSolid("my-button", {
     button.disabled = false;
     const [count, setCount] = createSignal(0);
     button.onclick = () => setCount(count() + 1);
-    createEffect(() => {
-      button.textContent = `Clicks: ${count()}`;
+    createEffect(count, (count) => {
+      button.textContent = `Clicks: ${count}`;
     });
   },
 });

@@ -72,8 +72,8 @@ const Counter = liftSolid("my-counter", {
     button.onclick = () => setCount(count() + 1);
 
     // Reactive effect to update button text
-    createEffect(() => {
-      button.textContent = `Clicks: ${count()}`;
+    createEffect(count, (count) => {
+      button.textContent = `Clicks: ${count}`;
     });
 
     button.disabled = false;
@@ -256,8 +256,8 @@ For quick prototyping, you can use the CDN version:
 
       const [count, setCount] = createSignal(0);
       button.onclick = () => setCount(count() + 1);
-      createEffect(() => {
-        button.textContent = `Clicks: ${count()}`;
+      createEffect(count, (count) => {
+        button.textContent = `Clicks: ${count}`;
       });
     },
   });

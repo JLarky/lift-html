@@ -1,6 +1,6 @@
 // PUBLIC DOMAIN: https://github.com/JLarky/lift-html/blob/main/packages/solid/mod.ts
 
-import { createRoot, createSignal } from "npm:solid-js@^1.9";
+import { createRoot, createSignal, runWithOwner } from "npm:solid-js@^2.0.0";
 import {
   type Attributes,
   type LiftBaseClass,
@@ -34,9 +34,12 @@ export type {
  *   observedAttributes: ["name"],
  *   init() {
  *     const props = useAttributes(this);
- *     createEffect(() => {
- *       this.innerText = "Hello, " + props.name;
- *     });
+ *     createEffect(
+ *       () => props.name,
+ *       (name) => {
+ *         this.innerText = "Hello, " + name;
+ *       },
+ *     );
  *   },
  * });
 ```
@@ -51,10 +54,13 @@ export function liftSolid<
   return liftHtml(tagName, {
     ...opts,
     init(dispose) {
-      createRoot((rootDispose) => {
-        opts.init?.call(this, dispose);
-        dispose(rootDispose);
-      });
+      // Solid 2.0 attaches a root to the current owner by default. The element's
+      // lifetime is managed by lift-html (disconnectedCallback), so detach it.
+      runWithOwner(null, () =>
+        createRoot((rootDispose) => {
+          opts.init?.call(this, dispose);
+          dispose(rootDispose);
+        }));
     },
   });
 }
@@ -62,6 +68,9 @@ export function liftSolid<
 /**
  * Makes attributes reactive. Returns an object where each key is an attribute
  * based on the `options.observedAttributes` of the component.
+ *
+ * Like any Solid 2.0 signal, a new attribute value becomes visible to reads
+ * after the current batch flushes (next microtask), or after `flush()`.
  */
 export function useAttributes<TAttributes extends Attributes>(
   instance: LiftBaseClass<TAttributes, LiftOptions<TAttributes>>,
